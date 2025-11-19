@@ -41,6 +41,9 @@
                             Alerts
                         </a>
                         @if(auth()->user()->hasRole(['owner', 'manager']))
+                        <a href="{{ route('suppliers.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('suppliers.*') ? 'bg-blue-700' : '' }}">
+                            Suppliers
+                        </a>
                         <a href="{{ route('users.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('users.*') ? 'bg-blue-700' : '' }}">
                             Users
                         </a>

@@ -9,6 +9,16 @@
         <p class="mt-1 text-sm text-gray-600">Access comprehensive business reports and insights</p>
     </div>
 
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between">
+        <div>
+            <h3 class="font-semibold text-blue-900">Looking for visual insights?</h3>
+            <p class="text-sm text-blue-700">Check out our interactive Analytics Dashboard with charts and graphs</p>
+        </div>
+        <a href="{{ route('analytics.index') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
+            View Analytics →
+        </a>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Sales Report -->
         <a href="{{ route('reports.sales') }}" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">

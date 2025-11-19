@@ -6,6 +6,7 @@ use App\Http\Controllers\BatchController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AnalyticsController;
 
 Route::middleware('auth')->group(function () {
 
@@ -34,5 +35,8 @@ Route::middleware('auth')->group(function () {
 
     // Dashboard API
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+
+    // Analytics API
+    Route::get('/analytics/sales', [AnalyticsController::class, 'salesData']);
 
 });

@@ -12,6 +12,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AnalyticsController;
 
 // Public routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -93,6 +94,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/top-products', [ReportController::class, 'topProducts'])->name('reports.top-products');
     Route::get('/reports/suppliers', [ReportController::class, 'suppliers'])->name('reports.suppliers');
     Route::get('/reports/customers', [ReportController::class, 'customers'])->name('reports.customers');
+
+    // Analytics
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
     // Users (Owner/Manager only)
     Route::middleware('role:owner,manager')->group(function () {

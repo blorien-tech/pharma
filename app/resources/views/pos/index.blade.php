@@ -127,8 +127,32 @@
                     </div>
                 </div>
 
-                <!-- Payment Method -->
+                <!-- Customer Selection -->
                 <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer (Optional)</label>
+                    <select x-model="customerId" @change="onCustomerChange()" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="">Walk-in Customer</option>
+                        @foreach(\App\Models\Customer::active()->orderBy('name')->get() as $customer)
+                        <option value="{{ $customer->id }}"
+                            data-credit-enabled="{{ $customer->credit_enabled ? '1' : '0' }}"
+                            data-available-credit="{{ $customer->availableCredit() }}">
+                            {{ $customer->name }} @if($customer->credit_enabled)(Credit: ৳{{ number_format($customer->availableCredit(), 2) }})@endif
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Credit Sale Option -->
+                <div x-show="canUseCredit" class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" x-model="isCredit" @change="onCreditChange()"
+                            class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-gray-700">Use Credit (Available: ৳<span x-text="availableCredit.toFixed(2)"></span>)</span>
+                    </label>
+                </div>
+
+                <!-- Payment Method -->
+                <div x-show="!isCredit" class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
                     <select x-model="paymentMethod" class="w-full px-3 py-2 border rounded-lg">
                         <option value="CASH">Cash</option>
@@ -139,7 +163,7 @@
                 </div>
 
                 <!-- Amount Paid (for cash) -->
-                <div x-show="paymentMethod === 'CASH'" class="mb-4">
+                <div x-show="paymentMethod === 'CASH' && !isCredit" class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Amount Paid</label>
                     <input
                         type="number"
@@ -190,9 +214,38 @@ function posApp() {
         amountPaid: 0,
         change: 0,
         processing: false,
+        customerId: '',
+        isCredit: false,
+        canUseCredit: false,
+        availableCredit: 0,
 
         init() {
             // Initialize
+        },
+
+        onCustomerChange() {
+            const select = document.querySelector('select[x-model="customerId"]');
+            const selectedOption = select.options[select.selectedIndex];
+
+            if (this.customerId) {
+                const creditEnabled = selectedOption.getAttribute('data-credit-enabled') === '1';
+                const availableCredit = parseFloat(selectedOption.getAttribute('data-available-credit'));
+
+                this.canUseCredit = creditEnabled;
+                this.availableCredit = availableCredit;
+            } else {
+                this.canUseCredit = false;
+                this.availableCredit = 0;
+                this.isCredit = false;
+            }
+        },
+
+        onCreditChange() {
+            if (this.isCredit) {
+                this.paymentMethod = 'CREDIT';
+            } else {
+                this.paymentMethod = 'CASH';
+            }
         },
 
         async searchProducts() {
@@ -288,6 +341,11 @@ function posApp() {
                 this.cart = [];
                 this.discount = 0;
                 this.amountPaid = 0;
+                this.customerId = '';
+                this.isCredit = false;
+                this.canUseCredit = false;
+                this.availableCredit = 0;
+                this.paymentMethod = 'CASH';
                 this.calculateTotals();
             }
         },
@@ -295,7 +353,13 @@ function posApp() {
         async completeSale() {
             if (this.cart.length === 0) return;
 
-            if (this.paymentMethod === 'CASH' && this.amountPaid < this.total) {
+            // Validate credit sale
+            if (this.isCredit) {
+                if (this.total > this.availableCredit) {
+                    alert(`Insufficient credit. Available: ৳${this.availableCredit.toFixed(2)}, Required: ৳${this.total.toFixed(2)}`);
+                    return;
+                }
+            } else if (this.paymentMethod === 'CASH' && this.amountPaid < this.total) {
                 alert('Amount paid is less than total');
                 return;
             }
@@ -303,22 +367,32 @@ function posApp() {
             this.processing = true;
 
             try {
+                const payload = {
+                    items: this.cart.map(item => ({
+                        product_id: item.id,
+                        quantity: item.quantity,
+                        unit_price: item.price
+                    })),
+                    payment_method: this.paymentMethod,
+                    discount: this.discount,
+                    amount_paid: this.paymentMethod === 'CASH' ? this.amountPaid : this.total
+                };
+
+                // Add customer and credit info if applicable
+                if (this.customerId) {
+                    payload.customer_id = this.customerId;
+                }
+                if (this.isCredit) {
+                    payload.is_credit = true;
+                }
+
                 const response = await fetch('/api/transactions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
-                    body: JSON.stringify({
-                        items: this.cart.map(item => ({
-                            product_id: item.id,
-                            quantity: item.quantity,
-                            unit_price: item.price
-                        })),
-                        payment_method: this.paymentMethod,
-                        discount: this.discount,
-                        amount_paid: this.paymentMethod === 'CASH' ? this.amountPaid : this.total
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 const data = await response.json();

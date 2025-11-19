@@ -13,6 +13,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'sku',
+        'supplier_id',
         'description',
         'purchase_price',
         'selling_price',
@@ -30,6 +31,14 @@ class Product extends Model
             'min_stock' => 'integer',
             'is_active' => 'boolean',
         ];
+    }
+
+    /**
+     * Get the supplier
+     */
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
     }
 
     /**

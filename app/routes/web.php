@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ReportController;
 
 // Public routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -83,6 +84,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/customers/{customer}/payment', [CustomerController::class, 'recordPayment'])->name('customers.payment.store');
     Route::get('/customers/{customer}/adjustment', [CustomerController::class, 'showAdjustment'])->name('customers.adjustment');
     Route::post('/customers/{customer}/adjustment', [CustomerController::class, 'recordAdjustment'])->name('customers.adjustment.store');
+
+    // Reports
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+    Route::get('/reports/profit', [ReportController::class, 'profit'])->name('reports.profit');
+    Route::get('/reports/inventory', [ReportController::class, 'inventory'])->name('reports.inventory');
+    Route::get('/reports/top-products', [ReportController::class, 'topProducts'])->name('reports.top-products');
+    Route::get('/reports/suppliers', [ReportController::class, 'suppliers'])->name('reports.suppliers');
+    Route::get('/reports/customers', [ReportController::class, 'customers'])->name('reports.customers');
 
     // Users (Owner/Manager only)
     Route::middleware('role:owner,manager')->group(function () {

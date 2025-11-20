@@ -382,7 +382,7 @@
                     </button>
                     <button
                         @click="confirmAndCompleteSale()"
-                        :disabled="processing || validationError"
+                        :disabled="processing || !!validationError"
                         class="flex-1 px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -631,25 +631,27 @@ function posApp() {
             return this.cart.reduce((sum, item) => sum + item.quantity, 0);
         },
 
-        clearCart() {
-            if (confirm('Are you sure you want to clear the cart?')) {
-                this.cart = [];
-                this.discount = 0;
-                this.amountPaid = 0;
-                this.customerId = '';
-                this.customerPhone = '';
-                this.customerLookupResult = '';
-                this.isCredit = false;
-                this.canUseCredit = false;
-                this.availableCredit = 0;
-                this.markAsDue = false;
-                this.dueName = '';
-                this.duePhone = '';
-                this.dueDate = '';
-                this.dueNotes = '';
-                this.paymentMethod = 'CASH';
-                this.calculateTotals();
+        clearCart(skipConfirm = false) {
+            if (!skipConfirm && !confirm('Are you sure you want to clear the cart?')) {
+                return;
             }
+
+            this.cart = [];
+            this.discount = 0;
+            this.amountPaid = 0;
+            this.customerId = '';
+            this.customerPhone = '';
+            this.customerLookupResult = '';
+            this.isCredit = false;
+            this.canUseCredit = false;
+            this.availableCredit = 0;
+            this.markAsDue = false;
+            this.dueName = '';
+            this.duePhone = '';
+            this.dueDate = '';
+            this.dueNotes = '';
+            this.paymentMethod = 'CASH';
+            this.calculateTotals();
         },
 
         completeSale() {
@@ -756,7 +758,7 @@ function posApp() {
                     if (data.transaction && data.transaction.id) {
                         window.open(`/transactions/${data.transaction.id}`, '_blank');
                     }
-                    this.clearCart();
+                    this.clearCart(true); // Skip confirmation after successful sale
                 } else {
                     this.validationError = data.message || 'Error completing sale';
                 }

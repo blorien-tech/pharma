@@ -53,6 +53,9 @@ Route::middleware('auth')->group(function () {
     // POS
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
 
+    // POS Product Search API (using web middleware for session auth)
+    Route::get('/api/products/search', [ProductController::class, 'search'])->name('api.products.search');
+
     // Transactions
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');

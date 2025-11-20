@@ -23,6 +23,8 @@ return [
     'basic_mode' => 'সহজ',
     'toggle_navigation' => 'নেভিগেশন মোড পরিবর্তন করুন',
     'toggle_language' => 'ভাষা পরিবর্তন করুন',
+    'expand_sidebar' => 'সাইডবার প্রসারিত করুন',
+    'collapse_sidebar' => 'সাইডবার সংকুচিত করুন',
 
     // User Info
     'welcome_user' => 'স্বাগতম, :name!',

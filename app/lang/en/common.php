@@ -26,6 +26,9 @@ return [
     'no' => 'No',
     'ok' => 'OK',
 
+    // System
+    'pharmacy_system' => 'Pharmacy System',
+
     // Common Labels
     'name' => 'Name',
     'email' => 'Email',

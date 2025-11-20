@@ -26,6 +26,9 @@ return [
     'no' => 'না',
     'ok' => 'ঠিক আছে',
 
+    // System
+    'pharmacy_system' => 'ফার্মাসি সিস্টেম',
+
     // Common Labels
     'name' => 'নাম',
     'email' => 'ইমেইল',

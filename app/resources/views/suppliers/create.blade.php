@@ -3,7 +3,7 @@
 @section('title', 'Create Supplier - BLORIEN Pharma')
 
 @section('content')
-<div class="max-w-3xl mx-auto space-y-6">
+<div class="space-y-6">
     <!-- Page Header -->
     <div>
         <h1 class="text-3xl font-bold text-gray-900">Create New Supplier</h1>
@@ -92,7 +92,8 @@
 
             <!-- Status -->
             <div class="flex items-center">
-                <input type="checkbox" name="is_active" id="is_active" checked
+                <input type="hidden" name="is_active" value="0">
+                <input type="checkbox" name="is_active" id="is_active" value="1" checked
                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                 <label for="is_active" class="ml-2 block text-sm text-gray-900">
                     Active (supplier can be used)

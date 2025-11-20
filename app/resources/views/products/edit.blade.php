@@ -97,10 +97,11 @@
             <!-- Stock -->
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label for="current_stock" class="block text-sm font-medium text-gray-700">{{ __('products.current_stock_label') }}</label>
-                    <input type="number" name="current_stock" id="current_stock" min="0" required
-                        value="{{ old('current_stock', $product->current_stock) }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border">
+                    <label class="block text-sm font-medium text-gray-700">{{ __('products.current_stock_label') }}</label>
+                    <div class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm sm:text-sm px-3 py-2 border text-gray-700 font-semibold">
+                        {{ $product->current_stock }} {{ __('common.units') }}
+                    </div>
+                    <p class="mt-1 text-sm text-gray-500">{{ __('products.current_stock_readonly') }}</p>
                 </div>
                 <div>
                     <label for="min_stock" class="block text-sm font-medium text-gray-700">{{ __('products.min_stock_label') }}</label>
@@ -109,6 +110,16 @@
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border">
                     <p class="mt-1 text-sm text-gray-500">{{ __('products.low_stock_alert') }}</p>
                 </div>
+            </div>
+
+            <!-- Add Stock -->
+            <div>
+                <label for="add_stock" class="block text-sm font-medium text-gray-700">{{ __('products.add_stock_label') }}</label>
+                <input type="number" name="add_stock" id="add_stock" min="0" step="1"
+                    value="{{ old('add_stock', 0) }}"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border"
+                    placeholder="0">
+                <p class="mt-1 text-sm text-gray-500">{{ __('products.add_stock_hint') }}</p>
             </div>
 
             <!-- Status -->

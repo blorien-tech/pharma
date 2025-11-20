@@ -15,6 +15,10 @@ use App\Http\Controllers\DueController;
 use App\Http\Controllers\DailyClosingController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\LanguageController;
+
+// Language switching (accessible to all)
+Route::post('/language/switch', [LanguageController::class, 'switch'])->name('language.switch');
 
 // Public routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

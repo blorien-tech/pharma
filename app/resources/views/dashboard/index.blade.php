@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard - BLORIEN Pharma')
+@section('title', __('dashboard.title') . ' - ' . __('navigation.app_name'))
 
 @section('content')
 <div class="space-y-6">
     <!-- Page Header -->
     <div>
-        <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p class="mt-1 text-sm text-gray-600">Welcome back, {{ auth()->user()->name }}!</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ __('dashboard.title') }}</h1>
+        <p class="mt-1 text-sm text-gray-600">{{ __('dashboard.welcome_back', ['name' => auth()->user()->name]) }}</p>
     </div>
 
     <!-- Statistics Cards -->
@@ -16,9 +16,9 @@
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Today's Sales</p>
-                    <p class="text-2xl font-bold text-gray-900">৳{{ number_format($todaySales, 2) }}</p>
-                    <p class="text-sm text-gray-500 mt-1">{{ $todayTransactions }} transactions</p>
+                    <p class="text-sm font-medium text-gray-600">{{ __('dashboard.todays_sales') }}</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ __('common.currency_symbol') }}{{ number_format($todaySales, 2) }}</p>
+                    <p class="text-sm text-gray-500 mt-1">{{ __('dashboard.transactions_count', ['count' => $todayTransactions]) }}</p>
                 </div>
                 <div class="bg-green-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,11 +32,11 @@
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Pending Dues (বাকি)</p>
-                    <p class="text-2xl font-bold text-yellow-600">৳{{ number_format($totalPendingDues, 2) }}</p>
-                    <p class="text-sm text-gray-500 mt-1">{{ $pendingDuesCount }} dues
+                    <p class="text-sm font-medium text-gray-600">{{ __('dashboard.pending_dues_bangla') }}</p>
+                    <p class="text-2xl font-bold text-yellow-600">{{ __('common.currency_symbol') }}{{ number_format($totalPendingDues, 2) }}</p>
+                    <p class="text-sm text-gray-500 mt-1">{{ __('dashboard.dues_count', ['count' => $pendingDuesCount]) }}
                         @if($overdueDuesCount > 0)
-                        <span class="text-red-600">({{ $overdueDuesCount }} overdue)</span>
+                        <span class="text-red-600">{{ __('dashboard.overdue_count', ['count' => $overdueDuesCount]) }}</span>
                         @endif
                     </p>
                 </div>
@@ -52,9 +52,9 @@
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Total Products</p>
+                    <p class="text-sm font-medium text-gray-600">{{ __('dashboard.total_products') }}</p>
                     <p class="text-2xl font-bold text-gray-900">{{ $totalProducts }}</p>
-                    <p class="text-sm text-gray-500 mt-1">Active items</p>
+                    <p class="text-sm text-gray-500 mt-1">{{ __('dashboard.active_items') }}</p>
                 </div>
                 <div class="bg-blue-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,9 +68,9 @@
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Low Stock Alert</p>
+                    <p class="text-sm font-medium text-gray-600">{{ __('dashboard.low_stock_alert') }}</p>
                     <p class="text-2xl font-bold text-orange-600">{{ $lowStockProducts }}</p>
-                    <p class="text-sm text-gray-500 mt-1">Products need restock</p>
+                    <p class="text-sm text-gray-500 mt-1">{{ __('dashboard.products_need_restock') }}</p>
                 </div>
                 <div class="bg-orange-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,9 +84,9 @@
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Expiring Soon</p>
+                    <p class="text-sm font-medium text-gray-600">{{ __('dashboard.expiring_soon') }}</p>
                     <p class="text-2xl font-bold text-red-600">{{ $expiringSoonBatches }}</p>
-                    <p class="text-sm text-gray-500 mt-1">{{ $expiredBatches }} already expired</p>
+                    <p class="text-sm text-gray-500 mt-1">{{ __('dashboard.already_expired', ['count' => $expiredBatches]) }}</p>
                 </div>
                 <div class="bg-red-100 rounded-full p-3">
                     <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,32 +209,32 @@
             <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
             </svg>
-            <h3 class="text-lg font-semibold">New Sale</h3>
-            <p class="text-sm opacity-90 mt-1">Start a new transaction</p>
+            <h3 class="text-lg font-semibold">{{ __('dashboard.new_sale') }}</h3>
+            <p class="text-sm opacity-90 mt-1">{{ __('dashboard.new_sale_desc') }}</p>
         </a>
 
         <a href="{{ route('dues.index') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg shadow p-6 text-center transition">
             <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
-            <h3 class="text-lg font-semibold">Manage Dues</h3>
-            <p class="text-sm opacity-90 mt-1">View and collect dues</p>
+            <h3 class="text-lg font-semibold">{{ __('dashboard.manage_dues') }}</h3>
+            <p class="text-sm opacity-90 mt-1">{{ __('dashboard.manage_dues_desc') }}</p>
         </a>
 
         <a href="{{ route('products.create') }}" class="bg-green-600 hover:bg-green-700 text-white rounded-lg shadow p-6 text-center transition">
             <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
-            <h3 class="text-lg font-semibold">Add Product</h3>
-            <p class="text-sm opacity-90 mt-1">Add new product to inventory</p>
+            <h3 class="text-lg font-semibold">{{ __('dashboard.add_product') }}</h3>
+            <p class="text-sm opacity-90 mt-1">{{ __('dashboard.add_product_desc') }}</p>
         </a>
 
         <a href="{{ route('daily-closing.index') }}" class="bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow p-6 text-center transition">
             <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
-            <h3 class="text-lg font-semibold">Daily Closing</h3>
-            <p class="text-sm opacity-90 mt-1">View end-of-day summary</p>
+            <h3 class="text-lg font-semibold">{{ __('dashboard.daily_closing') }}</h3>
+            <p class="text-sm opacity-90 mt-1">{{ __('dashboard.daily_closing_desc') }}</p>
         </a>
     </div>
 </div>

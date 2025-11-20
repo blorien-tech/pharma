@@ -3,7 +3,7 @@
 @section('title', 'Collect Payment - BLORIEN Pharma')
 
 @section('content')
-<div class="max-w-2xl mx-auto space-y-6">
+<div class="space-y-6">
     <!-- Header -->
     <div>
         <h1 class="text-3xl font-bold text-gray-900">Collect Payment</h1>

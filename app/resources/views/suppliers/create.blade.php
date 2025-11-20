@@ -3,7 +3,7 @@
 @section('title', 'Create Supplier - BLORIEN Pharma')
 
 @section('content')
-<div class="max-w-3xl mx-auto space-y-6">
+<div class="space-y-6">
     <!-- Page Header -->
     <div>
         <h1 class="text-3xl font-bold text-gray-900">Create New Supplier</h1>

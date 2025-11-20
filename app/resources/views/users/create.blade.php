@@ -3,7 +3,7 @@
 @section('title', 'Create User - BLORIEN Pharma')
 
 @section('content')
-<div class="max-w-2xl mx-auto space-y-6">
+<div class="space-y-6">
     <!-- Page Header -->
     <div>
         <h1 class="text-3xl font-bold text-gray-900">Create New User</h1>

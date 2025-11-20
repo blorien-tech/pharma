@@ -3,7 +3,7 @@
 @section('title', __('products.edit_product') . ' - ' . __('navigation.app_name'))
 
 @section('content')
-<div class="max-w-2xl mx-auto space-y-6">
+<div class="space-y-6">
     <!-- Page Header -->
     <div>
         <h1 class="text-3xl font-bold text-gray-900">{{ __('products.edit_product') }}</h1>

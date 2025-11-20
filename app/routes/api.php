@@ -15,7 +15,7 @@ Route::middleware('auth')->group(function () {
     // Products API
     Route::get('/products', [ProductController::class, 'apiIndex']);
     Route::post('/products', [ProductController::class, 'apiStore']);
-    Route::get('/products/search', [ProductController::class, 'search']);
+    // Product search moved to web routes for proper session authentication
     Route::post('/products/quick-stock', [ProductController::class, 'quickAddStock']); // Phase 3B
     Route::post('/products/{product}', [ProductController::class, 'apiUpdate']);
     Route::delete('/products/{product}', [ProductController::class, 'apiDestroy']);

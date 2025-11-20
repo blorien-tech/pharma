@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
-@section('title', 'Products - BLORIEN Pharma')
+@section('title', __('products.title') . ' - ' . __('navigation.app_name'))
 
 @section('content')
 <div class="space-y-6" x-data="productsPage()">
     <!-- Page Header -->
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Products</h1>
-            <p class="mt-1 text-sm text-gray-600">Manage your pharmacy inventory</p>
+            <h1 class="text-3xl font-bold text-gray-900">{{ __('products.title') }}</h1>
+            <p class="mt-1 text-sm text-gray-600">{{ __('products.subtitle') }}</p>
         </div>
         <div class="flex gap-3">
             <button @click="showQuickStockModal = true" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium">
-                ⚡ Quick Add Stock
+                {{ __('products.quick_stock_add') }}
             </button>
             <a href="{{ route('products.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
-                + Add Product
+                + {{ __('products.add_product') }}
             </a>
         </div>
     </div>
@@ -51,49 +51,49 @@
                     <!-- Modal Header -->
                     <div class="bg-green-600 px-6 py-4">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-medium text-white">⚡ Quick Add Stock</h3>
+                            <h3 class="text-lg font-medium text-white">{{ __('products.quick_stock_title') }}</h3>
                             <button @click="showQuickStockModal = false" type="button" class="text-white hover:text-gray-200">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
                             </button>
                         </div>
-                        <p class="text-sm text-green-100 mt-1">Quickly add stock to existing products</p>
+                        <p class="text-sm text-green-100 mt-1">{{ __('products.quick_stock_desc') }}</p>
                     </div>
 
                     <!-- Modal Body -->
                     <div class="px-6 py-4 space-y-4">
                         <!-- Product Selection -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Product *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.select_product') }}</label>
                             <select x-model="quickStock.product_id" required
                                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                                <option value="">Select a product...</option>
+                                <option value="">{{ __('products.select_product_placeholder') }}</option>
                                 @foreach(\App\Models\Product::where('is_active', true)->orderBy('name')->get() as $prod)
-                                <option value="{{ $prod->id }}">{{ $prod->name }} (Current: {{ $prod->current_stock }})</option>
+                                <option value="{{ $prod->id }}">{{ $prod->name }} {{ __('products.current_stock_info', ['stock' => $prod->current_stock]) }}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         <!-- Quantity -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Quantity to Add *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.quantity_to_add') }}</label>
                             <input type="number" x-model="quickStock.quantity" required min="1"
-                                   placeholder="Enter quantity"
+                                   placeholder="{{ __('products.enter_quantity') }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                         </div>
 
                         <!-- Batch Number -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Batch Number *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.batch_number_label') }}</label>
                             <input type="text" x-model="quickStock.batch_number" required
-                                   placeholder="e.g., BATCH-2024-001"
+                                   placeholder="{{ __('products.batch_example') }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                         </div>
 
                         <!-- Expiry Date -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.expiry_date_label') }}</label>
                             <input type="date" x-model="quickStock.expiry_date" required
                                    :min="new Date().toISOString().split('T')[0]"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
@@ -101,11 +101,11 @@
 
                         <!-- Purchase Price (optional) -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Purchase Price (optional)</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.purchase_price_optional') }}</label>
                             <input type="number" x-model="quickStock.purchase_price" step="0.01" min="0"
-                                   placeholder="Cost per unit"
+                                   placeholder="{{ __('products.cost_per_unit') }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                            <p class="text-xs text-gray-500 mt-1">Leave blank to use product's default price</p>
+                            <p class="text-xs text-gray-500 mt-1">{{ __('products.default_price_note') }}</p>
                         </div>
                     </div>
 
@@ -113,13 +113,13 @@
                     <div class="bg-gray-50 px-6 py-4 flex gap-3 justify-end">
                         <button @click="showQuickStockModal = false" type="button"
                                 class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium">
-                            Cancel
+                            {{ __('common.cancel') }}
                         </button>
                         <button type="submit" :disabled="processing"
                                 :class="processing ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'"
                                 class="px-4 py-2 text-white rounded-lg font-medium">
-                            <span x-show="!processing">Add Stock</span>
-                            <span x-show="processing">Adding...</span>
+                            <span x-show="!processing">{{ __('products.add_stock') }}</span>
+                            <span x-show="processing">{{ __('products.adding') }}</span>
                         </button>
                     </div>
                 </form>
@@ -148,15 +148,15 @@
     <!-- Search Bar -->
     <div class="bg-white rounded-lg shadow p-4">
         <form method="GET" action="{{ route('products.index') }}" class="flex gap-3">
-            <input type="text" name="search" placeholder="Search products by name, SKU, or description..."
+            <input type="text" name="search" placeholder="{{ __('products.search_products') }}"
                 value="{{ request('search') }}"
                 class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border">
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
-                Search
+                {{ __('products.search') }}
             </button>
             @if(request('search'))
             <a href="{{ route('products.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-medium">
-                Clear
+                {{ __('products.clear') }}
             </a>
             @endif
         </form>
@@ -174,7 +174,7 @@
                     </div>
                     <span class="px-2 py-1 text-xs font-semibold rounded-full
                         {{ $product->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                        {{ $product->is_active ? 'Active' : 'Inactive' }}
+                        {{ $product->is_active ? __('products.active') : __('products.inactive') }}
                     </span>
                 </div>
 
@@ -184,40 +184,40 @@
 
                 <div class="space-y-2 mb-4">
                     <div class="flex justify-between text-sm">
-                        <span class="text-gray-600">Purchase Price:</span>
-                        <span class="font-medium">৳{{ number_format($product->purchase_price, 2) }}</span>
+                        <span class="text-gray-600">{{ __('products.purchase_price') }}:</span>
+                        <span class="font-medium">{{ __('common.currency_symbol') }}{{ number_format($product->purchase_price, 2) }}</span>
                     </div>
                     <div class="flex justify-between text-sm">
-                        <span class="text-gray-600">Selling Price:</span>
-                        <span class="font-medium text-green-600">৳{{ number_format($product->selling_price, 2) }}</span>
+                        <span class="text-gray-600">{{ __('products.selling_price') }}:</span>
+                        <span class="font-medium text-green-600">{{ __('common.currency_symbol') }}{{ number_format($product->selling_price, 2) }}</span>
                     </div>
                     <div class="flex justify-between text-sm">
-                        <span class="text-gray-600">Stock:</span>
+                        <span class="text-gray-600">{{ __('products.current_stock') }}:</span>
                         <span class="font-medium {{ $product->isLowStock() ? 'text-red-600' : 'text-gray-900' }}">
-                            {{ $product->current_stock }} units
+                            {{ $product->current_stock }} {{ __('products.units') }}
                             @if($product->isLowStock())
-                            <span class="text-xs">(Low!)</span>
+                            <span class="text-xs">{{ __('products.low') }}</span>
                             @endif
                         </span>
                     </div>
                     <div class="flex justify-between text-sm">
-                        <span class="text-gray-600">Min Stock:</span>
-                        <span class="font-medium">{{ $product->min_stock }} units</span>
+                        <span class="text-gray-600">{{ __('products.min_stock') }}:</span>
+                        <span class="font-medium">{{ $product->min_stock }} {{ __('products.units') }}</span>
                     </div>
                 </div>
 
                 <div class="flex gap-2 pt-4 border-t">
                     <a href="{{ route('products.edit', $product) }}" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-2 rounded text-center text-sm font-medium">
-                        Edit
+                        {{ __('products.edit') }}
                     </a>
                     <a href="{{ route('batches.index', $product) }}" class="flex-1 bg-green-50 hover:bg-green-100 text-green-600 px-3 py-2 rounded text-center text-sm font-medium">
-                        Batches
+                        {{ __('products.view_batches') }}
                     </a>
-                    <form action="{{ route('products.destroy', $product) }}" method="POST" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this product?')">
+                    <form action="{{ route('products.destroy', $product) }}" method="POST" class="flex-1" onsubmit="return confirm('{{ __('products.confirm_delete') }}')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-full bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded text-sm font-medium">
-                            Delete
+                            {{ __('common.delete') }}
                         </button>
                     </form>
                 </div>
@@ -228,11 +228,11 @@
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
             </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">No products found</h3>
-            <p class="mt-1 text-sm text-gray-500">Get started by creating a new product.</p>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('products.no_products') }}</h3>
+            <p class="mt-1 text-sm text-gray-500">{{ __('products.get_started_creating') }}</p>
             <div class="mt-6">
                 <a href="{{ route('products.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                    + Add Product
+                    + {{ __('products.add_product') }}
                 </a>
             </div>
         </div>
@@ -282,7 +282,7 @@ document.addEventListener('alpine:init', () => {
 
                 if (response.ok) {
                     // Success - show toast and reload
-                    this.successMessage = data.message || 'Stock added successfully!';
+                    this.successMessage = data.message || '{{ __('products.stock_added_success') }}';
                     this.showSuccessToast = true;
                     this.showQuickStockModal = false;
 
@@ -301,11 +301,11 @@ document.addEventListener('alpine:init', () => {
                         window.location.reload();
                     }, 3000);
                 } else {
-                    alert(data.message || 'Error adding stock. Please try again.');
+                    alert(data.message || '{{ __('common.error') }}');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error adding stock. Please try again.');
+                alert('{{ __('common.error') }}');
             } finally {
                 this.processing = false;
             }

@@ -4,43 +4,43 @@
 <div class="space-y-6">
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Customer Credit Report</h1>
-            <p class="mt-1 text-sm text-gray-600">Credit balances and utilization</p>
+            <h1 class="text-3xl font-bold text-gray-900">{{ __('reports.customers_title') }}</h1>
+            <p class="mt-1 text-sm text-gray-600">{{ __('reports.customers_desc') }}</p>
         </div>
-        <a href="{{ route('reports.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium">← Back</a>
+        <a href="{{ route('reports.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium">← {{ __('common.back') }}</a>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="text-sm font-medium text-gray-500">Total Credit Limit</div>
+            <div class="text-sm font-medium text-gray-500">{{ __('reports.total_customers') }}</div>
             <div class="text-2xl font-bold text-gray-900 mt-2">৳{{ number_format($totalCreditLimit, 2) }}</div>
         </div>
         <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="text-sm font-medium text-gray-500">Outstanding Balance</div>
+            <div class="text-sm font-medium text-gray-500">{{ __('reports.outstanding_dues') }}</div>
             <div class="text-2xl font-bold text-red-600 mt-2">৳{{ number_format($totalOutstanding, 2) }}</div>
         </div>
         <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="text-sm font-medium text-gray-500">Available Credit</div>
+            <div class="text-sm font-medium text-gray-500">{{ __('common.status') }}</div>
             <div class="text-2xl font-bold text-green-600 mt-2">৳{{ number_format($totalAvailable, 2) }}</div>
         </div>
         <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="text-sm font-medium text-gray-500">Overdue Customers</div>
+            <div class="text-sm font-medium text-gray-500">{{ __('reports.total_customers') }}</div>
             <div class="text-2xl font-bold text-red-600 mt-2">{{ $overdueCustomers->count() }}</div>
         </div>
     </div>
 
     <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Customer Credit Status</h2>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('reports.customers_title') }}</h2>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Credit Limit</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Balance</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Available</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Utilization</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.name') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.total') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.amount') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.status') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.status') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.status') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -62,9 +62,9 @@
                         </td>
                         <td class="px-6 py-4 text-sm">
                             @if($item['is_overdue'])
-                            <span class="px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">Overdue</span>
+                            <span class="px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">{{ __('common.status') }}</span>
                             @else
-                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Good</span>
+                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">{{ __('common.status') }}</span>
                             @endif
                         </td>
                     </tr>

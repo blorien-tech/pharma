@@ -4,34 +4,34 @@
 <div class="space-y-6">
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Top Selling Products</h1>
-            <p class="mt-1 text-sm text-gray-600">Best performers by quantity and revenue</p>
+            <h1 class="text-3xl font-bold text-gray-900">{{ __('reports.top_products_title') }}</h1>
+            <p class="mt-1 text-sm text-gray-600">{{ __('reports.top_products_desc') }}</p>
         </div>
-        <a href="{{ route('reports.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium">← Back</a>
+        <a href="{{ route('reports.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium">← {{ __('common.back') }}</a>
     </div>
 
     <div class="bg-white rounded-lg shadow p-4">
         <form method="GET" class="flex gap-4">
             <select name="period" class="px-3 py-2 border rounded-lg">
-                <option value="week" {{ $period === 'week' ? 'selected' : '' }}>This Week</option>
-                <option value="month" {{ $period === 'month' ? 'selected' : '' }}>This Month</option>
-                <option value="year" {{ $period === 'year' ? 'selected' : '' }}>This Year</option>
+                <option value="week" {{ $period === 'week' ? 'selected' : '' }}>{{ __('reports.this_week') }}</option>
+                <option value="month" {{ $period === 'month' ? 'selected' : '' }}>{{ __('reports.this_month') }}</option>
+                <option value="year" {{ $period === 'year' ? 'selected' : '' }}>{{ __('reports.this_year') }}</option>
             </select>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">Apply</button>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">{{ __('reports.apply_filters') }}</button>
         </form>
     </div>
 
     <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Top 20 Products (Since {{ $startDate->format('M d, Y') }})</h2>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('reports.top_selling') }} ({{ $startDate->format('M d, Y') }})</h2>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantity Sold</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Revenue</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Avg Price</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.name') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('reports.units_sold') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('reports.revenue_generated') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.price') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

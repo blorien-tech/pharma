@@ -12,6 +12,57 @@
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <!-- Translation Support for JavaScript -->
+    <script>
+        window.translations = {
+            // Common
+            save: '{{ __('common.save') }}',
+            cancel: '{{ __('common.cancel') }}',
+            delete: '{{ __('common.delete') }}',
+            confirm: '{{ __('common.confirm') }}',
+            yes: '{{ __('common.yes') }}',
+            no: '{{ __('common.no') }}',
+            ok: '{{ __('common.ok') }}',
+            success: '{{ __('common.success') }}',
+            error: '{{ __('common.error') }}',
+            loading: '{{ __('common.loading') }}',
+            processing: '{{ __('common.processing') }}',
+            are_you_sure: '{{ __('common.are_you_sure') }}',
+            confirm_delete: '{{ __('common.confirm_delete') }}',
+            cannot_be_undone: '{{ __('common.cannot_be_undone') }}',
+            saved_successfully: '{{ __('common.saved_successfully') }}',
+            deleted_successfully: '{{ __('common.deleted_successfully') }}',
+            updated_successfully: '{{ __('common.updated_successfully') }}',
+            operation_failed: '{{ __('common.operation_failed') }}',
+
+            // POS specific
+            insufficient_stock: '{{ __('pos.insufficient_stock') }}',
+            sale_completed: '{{ __('pos.sale_completed') }}',
+            sale_and_due_created: '{{ __('pos.sale_and_due_created') }}',
+            sale_error: '{{ __('pos.sale_error') }}',
+            customer_name_required: '{{ __('pos.customer_name_required') }}',
+            amount_less_than_total: '{{ __('pos.amount_less_than_total') }}',
+
+            // Products specific
+            stock_added_success: '{{ __('products.stock_added_success') }}',
+            product_created: '{{ __('products.product_created') }}',
+            product_updated: '{{ __('products.product_updated') }}',
+            product_deleted: '{{ __('products.product_deleted') }}',
+        };
+
+        // Helper function to translate strings in JavaScript
+        function __(key, replacements = {}) {
+            let translation = window.translations[key] || key;
+
+            // Replace placeholders
+            Object.keys(replacements).forEach(placeholder => {
+                translation = translation.replace(`:${placeholder}`, replacements[placeholder]);
+            });
+
+            return translation;
+        }
+    </script>
+
     <style>
         [x-cloak] { display: none !important; }
     </style>

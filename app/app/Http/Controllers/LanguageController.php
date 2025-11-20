@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class LanguageController extends Controller
 {
@@ -24,6 +25,11 @@ class LanguageController extends Controller
 
         // Store locale in session
         Session::put('locale', $locale);
+
+        // If user is authenticated, store in database
+        if (Auth::check()) {
+            Auth::user()->update(['language' => $locale]);
+        }
 
         // Redirect back
         return redirect()->back();

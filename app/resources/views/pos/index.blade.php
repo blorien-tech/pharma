@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Point of Sale - BLORIEN Pharma')
+@section('title', __('pos.title') . ' - ' . __('navigation.app_name'))
 
 @section('content')
 <div x-data="posApp()" x-init="init()" class="space-y-4">
     <!-- Page Header -->
     <div class="bg-blue-600 text-white rounded-lg shadow p-4">
-        <h1 class="text-2xl font-bold">Point of Sale (POS)</h1>
-        <p class="text-sm opacity-90">Scan or search products to add to cart</p>
+        <h1 class="text-2xl font-bold">{{ __('pos.title') }}</h1>
+        <p class="text-sm opacity-90">{{ __('pos.subtitle') }}</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">

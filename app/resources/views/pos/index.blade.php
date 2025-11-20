@@ -565,13 +565,27 @@ function posApp() {
             const existingItem = this.cart.find(item => item.id === product.id);
 
             if (existingItem) {
-                if (existingItem.quantity < product.current_stock) {
+                const availableStock = product.current_stock;
+                const remainingStock = availableStock - existingItem.quantity;
+
+                if (existingItem.quantity < availableStock) {
                     existingItem.quantity++;
                     this.updateItemTotal(this.cart.indexOf(existingItem));
+
+                    // Show warning if stock is low
+                    if (remainingStock <= 3 && remainingStock > 0) {
+                        showWarning(`Only ${remainingStock} ${remainingStock === 1 ? 'item' : 'items'} remaining in stock for ${product.name}`, 'Low Stock Alert');
+                    }
                 } else {
-                    showWarning('Cannot add more items. Insufficient stock available.', 'Stock Limit Reached');
+                    showWarning(`Cannot add more. Only ${availableStock} ${availableStock === 1 ? 'item is' : 'items are'} available in stock.`, 'Stock Limit Reached');
                 }
             } else {
+                // Check if product has stock before adding
+                if (product.current_stock <= 0) {
+                    showError('This product is out of stock and cannot be added to cart.', 'Out of Stock');
+                    return;
+                }
+
                 this.cart.push({
                     id: product.id,
                     name: product.name,
@@ -581,6 +595,11 @@ function posApp() {
                     max_stock: product.current_stock,
                     total: parseFloat(product.selling_price)
                 });
+
+                // Show warning if stock is low when first adding
+                if (product.current_stock <= 3) {
+                    showWarning(`Low stock alert: Only ${product.current_stock} ${product.current_stock === 1 ? 'item' : 'items'} available for ${product.name}`, 'Low Stock');
+                }
             }
 
             this.calculateTotals();
@@ -594,9 +613,20 @@ function posApp() {
         },
 
         incrementQuantity(index) {
-            if (this.cart[index].quantity < this.cart[index].max_stock) {
-                this.cart[index].quantity++;
+            const item = this.cart[index];
+            const availableStock = item.max_stock;
+            const remainingStock = availableStock - item.quantity;
+
+            if (item.quantity < availableStock) {
+                item.quantity++;
                 this.updateItemTotal(index);
+
+                // Show warning if stock is low
+                if (remainingStock <= 3 && remainingStock > 0) {
+                    showWarning(`Only ${remainingStock} ${remainingStock === 1 ? 'item' : 'items'} remaining in stock for ${item.name}`, 'Low Stock Alert');
+                }
+            } else {
+                showWarning(`Cannot add more. Only ${availableStock} ${availableStock === 1 ? 'item is' : 'items are'} available in stock for ${item.name}.`, 'Stock Limit Reached');
             }
         },
 
@@ -685,6 +715,7 @@ function posApp() {
                 return;
             }
 
+            // Stock validation is now done during cart operations
             // All validations passed, show confirmation modal
             this.showConfirmModal = true;
         },

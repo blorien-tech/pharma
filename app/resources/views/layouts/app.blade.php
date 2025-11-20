@@ -317,6 +317,209 @@
     </main>
     @endauth
 
+    <!-- Global Modal System -->
+    <div x-data="modalSystem()" x-cloak>
+        <!-- Alert Modal -->
+        <div x-show="alert.show"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4"
+             @click.self="alert.show = false">
+            <div x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform scale-90"
+                 x-transition:enter-end="opacity-100 transform scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 transform scale-100"
+                 x-transition:leave-end="opacity-0 transform scale-90"
+                 class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+                <!-- Header -->
+                <div class="px-6 py-4"
+                     :class="{
+                         'bg-gradient-to-r from-blue-600 to-indigo-600': alert.type === 'info',
+                         'bg-gradient-to-r from-green-600 to-emerald-600': alert.type === 'success',
+                         'bg-gradient-to-r from-red-600 to-rose-600': alert.type === 'error',
+                         'bg-gradient-to-r from-yellow-500 to-orange-500': alert.type === 'warning'
+                     }">
+                    <div class="flex items-center">
+                        <!-- Icon -->
+                        <div class="flex-shrink-0">
+                            <svg x-show="alert.type === 'success'" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <svg x-show="alert.type === 'error'" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <svg x-show="alert.type === 'warning'" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            <svg x-show="alert.type === 'info'" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-lg font-semibold text-white" x-text="alert.title"></h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- Body -->
+                <div class="px-6 py-4">
+                    <p class="text-gray-700" x-text="alert.message"></p>
+                </div>
+                <!-- Footer -->
+                <div class="px-6 py-4 bg-gray-50 flex justify-end">
+                    <button @click="alert.show = false"
+                            class="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 transition">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirm Modal -->
+        <div x-show="confirm.show"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+            <div x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform scale-90"
+                 x-transition:enter-end="opacity-100 transform scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 transform scale-100"
+                 x-transition:leave-end="opacity-0 transform scale-90"
+                 class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+                    <div class="flex items-center">
+                        <svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-white" x-text="confirm.title"></h3>
+                    </div>
+                </div>
+                <!-- Body -->
+                <div class="px-6 py-4">
+                    <p class="text-gray-700" x-text="confirm.message"></p>
+                </div>
+                <!-- Footer -->
+                <div class="px-6 py-4 bg-gray-50 flex gap-3">
+                    <button @click="confirmCancel()"
+                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition">
+                        Cancel
+                    </button>
+                    <button @click="confirmOk()"
+                            class="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 transition">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Modal System Script -->
+    <script>
+        function modalSystem() {
+            return {
+                alert: {
+                    show: false,
+                    title: '',
+                    message: '',
+                    type: 'info' // info, success, error, warning
+                },
+                confirm: {
+                    show: false,
+                    title: '',
+                    message: '',
+                    resolve: null
+                },
+
+                showAlert(message, title = 'Notification', type = 'info') {
+                    this.alert = {
+                        show: true,
+                        title: title,
+                        message: message,
+                        type: type
+                    };
+                },
+
+                showConfirm(message, title = 'Confirm Action') {
+                    return new Promise((resolve) => {
+                        this.confirm = {
+                            show: true,
+                            title: title,
+                            message: message,
+                            resolve: resolve
+                        };
+                    });
+                },
+
+                confirmOk() {
+                    if (this.confirm.resolve) {
+                        this.confirm.resolve(true);
+                    }
+                    this.confirm.show = false;
+                },
+
+                confirmCancel() {
+                    if (this.confirm.resolve) {
+                        this.confirm.resolve(false);
+                    }
+                    this.confirm.show = false;
+                }
+            };
+        }
+
+        // Global helper functions
+        window.$modal = null;
+
+        // Initialize modal system after Alpine loads
+        document.addEventListener('alpine:init', () => {
+            // Wait for modal system to be available
+            setTimeout(() => {
+                window.$modal = Alpine.$data(document.querySelector('[x-data="modalSystem()"]'));
+            }, 100);
+        });
+
+        // Helper functions for easy access
+        window.showAlert = function(message, title = 'Notification', type = 'info') {
+            if (window.$modal) {
+                window.$modal.showAlert(message, title, type);
+            }
+        };
+
+        window.showSuccess = function(message, title = 'Success') {
+            if (window.$modal) {
+                window.$modal.showAlert(message, title, 'success');
+            }
+        };
+
+        window.showError = function(message, title = 'Error') {
+            if (window.$modal) {
+                window.$modal.showAlert(message, title, 'error');
+            }
+        };
+
+        window.showWarning = function(message, title = 'Warning') {
+            if (window.$modal) {
+                window.$modal.showAlert(message, title, 'warning');
+            }
+        };
+
+        window.showConfirm = async function(message, title = 'Confirm Action') {
+            if (window.$modal) {
+                return await window.$modal.showConfirm(message, title);
+            }
+            return confirm(message); // Fallback to browser confirm
+        };
+    </script>
+
     @stack('scripts')
 </body>
 </html>

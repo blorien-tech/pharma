@@ -213,7 +213,7 @@
                     <a href="{{ route('batches.index', $product) }}" class="flex-1 bg-green-50 hover:bg-green-100 text-green-600 px-3 py-2 rounded text-center text-sm font-medium">
                         {{ __('products.view_batches') }}
                     </a>
-                    <form action="{{ route('products.destroy', $product) }}" method="POST" class="flex-1" onsubmit="return confirm('{{ __('products.confirm_delete') }}')">
+                    <form action="{{ route('products.destroy', $product) }}" method="POST" class="flex-1" onsubmit="return handleDeleteProduct(event, '{{ $product->name }}')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-full bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded text-sm font-medium">
@@ -249,6 +249,22 @@
 
 @push('scripts')
 <script>
+// Handle product delete with custom modal
+async function handleDeleteProduct(event, productName) {
+    event.preventDefault();
+
+    const confirmed = await showConfirm(
+        `Are you sure you want to delete "${productName}"? This action cannot be undone and all associated data will be permanently removed.`,
+        'Delete Product?'
+    );
+
+    if (confirmed) {
+        event.target.submit();
+    }
+
+    return false;
+}
+
 document.addEventListener('alpine:init', () => {
     Alpine.data('productsPage', () => ({
         showQuickStockModal: false,
@@ -301,11 +317,11 @@ document.addEventListener('alpine:init', () => {
                         window.location.reload();
                     }, 3000);
                 } else {
-                    alert(data.message || '{{ __('common.error') }}');
+                    showError(data.message || 'Failed to add stock. Please try again.', 'Error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('{{ __('common.error') }}');
+                showError('An error occurred while adding stock. Please try again.', 'Error');
             } finally {
                 this.processing = false;
             }

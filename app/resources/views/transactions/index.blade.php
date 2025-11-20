@@ -113,7 +113,8 @@
 @push('scripts')
 <script>
 async function processReturn(transactionId) {
-    if (!confirm('Are you sure you want to process a return for this transaction?')) {
+    const confirmed = await showConfirm('This will process a return for all items in this transaction. This action cannot be undone.', 'Process Return?');
+    if (!confirmed) {
         return;
     }
 
@@ -129,14 +130,14 @@ async function processReturn(transactionId) {
         const data = await response.json();
 
         if (response.ok) {
-            alert('Return processed successfully!');
-            window.location.reload();
+            showSuccess('Return has been processed successfully! The page will reload.', 'Return Processed');
+            setTimeout(() => window.location.reload(), 1500);
         } else {
-            alert(data.message || 'Error processing return');
+            showError(data.message || 'Failed to process return. Please try again.', 'Return Failed');
         }
     } catch (error) {
         console.error('Return error:', error);
-        alert('Error processing return');
+        showError('An error occurred while processing the return. Please try again.', 'Error');
     }
 }
 </script>

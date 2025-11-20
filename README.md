@@ -91,7 +91,7 @@ A comprehensive yet simple pharmacy management system built for **Bangladesh sma
 1. **Clone the repository**
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:blorien-tech/pharma.git
 cd pharma
 ```
 
@@ -137,59 +137,6 @@ http://localhost:8000
 - **[USER_GUIDE.md](USER_GUIDE.md)** - How to use the system (for pharmacy staff)
 - **[INSTALLATION.md](INSTALLATION.md)** - Detailed setup instructions
 - **[ROADMAP.md](ROADMAP.md)** - Future development plans
-
----
-
-## 💡 Phase 3A Highlights
-
-### Real-World Example
-
-**Before:**
-
-```
-Customer: "I need Napa, mark it as due"
-Shopkeeper: Must create full customer profile first...
-```
-
-**After Phase 3A:**
-
-```
-1. Type "Napa" in POS → Found by brand name ✓
-2. Check "Mark as Due (বাকি)" ✓
-3. Enter "Rahman" → Done! ✓
-   (phone optional, no profile needed)
-4. Sale complete, due recorded ✓
-```
-
-### Key Improvements
-
-- **Quick Customer Lookup**: Type phone number → instant match
-- **Smart Product Search**: "Napa" or "Paracetamol" both work
-- **Simple Due Tracking**: Like digital notebook, just name + amount
-- **Partial Payments**: Collect ৳200 today, ৳300 later
-- **Audit Trail**: Every payment tracked automatically
-
----
-
-## 🗺️ Implementation Status
-
-### ✅ Completed (Phases 1, 2, 3A)
-
-| Phase             | Features                                              | Status      |
-| ----------------- | ----------------------------------------------------- | ----------- |
-| **Phase 1 (MVP)** | Auth, Products, Batches, POS, Transactions            | ✅ Complete |
-| **Phase 2**       | Suppliers, POs, Customers, Credit, Reports, Analytics | ✅ Complete |
-| **Phase 3A**      | Dues, Phone Lookup, Generic/Brand Search              | ✅ Complete |
-
-### 🔜 Next Priorities
-
-| Phase        | Features                                        | Priority |
-| ------------ | ----------------------------------------------- | -------- |
-| **Phase 3B** | Quick stock add, Daily closing, Simplified UI   | High     |
-| **Phase 4**  | DGDA compliance (Schedule drugs, Prescriptions) | Medium   |
-| **Phase 5**  | Optional bKash/Nagad integration                | Low      |
-
-See [ROADMAP.md](ROADMAP.md) for details.
 
 ---
 
@@ -243,7 +190,6 @@ docker compose exec db mysqldump -u root -p blorien_pharma > backup.sql
 ✅ **SIMPLICITY**
 
 - Like digital notebook
-- Bengali labels (বাকি) for familiarity
 - Minimal required fields
 - No training needed for basics
 
@@ -286,16 +232,6 @@ docker compose exec db mysqldump -u root -p blorien_pharma > backup.sql
 
 ---
 
-## 💰 Pricing Strategy
-
-**Target**: ৳1,500-3,000/month
-
-- Affordable for small pharmacies
-- No upfront cost (SaaS model)
-- Includes updates and support
-
----
-
 ## 📞 Support
 
 For issues or questions:
@@ -315,12 +251,12 @@ MIT License
 
 ## 👥 Credits
 
-Developed by **BLORIEN Tech**
+Developed by **BLORIEN**
 
 Built specifically for Bangladesh small pharmacies with:
 
 - Understanding of local workflows
-- Bengali language support (বাকি)
+- Bengali language support
 - Generic/brand medicine search
 - Simple notebook-style tracking
 - Professional accuracy

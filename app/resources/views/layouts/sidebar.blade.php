@@ -1,8 +1,21 @@
 <!-- Sidebar Navigation Component -->
 <div
-    x-data="{ collapsed: $persist(false).as('sidebar_collapsed') }"
-    :class="collapsed ? 'w-20' : 'w-64'"
-    class="fixed left-0 top-0 h-screen bg-gradient-to-b from-blue-900 to-blue-800 text-white shadow-xl transition-all duration-300 z-50 flex flex-col"
+    x-data="{
+        collapsed: $persist(false).as('sidebar_collapsed'),
+        mobileMenuOpen: false,
+        init() {
+            // Dispatch initial state to parent
+            this.$dispatch('sidebar-collapse-changed', { collapsed: this.collapsed });
+        },
+        toggleCollapse() {
+            this.collapsed = !this.collapsed;
+            this.$dispatch('sidebar-collapse-changed', { collapsed: this.collapsed });
+        }
+    }"
+    @toggle-mobile-menu.window="mobileMenuOpen = !mobileMenuOpen"
+    :class="collapsed ? 'lg:w-20' : 'lg:w-64'"
+    class="fixed left-0 top-0 h-screen bg-gradient-to-b from-blue-900 to-blue-800 text-white shadow-xl transition-all duration-300 z-50 flex flex-col w-64 lg:translate-x-0"
+    :class="mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
 >
     <!-- Logo & Branding -->
     <div class="p-4 border-b border-blue-700">
@@ -18,19 +31,33 @@
                     <p class="text-xs text-blue-300">{{ __('common.pharmacy_system') }}</p>
                 </div>
             </div>
-            <!-- Collapse Toggle -->
-            <button
-                @click="collapsed = !collapsed"
-                class="p-2 hover:bg-blue-700 rounded-lg transition hidden lg:block"
-                :title="collapsed ? '{{ __('navigation.expand_sidebar') }}' : '{{ __('navigation.collapse_sidebar') }}'"
-            >
-                <svg x-show="!collapsed" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
-                </svg>
-                <svg x-show="collapsed" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
-                </svg>
-            </button>
+
+            <div class="flex items-center space-x-2">
+                <!-- Mobile Close Button -->
+                <button
+                    @click="mobileMenuOpen = false; $dispatch('toggle-mobile-menu')"
+                    class="p-2 hover:bg-blue-700 rounded-lg transition lg:hidden"
+                    :title="'{{ __('common.close') }}'"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+
+                <!-- Desktop Collapse Toggle -->
+                <button
+                    @click="toggleCollapse()"
+                    class="p-2 hover:bg-blue-700 rounded-lg transition hidden lg:block"
+                    :title="collapsed ? '{{ __('navigation.expand_sidebar') }}' : '{{ __('navigation.collapse_sidebar') }}'"
+                >
+                    <svg x-show="!collapsed" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                    </svg>
+                    <svg x-show="collapsed" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -243,21 +270,8 @@
     </div>
 </div>
 
-<!-- Mobile Overlay (when sidebar is open) -->
-<div
-    x-data="{ mobileMenuOpen: false }"
-    @toggle-mobile-menu.window="mobileMenuOpen = !mobileMenuOpen"
-    x-show="mobileMenuOpen"
-    @click="mobileMenuOpen = false"
-    class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-    x-transition:enter="transition-opacity ease-linear duration-300"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-    x-transition:leave="transition-opacity ease-linear duration-300"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0"
-    style="display: none;"
-></div>
+<!-- Mobile Overlay (when sidebar is open) - Managed by app.blade.php -->
+<!-- Overlay is now in app.blade.php for better state management -->
 
 <!-- Custom Scrollbar Styles -->
 <style>

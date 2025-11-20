@@ -68,7 +68,7 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="h-full bg-gray-100 overflow-hidden" x-data="{ mobileMenuOpen: false }" @toggle-mobile-menu.window="mobileMenuOpen = !mobileMenuOpen">
+<body class="h-full bg-gray-100 overflow-hidden" x-data="{ mobileMenuOpen: false, sidebarCollapsed: false }" @toggle-mobile-menu.window="mobileMenuOpen = !mobileMenuOpen" @sidebar-collapse-changed.window="sidebarCollapsed = $event.detail.collapsed">
     @auth
     <!-- Main Container: Flex layout for sidebar + content -->
     <div class="flex h-screen overflow-hidden">
@@ -76,7 +76,8 @@
         @include('layouts.sidebar')
 
         <!-- Main Content Area: Topbar + Content + Footer -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-hidden transition-all duration-300 lg:ml-64"
+             :class="{ 'lg:ml-20': sidebarCollapsed, 'lg:ml-64': !sidebarCollapsed }">
             <!-- Top Navbar Component -->
             @include('layouts.topbar')
 

@@ -40,6 +40,18 @@
                         <a href="{{ route('alerts') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('alerts') ? 'bg-blue-700' : '' }}">
                             Alerts
                         </a>
+                        <a href="{{ route('customers.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('customers.*') ? 'bg-blue-700' : '' }}">
+                            Customers
+                        </a>
+                        <a href="{{ route('dues.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('dues.*') ? 'bg-blue-700' : '' }}">
+                            Dues (বাকি)
+                        </a>
+                        <a href="{{ route('reports.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('reports.*') ? 'bg-blue-700' : '' }}">
+                            Reports
+                        </a>
+                        <a href="{{ route('analytics.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('analytics.*') ? 'bg-blue-700' : '' }}">
+                            Analytics
+                        </a>
                         @if(auth()->user()->hasRole(['owner', 'manager']))
                         <a href="{{ route('suppliers.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('suppliers.*') ? 'bg-blue-700' : '' }}">
                             Suppliers

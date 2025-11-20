@@ -6,6 +6,8 @@ use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Models\Product;
 use App\Models\ProductBatch;
+use App\Models\Customer;
+use App\Models\CustomerCreditTransaction;
 use Illuminate\Support\Facades\DB;
 
 class PosService
@@ -54,18 +56,57 @@ class PosService
             $discount = $data['discount'] ?? 0;
             $total = $subtotal - $discount;
 
+            // Check if credit sale
+            $isCredit = isset($data['customer_id']) && isset($data['is_credit']) && $data['is_credit'];
+            $customer = null;
+
+            if ($isCredit) {
+                $customer = Customer::findOrFail($data['customer_id']);
+
+                // Validate credit availability
+                if (!$customer->credit_enabled) {
+                    throw new \Exception("Credit is not enabled for this customer");
+                }
+
+                if (!$customer->hasCreditAvailable($total)) {
+                    throw new \Exception("Insufficient credit available. Available: ৳" . number_format($customer->availableCredit(), 2));
+                }
+            }
+
             // Create transaction
             $transaction = Transaction::create([
                 'type' => 'SALE',
                 'user_id' => auth()->id(),
+                'customer_id' => $isCredit ? $customer->id : null,
+                'is_credit' => $isCredit,
                 'subtotal' => $subtotal,
                 'discount' => $discount,
                 'tax' => 0,
                 'total' => $total,
                 'payment_method' => $data['payment_method'],
-                'amount_paid' => $data['amount_paid'] ?? $total,
-                'change_given' => ($data['amount_paid'] ?? $total) - $total,
+                'amount_paid' => $isCredit ? 0 : ($data['amount_paid'] ?? $total),
+                'change_given' => $isCredit ? 0 : (($data['amount_paid'] ?? $total) - $total),
             ]);
+
+            // Record credit transaction
+            if ($isCredit) {
+                $balanceBefore = $customer->current_balance;
+                $balanceAfter = $balanceBefore + $total;
+
+                CustomerCreditTransaction::create([
+                    'customer_id' => $customer->id,
+                    'transaction_id' => $transaction->id,
+                    'type' => 'SALE',
+                    'amount' => $total,
+                    'balance_before' => $balanceBefore,
+                    'balance_after' => $balanceAfter,
+                    'notes' => "Credit sale - Invoice {$transaction->invoice_number}",
+                    'created_by' => auth()->id(),
+                ]);
+
+                // Update customer balance
+                $customer->increment('current_balance', $total);
+            }
 
             // Create transaction items and update inventory
             foreach ($processedItems as $processedItem) {

@@ -9,6 +9,11 @@ use App\Http\Controllers\PosController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\PurchaseOrderController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DueController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AnalyticsController;
 
 // Public routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -57,6 +62,54 @@ Route::middleware('auth')->group(function () {
         Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
         Route::delete('/suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
     });
+
+    // Purchase Orders (Owner/Manager only)
+    Route::middleware('role:owner,manager')->group(function () {
+        Route::get('/purchase-orders', [PurchaseOrderController::class, 'index'])->name('purchase-orders.index');
+        Route::get('/purchase-orders/create', [PurchaseOrderController::class, 'create'])->name('purchase-orders.create');
+        Route::post('/purchase-orders', [PurchaseOrderController::class, 'store'])->name('purchase-orders.store');
+        Route::get('/purchase-orders/{purchaseOrder}', [PurchaseOrderController::class, 'show'])->name('purchase-orders.show');
+        Route::get('/purchase-orders/{purchaseOrder}/receive', [PurchaseOrderController::class, 'showReceive'])->name('purchase-orders.receive');
+        Route::post('/purchase-orders/{purchaseOrder}/receive', [PurchaseOrderController::class, 'receive'])->name('purchase-orders.receive.store');
+        Route::put('/purchase-orders/{purchaseOrder}/cancel', [PurchaseOrderController::class, 'cancel'])->name('purchase-orders.cancel');
+    });
+
+    // Customers
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+    Route::get('/customers/create', [CustomerController::class, 'create'])->name('customers.create');
+    Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
+    Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('customers.show');
+    Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
+    Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+    Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+    Route::get('/customers/{customer}/payment', [CustomerController::class, 'showPayment'])->name('customers.payment');
+    Route::post('/customers/{customer}/payment', [CustomerController::class, 'recordPayment'])->name('customers.payment.store');
+    Route::get('/customers/{customer}/adjustment', [CustomerController::class, 'showAdjustment'])->name('customers.adjustment');
+    Route::post('/customers/{customer}/adjustment', [CustomerController::class, 'recordAdjustment'])->name('customers.adjustment.store');
+
+    // Dues (Notebook-style due tracking)
+    Route::get('/dues', [DueController::class, 'index'])->name('dues.index');
+    Route::get('/dues/create', [DueController::class, 'create'])->name('dues.create');
+    Route::post('/dues', [DueController::class, 'store'])->name('dues.store');
+    Route::get('/dues/{due}', [DueController::class, 'show'])->name('dues.show');
+    Route::get('/dues/{due}/edit', [DueController::class, 'edit'])->name('dues.edit');
+    Route::put('/dues/{due}', [DueController::class, 'update'])->name('dues.update');
+    Route::delete('/dues/{due}', [DueController::class, 'destroy'])->name('dues.destroy');
+    Route::get('/dues/{due}/payment', [DueController::class, 'showPayment'])->name('dues.payment');
+    Route::post('/dues/{due}/payment', [DueController::class, 'recordPayment'])->name('dues.payment.store');
+    Route::get('/dues/lookup/phone', [DueController::class, 'lookupByPhone'])->name('dues.lookup.phone');
+
+    // Reports
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+    Route::get('/reports/profit', [ReportController::class, 'profit'])->name('reports.profit');
+    Route::get('/reports/inventory', [ReportController::class, 'inventory'])->name('reports.inventory');
+    Route::get('/reports/top-products', [ReportController::class, 'topProducts'])->name('reports.top-products');
+    Route::get('/reports/suppliers', [ReportController::class, 'suppliers'])->name('reports.suppliers');
+    Route::get('/reports/customers', [ReportController::class, 'customers'])->name('reports.customers');
+
+    // Analytics
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
     // Users (Owner/Manager only)
     Route::middleware('role:owner,manager')->group(function () {

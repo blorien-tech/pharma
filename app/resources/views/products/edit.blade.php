@@ -32,15 +32,43 @@
                 <input type="text" name="name" id="name" required
                     value="{{ old('name', $product->name) }}"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border">
+                <p class="mt-1 text-sm text-gray-500">Full product name</p>
             </div>
 
-            <!-- SKU -->
-            <div>
-                <label for="sku" class="block text-sm font-medium text-gray-700">SKU (Stock Keeping Unit) *</label>
-                <input type="text" name="sku" id="sku" required
-                    value="{{ old('sku', $product->sku) }}"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border">
-                <p class="mt-1 text-sm text-gray-500">Unique product identifier</p>
+            <!-- Generic Name and Brand Name -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="generic_name" class="block text-sm font-medium text-gray-700">Generic Name</label>
+                    <input type="text" name="generic_name" id="generic_name"
+                        value="{{ old('generic_name', $product->generic_name) }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border">
+                    <p class="mt-1 text-sm text-gray-500">e.g., Paracetamol</p>
+                </div>
+                <div>
+                    <label for="brand_name" class="block text-sm font-medium text-gray-700">Brand Name</label>
+                    <input type="text" name="brand_name" id="brand_name"
+                        value="{{ old('brand_name', $product->brand_name) }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border">
+                    <p class="mt-1 text-sm text-gray-500">e.g., Napa</p>
+                </div>
+            </div>
+
+            <!-- SKU and Barcode -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="sku" class="block text-sm font-medium text-gray-700">SKU (Stock Keeping Unit) *</label>
+                    <input type="text" name="sku" id="sku" required
+                        value="{{ old('sku', $product->sku) }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border">
+                    <p class="mt-1 text-sm text-gray-500">Unique identifier</p>
+                </div>
+                <div>
+                    <label for="barcode" class="block text-sm font-medium text-gray-700">Barcode</label>
+                    <input type="text" name="barcode" id="barcode"
+                        value="{{ old('barcode', $product->barcode) }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border">
+                    <p class="mt-1 text-sm text-gray-500">Product barcode (optional)</p>
+                </div>
             </div>
 
             <!-- Description -->

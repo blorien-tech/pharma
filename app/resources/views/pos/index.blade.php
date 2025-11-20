@@ -127,19 +127,107 @@
                     </div>
                 </div>
 
-                <!-- Payment Method -->
+                <!-- Customer Selection -->
                 <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer (Optional)</label>
+
+                    <!-- Quick Phone Lookup -->
+                    <div class="mb-2">
+                        <input
+                            type="tel"
+                            x-model="customerPhone"
+                            @input="lookupCustomerByPhone()"
+                            placeholder="Type phone number for quick lookup..."
+                            class="w-full px-3 py-2 border rounded-lg text-sm">
+                        <p x-show="customerLookupResult" class="text-xs text-green-600 mt-1" x-text="customerLookupResult"></p>
+                    </div>
+
+                    <!-- Or Select from List -->
+                    <select x-model="customerId" @change="onCustomerChange()" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="">Walk-in Customer</option>
+                        @foreach(\App\Models\Customer::active()->orderBy('name')->get() as $customer)
+                        <option value="{{ $customer->id }}"
+                            data-phone="{{ $customer->phone }}"
+                            data-name="{{ $customer->name }}"
+                            data-credit-enabled="{{ $customer->credit_enabled ? '1' : '0' }}"
+                            data-available-credit="{{ $customer->availableCredit() }}">
+                            {{ $customer->name }} - {{ $customer->phone }} @if($customer->credit_enabled)(Credit: ৳{{ number_format($customer->availableCredit(), 2) }})@endif
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Credit Sale Option -->
+                <div x-show="canUseCredit" class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" x-model="isCredit" @change="onCreditChange()"
+                            class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-gray-700">Use Credit (Available: ৳<span x-text="availableCredit.toFixed(2)"></span>)</span>
+                    </label>
+                </div>
+
+                <!-- Quick Due Option (Simple notebook-style) -->
+                <div class="mb-4">
+                    <label class="flex items-center p-3 bg-yellow-50 border border-yellow-200 rounded-lg cursor-pointer">
+                        <input type="checkbox" x-model="markAsDue" @change="onDueChange()"
+                            class="rounded border-gray-300 text-yellow-600 shadow-sm focus:border-yellow-500 focus:ring-yellow-500">
+                        <div class="ml-2">
+                            <span class="text-sm font-medium text-yellow-900">Mark as Due (বাকি)</span>
+                            <p class="text-xs text-yellow-700">Quick notebook-style due tracking</p>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Due Details -->
+                <div x-show="markAsDue" class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div class="space-y-2">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Customer Name *</label>
+                            <input
+                                type="text"
+                                x-model="dueName"
+                                placeholder="Enter customer name"
+                                class="w-full px-2 py-1 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Phone (Optional)</label>
+                            <input
+                                type="tel"
+                                x-model="duePhone"
+                                placeholder="Customer phone"
+                                class="w-full px-2 py-1 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Due Date (Optional)</label>
+                            <input
+                                type="date"
+                                x-model="dueDate"
+                                class="w-full px-2 py-1 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Notes</label>
+                            <textarea
+                                x-model="dueNotes"
+                                placeholder="Any notes..."
+                                rows="2"
+                                class="w-full px-2 py-1 border rounded text-sm"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div x-show="!isCredit && !markAsDue" class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
                     <select x-model="paymentMethod" class="w-full px-3 py-2 border rounded-lg">
                         <option value="CASH">Cash</option>
                         <option value="CARD">Card</option>
-                        <option value="MOBILE">Mobile Money</option>
+                        <option value="MOBILE">Mobile Money (bKash/Nagad)</option>
                         <option value="OTHER">Other</option>
                     </select>
                 </div>
 
                 <!-- Amount Paid (for cash) -->
-                <div x-show="paymentMethod === 'CASH'" class="mb-4">
+                <div x-show="paymentMethod === 'CASH' && !isCredit" class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Amount Paid</label>
                     <input
                         type="number"
@@ -190,9 +278,103 @@ function posApp() {
         amountPaid: 0,
         change: 0,
         processing: false,
+        customerId: '',
+        isCredit: false,
+        canUseCredit: false,
+        availableCredit: 0,
+        customerPhone: '',
+        customerLookupResult: '',
+        markAsDue: false,
+        dueName: '',
+        duePhone: '',
+        dueDate: '',
+        dueNotes: '',
 
         init() {
             // Initialize
+        },
+
+        onCustomerChange() {
+            const select = document.querySelector('select[x-model="customerId"]');
+            const selectedOption = select.options[select.selectedIndex];
+
+            if (this.customerId) {
+                const creditEnabled = selectedOption.getAttribute('data-credit-enabled') === '1';
+                const availableCredit = parseFloat(selectedOption.getAttribute('data-available-credit'));
+                const phone = selectedOption.getAttribute('data-phone');
+                const name = selectedOption.getAttribute('data-name');
+
+                this.canUseCredit = creditEnabled;
+                this.availableCredit = availableCredit;
+                this.customerPhone = phone || '';
+
+                // Auto-fill due details if marking as due
+                if (this.markAsDue) {
+                    this.dueName = name;
+                    this.duePhone = phone;
+                }
+            } else {
+                this.canUseCredit = false;
+                this.availableCredit = 0;
+                this.isCredit = false;
+            }
+        },
+
+        lookupCustomerByPhone() {
+            if (this.customerPhone.length < 3) {
+                this.customerLookupResult = '';
+                return;
+            }
+
+            // Find matching customer in dropdown
+            const select = document.querySelector('select[x-model="customerId"]');
+            const options = Array.from(select.options);
+
+            for (let option of options) {
+                const phone = option.getAttribute('data-phone');
+                if (phone && phone.includes(this.customerPhone)) {
+                    const name = option.getAttribute('data-name');
+                    this.customerId = option.value;
+                    this.customerLookupResult = `Found: ${name}`;
+                    this.onCustomerChange();
+                    return;
+                }
+            }
+
+            this.customerLookupResult = '';
+            this.customerId = '';
+        },
+
+        onCreditChange() {
+            if (this.isCredit) {
+                this.paymentMethod = 'CREDIT';
+                this.markAsDue = false; // Cannot use both credit and due
+            } else {
+                this.paymentMethod = 'CASH';
+            }
+        },
+
+        onDueChange() {
+            if (this.markAsDue) {
+                this.isCredit = false; // Cannot use both due and credit
+                // Auto-fill from customer if selected
+                if (this.customerId) {
+                    const select = document.querySelector('select[x-model="customerId"]');
+                    const selectedOption = select.options[select.selectedIndex];
+                    const name = selectedOption.getAttribute('data-name');
+                    const phone = selectedOption.getAttribute('data-phone');
+                    this.dueName = name || '';
+                    this.duePhone = phone || '';
+                } else if (this.customerPhone) {
+                    this.duePhone = this.customerPhone;
+                }
+            } else {
+                // Clear due fields
+                this.dueName = '';
+                this.duePhone = '';
+                this.dueDate = '';
+                this.dueNotes = '';
+            }
         },
 
         async searchProducts() {
@@ -288,6 +470,18 @@ function posApp() {
                 this.cart = [];
                 this.discount = 0;
                 this.amountPaid = 0;
+                this.customerId = '';
+                this.customerPhone = '';
+                this.customerLookupResult = '';
+                this.isCredit = false;
+                this.canUseCredit = false;
+                this.availableCredit = 0;
+                this.markAsDue = false;
+                this.dueName = '';
+                this.duePhone = '';
+                this.dueDate = '';
+                this.dueNotes = '';
+                this.paymentMethod = 'CASH';
                 this.calculateTotals();
             }
         },
@@ -295,7 +489,21 @@ function posApp() {
         async completeSale() {
             if (this.cart.length === 0) return;
 
-            if (this.paymentMethod === 'CASH' && this.amountPaid < this.total) {
+            // Validate due entry
+            if (this.markAsDue) {
+                if (!this.dueName || this.dueName.trim() === '') {
+                    alert('Please enter customer name for due entry');
+                    return;
+                }
+            }
+
+            // Validate credit sale
+            if (this.isCredit) {
+                if (this.total > this.availableCredit) {
+                    alert(`Insufficient credit. Available: ৳${this.availableCredit.toFixed(2)}, Required: ৳${this.total.toFixed(2)}`);
+                    return;
+                }
+            } else if (!this.markAsDue && this.paymentMethod === 'CASH' && this.amountPaid < this.total) {
                 alert('Amount paid is less than total');
                 return;
             }
@@ -303,28 +511,66 @@ function posApp() {
             this.processing = true;
 
             try {
+                const payload = {
+                    items: this.cart.map(item => ({
+                        product_id: item.id,
+                        quantity: item.quantity,
+                        unit_price: item.price
+                    })),
+                    payment_method: this.markAsDue ? 'OTHER' : this.paymentMethod,
+                    discount: this.discount,
+                    amount_paid: this.markAsDue ? 0 : (this.paymentMethod === 'CASH' ? this.amountPaid : this.total)
+                };
+
+                // Add customer and credit info if applicable
+                if (this.customerId) {
+                    payload.customer_id = this.customerId;
+                }
+                if (this.isCredit) {
+                    payload.is_credit = true;
+                }
+
                 const response = await fetch('/api/transactions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
-                    body: JSON.stringify({
-                        items: this.cart.map(item => ({
-                            product_id: item.id,
-                            quantity: item.quantity,
-                            unit_price: item.price
-                        })),
-                        payment_method: this.paymentMethod,
-                        discount: this.discount,
-                        amount_paid: this.paymentMethod === 'CASH' ? this.amountPaid : this.total
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    alert('Sale completed successfully!');
+                    // If marked as due, create due entry
+                    if (this.markAsDue && data.transaction && data.transaction.id) {
+                        const duePayload = {
+                            customer_name: this.dueName,
+                            customer_phone: this.duePhone || null,
+                            transaction_id: data.transaction.id,
+                            amount: this.total,
+                            due_date: this.dueDate || null,
+                            notes: this.dueNotes || null
+                        };
+
+                        const dueResponse = await fetch('/api/dues', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            },
+                            body: JSON.stringify(duePayload)
+                        });
+
+                        if (dueResponse.ok) {
+                            alert('Sale completed and marked as due successfully!');
+                        } else {
+                            alert('Sale completed but error creating due entry');
+                        }
+                    } else {
+                        alert('Sale completed successfully!');
+                    }
+
                     // Open receipt in new tab
                     if (data.transaction && data.transaction.id) {
                         window.open(`/transactions/${data.transaction.id}`, '_blank');

@@ -569,7 +569,7 @@ function posApp() {
                     existingItem.quantity++;
                     this.updateItemTotal(this.cart.indexOf(existingItem));
                 } else {
-                    alert('Insufficient stock available');
+                    showWarning('Cannot add more items. Insufficient stock available.', 'Stock Limit Reached');
                 }
             } else {
                 this.cart.push({
@@ -631,9 +631,12 @@ function posApp() {
             return this.cart.reduce((sum, item) => sum + item.quantity, 0);
         },
 
-        clearCart(skipConfirm = false) {
-            if (!skipConfirm && !confirm('Are you sure you want to clear the cart?')) {
-                return;
+        async clearCart(skipConfirm = false) {
+            if (!skipConfirm) {
+                const confirmed = await showConfirm('All items in the cart will be removed. This action cannot be undone.', 'Clear Cart?');
+                if (!confirmed) {
+                    return;
+                }
             }
 
             this.cart = [];

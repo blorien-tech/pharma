@@ -5,12 +5,14 @@ This guide provides detailed instructions for installing and configuring the BLO
 ## System Requirements
 
 ### For Docker Installation (Recommended)
+
 - Docker Engine 20.10+
 - Docker Compose 1.29+
 - 2GB RAM minimum
 - 10GB disk space
 
 ### For Manual Installation
+
 - PHP 8.4+
 - MySQL 8.0+
 - Nginx or Apache
@@ -22,7 +24,7 @@ This guide provides detailed instructions for installing and configuring the BLO
 ### Step 1: Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:blorien-tech/pharma.git
 cd pharma
 ```
 
@@ -37,6 +39,7 @@ nano .env
 ```
 
 Key environment variables:
+
 ```env
 DB_DATABASE=blorien_pharma
 DB_USERNAME=blorien_user
@@ -61,6 +64,7 @@ docker-compose ps
 ```
 
 You should see three containers running:
+
 - `blorien_nginx` (Web Server)
 - `blorien_app` (PHP-FPM)
 - `blorien_db` (MySQL)
@@ -107,7 +111,8 @@ docker-compose exec app chown -R www-data:www-data storage bootstrap/cache
 ### Step 7: Access the Application
 
 Open your browser and navigate to:
-```
+
+```bash
 http://localhost:8000
 ```
 
@@ -118,7 +123,7 @@ You should see the setup page if this is a fresh installation.
 1. Navigate to `http://localhost:8000/setup`
 2. Create the owner account:
    - Full Name: Your name
-   - Email: your-email@example.com
+   - Email: `email@example.com`
    - Password: (minimum 8 characters)
    - Confirm Password
 3. Click "Complete Setup"
@@ -178,6 +183,7 @@ nano .env
 ```
 
 Update these values in `.env`:
+
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -195,7 +201,7 @@ php artisan migrate
 
 ### Step 6: Configure Web Server
 
-#### For Nginx:
+#### For Nginx
 
 ```nginx
 server {
@@ -269,12 +275,14 @@ Navigate to your configured domain or `http://localhost`
 ### Cannot Access Application
 
 **Check containers:**
+
 ```bash
 docker-compose ps
 docker-compose logs
 ```
 
 **Restart containers:**
+
 ```bash
 docker-compose down
 docker-compose up -d
@@ -283,6 +291,7 @@ docker-compose up -d
 ### Database Connection Error
 
 **Check MySQL is running:**
+
 ```bash
 docker-compose exec db mysql -u blorien_user -p
 ```
@@ -346,6 +355,7 @@ For production deployment:
 6. **Configure firewall rules**
 7. **Enable error logging**
 8. **Optimize autoloader**:
+
    ```bash
    composer install --optimize-autoloader --no-dev
    php artisan config:cache
@@ -356,6 +366,7 @@ For production deployment:
 ## Support
 
 For issues during installation:
+
 1. Check logs: `docker-compose logs -f app`
 2. Review error messages
 3. Create an issue in the repository with:
@@ -366,5 +377,6 @@ For issues during installation:
 ## Next Steps
 
 After successful installation, refer to:
+
 - [User Guide](USER_GUIDE.md) - Learn how to use the system
 - [API Documentation](API_DOCUMENTATION.md) - For developers

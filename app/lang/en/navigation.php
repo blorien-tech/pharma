@@ -9,7 +9,7 @@ return [
     'alerts' => 'Alerts',
     'customers' => 'Customers',
     'dues' => 'Dues',
-    'dues_bangla' => 'Dues (বাকি)',
+    'dues_bangla' => 'Dues',
     'reports' => 'Reports',
     'daily_closing' => 'Daily Closing',
     'analytics' => 'Analytics',

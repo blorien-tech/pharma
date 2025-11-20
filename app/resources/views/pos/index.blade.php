@@ -172,7 +172,7 @@
                         <input type="checkbox" x-model="markAsDue" @change="onDueChange()"
                             class="rounded border-gray-300 text-yellow-600 shadow-sm focus:border-yellow-500 focus:ring-yellow-500">
                         <div class="ml-2">
-                            <span class="text-sm font-medium text-yellow-900">Mark as Due (বাকি)</span>
+                            <span class="text-sm font-medium text-yellow-900">Mark as Due </span>
                             <p class="text-xs text-yellow-700">Quick notebook-style due tracking</p>
                         </div>
                     </label>

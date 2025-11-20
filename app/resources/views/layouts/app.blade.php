@@ -288,7 +288,7 @@
                                 <p>&copy; {{ date('Y') }} {{ __('navigation.app_name') }}. All rights reserved.</p>
                             </div>
                             <div class="text-gray-500 text-xs">
-                                <p>Version 2.6 | Powered by BLORIEN Tech</p>
+                                <p>Version 2.6 | Powered by BLORIEN</p>
                             </div>
                         </div>
                     </div>

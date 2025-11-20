@@ -42,7 +42,7 @@ return [
     'available_credit' => 'Available Credit',
 
     // Dues
-    'mark_as_due' => 'Mark as Due (বাকি)',
+    'mark_as_due' => 'Mark as Due',
     'customer_name' => 'Customer Name',
     'due_date' => 'Due Date (Optional)',
     'notes' => 'Notes (Optional)',

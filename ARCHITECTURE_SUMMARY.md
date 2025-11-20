@@ -1,104 +1,103 @@
 # BLORIEN PHARMA - ARCHITECTURE SUMMARY
 
-**Version**: 2.6 (Phase 3B Complete)
+**Version**: 2.6
 **Last Updated**: January 2025
 
 ## System Architecture Overview
 
-```
+```bash
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         Laravel Application                          │
-│                      BLORIEN Pharma System v2.6                      │
-│              (Phase 3B - Multi-Language & Performance Ready)         │
+│                         Laravel Application                         │
+│                      BLORIEN Pharma System v2.6                     │
 └─────────────────────────────────────────────────────────────────────┘
 
 ┌────────────────────────────────────────────────────────────────────┐
 │                      REQUEST LAYER (Routes)                        │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
-│  WEB ROUTES (/routes/web.php)      API ROUTES (/routes/api.php)  │
-│  ├─ Authentication                 ├─ Products                   │
-│  ├─ Dashboard                       ├─ Transactions              │
-│  ├─ Products CRUD                   ├─ Batches                   │
-│  ├─ POS Interface                   ├─ Users                     │
-│  ├─ Suppliers CRUD                  ├─ Analytics Data            │
-│  ├─ Purchase Orders                 └─ Dashboard Stats           │
-│  ├─ Customers                                                    │
-│  ├─ Reports                                                      │
-│  └─ Analytics                                                    │
-│                                                                  │
-│  Middleware: auth, role:owner,manager, SetLocale (Phase 3B)     │
+│  WEB ROUTES (/routes/web.php)      API ROUTES (/routes/api.php)    │
+│  ├─ Authentication                 ├─ Products                     │
+│  ├─ Dashboard                       ├─ Transactions                │
+│  ├─ Products CRUD                   ├─ Batches                     │
+│  ├─ POS Interface                   ├─ Users                       │
+│  ├─ Suppliers CRUD                  ├─ Analytics Data              │
+│  ├─ Purchase Orders                 └─ Dashboard Stats             │
+│  ├─ Customers                                                      │
+│  ├─ Reports                                                        │
+│  └─ Analytics                                                      │
+│                                                                    │
+│  Middleware: auth, role:owner,manager, SetLocale (Phase 3B)        │
 └────────────────────────────────────────────────────────────────────┘
           ↓
 ┌────────────────────────────────────────────────────────────────────┐
 │                   CONTROLLER LAYER (15 Controllers)                │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
-│  • AuthController          • BatchController                      │
-│  • DashboardController     • UserController                       │
-│  • ProductController       • ReportController                     │
-│  • PosController           • AnalyticsController                  │
-│  • TransactionController   • SupplierController                   │
-│  • CustomerController      • PurchaseOrderController              │
-│  • DueController (Phase 3A)                                       │
-│  • DailyClosingController (Phase 3B)                              │
-│  • LanguageController (Phase 3B)                                  │
+│  • AuthController          • BatchController                       │
+│  • DashboardController     • UserController                        │
+│  • ProductController       • ReportController                      │
+│  • PosController           • AnalyticsController                   │
+│  • TransactionController   • SupplierController                    │
+│  • CustomerController      • PurchaseOrderController               │
+│  • DueController (Phase 3A)                                        │
+│  • DailyClosingController (Phase 3B)                               │
+│  • LanguageController (Phase 3B)                                   │
 │                                                                    │
-│  Role: Request validation, call services, return responses       │
+│  Role: Request validation, call services, return responses         │
 └────────────────────────────────────────────────────────────────────┘
           ↓
 ┌────────────────────────────────────────────────────────────────────┐
 │                    SERVICE LAYER (3 Services)                      │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
-│  ┌─────────────────┐  ┌──────────────────┐  ┌───────────────┐   │
-│  │   PosService    │  │InventoryService  │  │PurchaseOrder  │   │
-│  ├─────────────────┤  ├──────────────────┤  │    Service    │   │
-│  │• processSale()  │  │• getLowStock()   │  ├───────────────┤   │
-│  │• processReturn()│  │• getExpiring()   │  │• create()     │   │
-│  │• validateCredit │  │• getExpired()    │  │• receiveStock │   │
-│  │• updateBalance  │  │• getBestBatch()  │  │• markOrdered()│   │
-│  │                 │  │• getAllAlerts()  │  │               │   │
-│  │ DB Transaction  │  │• deductStock()   │  │ DB Transaction│   │
-│  │ Audit Trail     │  │• addStock()      │  │ Auto ID Gen   │   │
-│  └─────────────────┘  └──────────────────┘  └───────────────┘   │
+│  ┌─────────────────┐  ┌──────────────────┐  ┌───────────────┐      │
+│  │   PosService    │  │InventoryService  │  │PurchaseOrder  │      │
+│  ├─────────────────┤  ├──────────────────┤  │    Service    │      │
+│  │• processSale()  │  │• getLowStock()   │  ├───────────────┤      │
+│  │• processReturn()│  │• getExpiring()   │  │• create()     │      │
+│  │• validateCredit │  │• getExpired()    │  │• receiveStock │      │
+│  │• updateBalance  │  │• getBestBatch()  │  │• markOrdered()│      │
+│  │                 │  │• getAllAlerts()  │  │               │      │
+│  │ DB Transaction  │  │• deductStock()   │  │ DB Transaction│      │
+│  │ Audit Trail     │  │• addStock()      │  │ Auto ID Gen   │      │
+│  └─────────────────┘  └──────────────────┘  └───────────────┘      │
 │                                                                    │
-│  Role: Business logic, data validation, DB transactions          │
+│  Role: Business logic, data validation, DB transactions            │
 └────────────────────────────────────────────────────────────────────┘
           ↓
 ┌────────────────────────────────────────────────────────────────────┐
 │                    MODEL LAYER (10 Models)                         │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
-│  Users ─────────┐                                                 │
-│  Products ──┐   │   Transactions                                  │
-│  Batches ───┼───┼───┬─ TransactionItems                           │
-│  Suppliers──┘   │   └─ Returns                                    │
-│  POs ───────────┼───┬─ PO Items                                   │
-│  Customers ─────┼───┴─ CreditTransactions                         │
-│                 │                                                 │
-│  Role: Data structure, relationships, query scopes, validation   │
+│  Users ─────────┐                                                  │
+│  Products ──┐   │   Transactions                                   │
+│  Batches ───┼───┼───┬─ TransactionItems                            │
+│  Suppliers──┘   │   └─ Returns                                     │
+│  POs ───────────┼───┬─ PO Items                                    │
+│  Customers ─────┼───┴─ CreditTransactions                          │
+│                 │                                                  │
+│  Role: Data structure, relationships, query scopes, validation     │
 └────────────────────────────────────────────────────────────────────┘
           ↓
 ┌────────────────────────────────────────────────────────────────────┐
 │                    DATABASE LAYER (MySQL)                          │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
-│  Core Tables:                                                     │
-│  ├─ users (3 roles: owner, manager, cashier)                     │
-│  ├─ products (with supplier relation)                            │
-│  ├─ product_batches (FIFO by expiry_date)                       │
-│  ├─ transactions (SALE/RETURN)                                   │
-│  ├─ transaction_items (line items)                               │
-│  ├─ suppliers (with PO tracking)                                 │
-│  ├─ purchase_orders (4-status workflow)                          │
-│  ├─ purchase_order_items (line items)                            │
-│  ├─ customers (with credit management)                           │
-│  └─ customer_credit_transactions (audit trail)                   │
+│  Core Tables:                                                      │
+│  ├─ users (3 roles: owner, manager, cashier)                       │
+│  ├─ products (with supplier relation)                              │
+│  ├─ product_batches (FIFO by expiry_date)                          │
+│  ├─ transactions (SALE/RETURN)                                     │
+│  ├─ transaction_items (line items)                                 │
+│  ├─ suppliers (with PO tracking)                                   │
+│  ├─ purchase_orders (4-status workflow)                            │
+│  ├─ purchase_order_items (line items)                              │
+│  ├─ customers (with credit management)                             │
+│  └─ customer_credit_transactions (audit trail)                     │
 │                                                                    │
-│  + System tables: password_reset_tokens, sessions                │
-│  + Soft Deletes: products, suppliers, POs, customers             │
-│  + Indexes: 50+ for query optimization                           │
+│  + System tables: password_reset_tokens, sessions                  │
+│  + Soft Deletes: products, suppliers, POs, customers               │
+│  + Indexes: 50+ for query optimization                             │
 └────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -108,7 +107,7 @@
 
 ### Sales Transaction Flow
 
-```
+```bash
 ┌──────────────────┐
 │  Customer Sale   │
 └────────┬─────────┘
@@ -161,7 +160,7 @@
 
 ### Purchase Order Workflow
 
-```
+```bash
 ┌──────────────────────┐
 │ Create Purchase Order│
 │ (Owner/Manager)      │
@@ -225,7 +224,7 @@
 
 ### Customer Credit Flow
 
-```
+```bash
 ┌──────────────────────────┐
 │ Create Customer          │
 │ Set Credit Limit         │
@@ -281,7 +280,7 @@
 
 ## File Organization
 
-```
+```bash
 pharma/
 ├── app/
 │   ├── app/
@@ -307,32 +306,38 @@ pharma/
 ## Key Design Patterns
 
 ### 1. Service Layer Pattern
+
 - Business logic in dedicated services
 - Controllers delegate to services
 - Reusable, testable code
 
 ### 2. FIFO Inventory Management
+
 - Products tracked at batch level
 - Ordered by expiry_date (ascending)
 - Prevents waste, ensures compliance
 
 ### 3. Audit Trail Pattern
+
 - Customer credit transactions recorded
 - Returns use negative values
 - User attribution on all actions
 - Immutable transaction records
 
 ### 4. Role-Based Access Control
+
 - 3 roles: owner, manager, cashier
 - Middleware-based enforcement
 - Route-level permissions
 
 ### 5. Database Transaction Safety
+
 - Multi-step operations in transactions
 - ACID compliance
 - Automatic rollback on error
 
 ### 6. Soft Delete Pattern
+
 - Data preservation
 - Logical deletion (not physical)
 - Applied to: products, suppliers, POs, customers
@@ -342,6 +347,7 @@ pharma/
 ## Key Metrics
 
 ### Database
+
 - 10 core tables
 - 50+ indexed columns
 - FIFO ordering by expiry date
@@ -349,6 +355,7 @@ pharma/
 - Soft deletes for audit trail
 
 ### Code
+
 - 12 controllers
 - 3 services
 - 10 models
@@ -356,6 +363,7 @@ pharma/
 - 95 total routes (web + API)
 
 ### Features
+
 - 8 CRUD resources
 - 6 report types
 - 4 payment methods
@@ -367,6 +375,7 @@ pharma/
 ## Performance Considerations
 
 ### Indexes
+
 - Primary keys indexed
 - Foreign keys indexed
 - Search fields indexed (sku, email, phone, name)
@@ -374,12 +383,14 @@ pharma/
 - Date columns indexed (for range queries)
 
 ### Query Optimization
+
 - Eager loading relationships
 - Model scopes for common filters
 - Pagination on list views
 - Database transactions for consistency
 
 ### Caching Opportunities
+
 - Dashboard stats (refresh interval)
 - Product lists for POS
 - Supplier dropdown lists
@@ -390,6 +401,7 @@ pharma/
 ## Security Features
 
 ### Authentication
+
 - Email + password login
 - Session-based auth
 - Remember tokens
@@ -397,12 +409,14 @@ pharma/
 - Password hashing (bcrypt)
 
 ### Authorization
+
 - Role-based access control
 - Route middleware protection
 - Controller-level checks
 - Soft delete protection
 
 ### Data Protection
+
 - Mass assignment fillable arrays
 - Input validation on all forms
 - Database transactions for consistency
@@ -413,12 +427,14 @@ pharma/
 ## Scalability Roadmap
 
 ### Current Capacity
+
 - Single-user (1 store)
 - 10K+ products
 - 100K+ transactions per year
 - Unlimited customers
 
 ### Future Enhancements
+
 1. Multi-location support (warehouse management)
 2. Advanced analytics (ML-based forecasting)
 3. Mobile app (dedicated POS app)

@@ -1,6 +1,6 @@
 # BLORIEN Pharma - Pharmacy Management System
 
-A comprehensive yet simple pharmacy management system built for **Bangladesh small pharmacies**, featuring Point of Sale (POS), inventory management, batch tracking, notebook-style due tracking (বাকি হিসাব), multi-language support, and advanced analytics.
+A comprehensive yet simple pharmacy management system built for **Bangladesh small pharmacies**, featuring Point of Sale (POS), inventory management, batch tracking, notebook-style due tracking, multi-language support, and advanced analytics.
 
 **Version**: 2.6.0
 **Status**: Production Ready for Small Pharmacies
@@ -22,6 +22,7 @@ A comprehensive yet simple pharmacy management system built for **Bangladesh sma
 ## ✨ Key Features
 
 ### Core System
+
 - **User Authentication**: Role-based access (Owner, Manager, Cashier)
 - **Product Management**: Full CRUD with generic/brand name support
 - **Batch Management**: FIFO tracking with expiry monitoring
@@ -32,7 +33,7 @@ A comprehensive yet simple pharmacy management system built for **Bangladesh sma
 - **Dashboard**: Real-time statistics and metrics
 - **Quick Phone Lookup**: Type phone → customer auto-fills
 - **Generic/Brand Search**: Find "Napa" or "Paracetamol" - both work!
-- **Notebook-Style Dues (বাকি)**: Simple due tracking like digital notebook
+- **Notebook-Style Dues**: Simple due tracking like digital notebook
 - **Flexible Workflows**: Optional customer profiles, skip steps as needed
 - **Partial Payments**: Track and collect payments over ti
 - **Quick Stock Add**: Add stock in < 20 seconds without full purchase order
@@ -42,6 +43,7 @@ A comprehensive yet simple pharmacy management system built for **Bangladesh sma
 - **Performance Optimizations**: Cached queries, indexed tables, debounced search
 
 ### Multi-Language Support 🆕
+
 - **English & Bengali**: Full system translation in both languages
 - **Database-Stored Preferences**: Language choice persists across sessions
 - **Instant Language Switching**: One-click toggle in navigation bar
@@ -271,11 +273,12 @@ MIT License
 Developed by **BLORIEN**
 
 Built specifically for Bangladesh small pharmacies with:
+
 - Full Bengali language support
 - Understanding of local workflows
 - Bengali language support
 - Generic/brand medicine search
-- Simple notebook-style tracking (বাকি হিসাব)
+- Simple notebook-style tracking
 - Professional accuracy with flexibility
 
 ---

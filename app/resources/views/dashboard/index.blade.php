@@ -160,7 +160,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-yellow-50 to-white">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-lg font-semibold text-gray-900">Recent Dues (বাকি)</h2>
+                    <h2 class="text-lg font-semibold text-gray-900">Recent Dues </h2>
                     @if($recentDues->count() > 0)
                     <a href="{{ route('dues.index') }}" class="text-sm text-yellow-600 hover:text-yellow-700 font-medium">
                         View all →

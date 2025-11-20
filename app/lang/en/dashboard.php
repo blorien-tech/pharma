@@ -8,7 +8,7 @@ return [
     'todays_sales' => "Today's Sales",
     'transactions_count' => ':count transactions',
     'pending_dues' => 'Pending Dues',
-    'pending_dues_bangla' => 'Pending Dues (বাকি)',
+    'pending_dues_bangla' => 'Pending Dues ',
     'dues_count' => ':count dues',
     'overdue_count' => '(:count overdue)',
     'total_products' => 'Total Products',
@@ -30,7 +30,7 @@ return [
     'no_transactions' => 'No transactions yet',
 
     // Recent Dues
-    'recent_dues' => 'Recent Dues (বাকি)',
+    'recent_dues' => 'Recent Dues',
     'view_all_dues' => 'View all dues →',
     'customer' => 'Customer',
     'phone' => 'Phone',

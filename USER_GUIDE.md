@@ -53,16 +53,19 @@ A comprehensive guide for pharmacy staff on using the BLORIEN Pharma system.
 The dashboard is your home screen showing:
 
 ### Statistics Cards
+
 - **Today's Sales**: Total sales amount and transaction count
 - **Total Products**: Number of active products
 - **Low Stock Alert**: Products needing restock
 - **Expiring Soon**: Batches expiring within 30 days
 
 ### Recent Transactions
+
 - Last 5 transactions
 - Quick view of transaction type, amount, and date
 
 ### Quick Actions
+
 - **New Sale**: Opens POS interface
 - **Add Product**: Create a new product
 - **View Reports**: Access transaction history
@@ -74,30 +77,36 @@ The dashboard is your home screen showing:
 ### Processing a Sale
 
 1. **Navigate to POS**
+
    - Click "POS" in the navigation menu
    - Or click "New Sale" on the dashboard
 
 2. **Search for Products**
+
    - Type product name or SKU in the search box
    - Products will appear as you type
    - Click on a product to add it to cart
 
 3. **Manage Cart Items**
+
    - **Adjust Quantity**: Use +/- buttons or type directly
    - **Remove Item**: Click the X button
    - **View Total**: Cart summary shows subtotal and total
 
 4. **Apply Discount** (Optional)
+
    - Enter discount amount in the Discount field
    - Total will update automatically
 
 5. **Select Payment Method**
+
    - Cash
    - Card
    - Mobile Money
    - Other
 
 6. **For Cash Payments**
+
    - Enter amount paid
    - System calculates change automatically
 
@@ -146,6 +155,7 @@ The dashboard is your home screen showing:
 ### Viewing Products
 
 Products are displayed in cards showing:
+
 - Product name and SKU
 - Purchase and selling prices
 - Current stock (red if low)
@@ -183,6 +193,7 @@ Products are displayed in cards showing:
 ### Viewing Batches
 
 Batch table shows:
+
 - Batch number
 - Expiry date (color-coded)
 - Quantity received and remaining
@@ -211,6 +222,7 @@ Batch table shows:
 ### Transaction Details
 
 Click "View" on any transaction to see:
+
 - Receipt number and date
 - All items purchased
 - Batch numbers (for traceability)
@@ -232,7 +244,7 @@ Click "View" on any transaction to see:
 
 ## User Management
 
-*Available for Owners and Managers only*
+- Available for Owners and Managers only
 
 ### Creating a User
 
@@ -249,18 +261,21 @@ Click "View" on any transaction to see:
 ### User Roles Explained
 
 **Owner:**
+
 - Full system access
 - Can manage users
 - Can view all reports
 - Can modify system settings
 
 **Manager:**
+
 - Can manage products and inventory
 - Can view reports
 - Can manage users
 - Cannot access system settings
 
 **Cashier:**
+
 - Can process sales
 - Can view POS and products
 - Cannot manage inventory
@@ -269,6 +284,7 @@ Click "View" on any transaction to see:
 ### Deactivating a User
 
 Users cannot be deleted, but can be deactivated:
+
 1. Edit the user
 2. Uncheck "Active"
 3. Update user
@@ -278,7 +294,7 @@ Users cannot be deleted, but can be deactivated:
 
 ## Supplier Management
 
-*Available for Owners and Managers only*
+- Available for Owners and Managers only
 
 ### Adding a Supplier
 
@@ -296,6 +312,7 @@ Users cannot be deleted, but can be deactivated:
 ### Viewing Suppliers
 
 Supplier list shows:
+
 - Contact and company name
 - Phone and email
 - Total products supplied
@@ -312,7 +329,7 @@ Supplier list shows:
 
 ## Purchase Orders
 
-*Available for Owners and Managers only*
+- Available for Owners and Managers only
 
 ### Creating a Purchase Order
 
@@ -344,6 +361,7 @@ Supplier list shows:
 5. Click "Confirm Receipt & Update Inventory"
 
 **What Happens:**
+
 - Inventory automatically updates
 - Product batches are created
 - Purchase order status changes to RECEIVED
@@ -352,12 +370,14 @@ Supplier list shows:
 ### Managing Purchase Orders
 
 **Statuses:**
+
 - **PENDING**: Newly created, not yet ordered
 - **ORDERED**: Sent to supplier
 - **RECEIVED**: Stock received and added to inventory
 - **CANCELLED**: Order cancelled
 
 **Actions:**
+
 - **View**: See PO details
 - **Receive**: Record stock receipt
 - **Cancel**: Cancel pending/ordered PO
@@ -370,8 +390,8 @@ Supplier list shows:
 
 1. Navigate to **Customers** → **Add Customer**
 2. Fill in basic information:
-   - **Full Name** *
-   - **Phone Number** * (unique)
+   - **Full Name** \*
+   - **Phone Number** \* (unique)
    - **Email** (optional)
    - **Address**
    - **City**
@@ -405,6 +425,7 @@ Supplier list shows:
 7. Click "Record Payment"
 
 **Result:**
+
 - Customer balance reduces
 - Credit transaction recorded
 - Available credit increases
@@ -426,6 +447,7 @@ For corrections or special circumstances:
 ### Viewing Customer Details
 
 Customer profile shows:
+
 - Credit limit and current balance
 - Available credit
 - Total transactions
@@ -497,27 +519,32 @@ Navigate to **Analytics** for visual business insights:
 ### Interactive Charts
 
 **Sales Trend Chart:**
+
 - 30-day sales trend line
 - Dual axis (sales amount + transaction count)
 - Period selector (7/30/90 days)
 - Real-time updates
 
 **Payment Method Distribution:**
+
 - Doughnut chart showing revenue by payment type
 - Current month data
 - Percentages and amounts
 
 **Inventory Status:**
+
 - Pie chart of stock levels
 - Low Stock, Adequate Stock, Out of Stock
 - Product count per category
 
 **Top Products Bar Chart:**
+
 - Top 10 products by revenue
 - Current month data
 - Visual comparison
 
 **Credit Utilization:**
+
 - Doughnut chart of used vs available credit
 - Total amounts displayed
 - Real-time customer credit status
@@ -529,6 +556,7 @@ Navigate to **Analytics** for visual business insights:
 - Growth percentage (color-coded)
 
 **Features:**
+
 - All charts are interactive
 - Hover for detailed tooltips
 - Responsive design
@@ -545,6 +573,7 @@ Click "Alerts" in the navigation to see:
 ### Low Stock Products
 
 Products where current stock ≤ minimum stock:
+
 - Product name and SKU
 - Current vs minimum stock
 - Quick link to restock
@@ -552,6 +581,7 @@ Products where current stock ≤ minimum stock:
 ### Expiring Soon Batches
 
 Batches expiring within 30 days:
+
 - Product and batch number
 - Expiry date
 - Days remaining
@@ -560,6 +590,7 @@ Batches expiring within 30 days:
 ### Expired Batches
 
 Batches past expiry date:
+
 - Must be removed from inventory
 - Cannot be sold
 - Needs disposal
@@ -792,6 +823,7 @@ If you encounter issues:
 ### Product Categories
 
 Products should be organized by:
+
 - Medicine type (tablets, syrup, injection)
 - Purpose (pain relief, antibiotics, etc.)
 - Brand or generic
@@ -807,44 +839,7 @@ Products should be organized by:
 
 ---
 
-*For technical issues or system errors, contact your system administrator.*
-
-**BLORIEN Pharma System v2.5 - Phase 3A Complete**
-
-### What's New in Version 2.5 (Phase 3A)
-
-- **Quick Phone Lookup**: Type phone number for instant customer match
-- **Generic/Brand Search**: Search medicines by both generic and brand names
-- **Simple Due Tracking (বাকি)**: Notebook-style due tracking without forced customer accounts
-- **Partial Payment Support**: Track and collect partial payments over time
-- **Enhanced Product Search**: Search by name, generic, brand, SKU, or barcode
-- **Flexible Workflows**: Optional fields, skip steps as needed
-
----
-
-## Phase 3A Features Guide
-
-### Quick Customer Phone Lookup
-
-**Purpose**: Find customers instantly by typing their phone number
-
-**How to Use**:
-1. In POS, look for "Quick Phone Lookup" field
-2. Start typing customer's phone number
-3. System automatically finds and fills customer if registered
-4. No need to scroll through dropdown
-
-**Example**:
-```
-Type: 01712... → Auto-fills: "Karim Mia - 01712345678"
-```
-
-**Benefits**:
-- Save time (no scrolling)
-- Reduce errors
-- Quick for regular customers
-
----
+_For technical issues or system errors, contact your system administrator._
 
 ### Generic and Brand Name Search
 
@@ -852,6 +847,7 @@ Type: 01712... → Auto-fills: "Karim Mia - 01712345678"
 
 **How it Works**:
 The system now searches products by:
+
 - Product Name
 - **Generic Name** (e.g., "Paracetamol")
 - **Brand Name** (e.g., "Napa")
@@ -861,10 +857,12 @@ The system now searches products by:
 **Examples**:
 
 Customer says "Napa":
+
 1. Type "Napa" in product search
 2. Finds "Napa 500mg Tablet" (brand name match)
 
 Customer says "Paracetamol":
+
 1. Type "Paracetamol" in product search
 2. Finds all products with generic name "Paracetamol"
    - Napa 500mg
@@ -872,12 +870,14 @@ Customer says "Paracetamol":
    - etc.
 
 **When Adding Products**:
+
 - Enter both Generic Name and Brand Name
 - Makes search more flexible
 - Customers can ask either way
 
 **Example Product Entry**:
-```
+
+```bash
 Product Name: Napa 500mg Tablet
 Generic Name: Paracetamol
 Brand Name: Napa
@@ -885,20 +885,21 @@ Brand Name: Napa
 
 ---
 
-### Simple Due Tracking (বাকি হিসাব)
+### Simple Due Tracking
 
 **Purpose**: Track customer dues like a digital notebook
 
 **Key Difference from Credit**:
+
 - **Credit**: Formal customer account required, credit limit
-- **Due (বাকি)**: Simple notebook entry, just name needed
+- **Due Tracking**: Simple notebook entry, just name needed
 
 **How to Mark Sale as Due**:
 
 1. **In POS**, add products to cart normally
-2. Check **"Mark as Due (বাকি)"** checkbox
+2. Check **"Mark as Due"** checkbox
 3. Fill simple due form:
-   - Customer Name * (required)
+   - Customer Name \* (required)
    - Phone (optional but recommended)
    - Due Date (optional)
    - Notes (optional)
@@ -909,8 +910,9 @@ Brand Name: Napa
    - Ready for payment collection
 
 **Quick Due Entry Example**:
-```
-✓ Mark as Due (বাকি)
+
+```bash
+✓ Mark as Due
    Customer Name: Rahman
    Phone: 01723456789
    Due Date: [7 days from today]
@@ -921,11 +923,13 @@ Brand Name: Napa
 ```
 
 **Auto-Fill from Customer**:
+
 - If you select a customer from dropdown
 - Due form auto-fills with their name and phone
 - Save even more time
 
 **Cannot Use Both**:
+
 - Cannot mark as Due AND use Credit
 - Choose one method per sale
 
@@ -934,7 +938,8 @@ Brand Name: Napa
 ### Managing Dues
 
 **View All Dues**:
-1. Click **"Dues (বাকি)"** in navigation
+
+1. Click **"Dues"** in navigation
 2. See all pending/partial/paid dues
 3. Summary cards show:
    - Total Pending: ৳
@@ -943,6 +948,7 @@ Brand Name: Napa
    - Partial Payments Count
 
 **Filter Dues**:
+
 - Search by customer name or phone
 - Filter by status:
   - PENDING: No payment made
@@ -951,6 +957,7 @@ Brand Name: Napa
   - OVERDUE: Past due date, not paid
 
 **Due Status Colors**:
+
 - 🟡 Yellow: Pending
 - 🔵 Blue: Partial
 - 🟢 Green: Paid
@@ -963,11 +970,13 @@ Brand Name: Napa
 **Full Process**:
 
 1. **Navigate to Dues**
-   - Click "Dues (বাকি)" in menu
+
+   - Click "Dues" in menu
    - Find customer's due
    - Click **"Collect"** button
 
 2. **Payment Form Shows**:
+
    - Customer name and remaining balance
    - Payment amount field (pre-filled with full amount)
    - Quick buttons: "Half" and "Full"
@@ -975,6 +984,7 @@ Brand Name: Napa
    - Notes field (optional)
 
 3. **Enter Payment**:
+
    - Type amount or click "Half"/"Full"
    - Select payment method (Cash/Card/Mobile/Other)
    - Add notes if needed
@@ -989,7 +999,8 @@ Brand Name: Napa
    - Shows who collected and when
 
 **Partial Payment Example**:
-```
+
+```bash
 Due: ৳1000
 Customer: Karim
 
@@ -1004,6 +1015,7 @@ Payment 2: ৳600 (bKash) - Dec 20
 ```
 
 **Payment History**:
+
 - Every payment recorded
 - Shows: amount, method, date, who collected
 - Complete audit trail
@@ -1014,6 +1026,7 @@ Payment 2: ৳600 (bKash) - Dec 20
 ### Due Details Page
 
 **What You See**:
+
 - Customer information (name, phone)
 - Amount summary:
   - Total amount
@@ -1030,6 +1043,7 @@ Payment 2: ৳600 (bKash) - Dec 20
 - Link to original transaction
 
 **Quick Actions**:
+
 - Collect Payment button (if not fully paid)
 - View Transaction button
 - Print summary (future)
@@ -1043,10 +1057,11 @@ Payment 2: ৳600 (bKash) - Dec 20
 **Situation**: Regular customer Rahman wants to buy on due
 
 **Steps**:
+
 1. POS → Add products (৳500 total)
 2. Type "01712..." in phone lookup
 3. "Rahman" auto-fills
-4. Check "Mark as Due (বাকি)"
+4. Check "Mark as Due"
 5. Name/phone already filled
 6. Set due date: 7 days
 7. Complete sale
@@ -1061,8 +1076,9 @@ Payment 2: ৳600 (bKash) - Dec 20
 **Situation**: New customer, no account, wants due
 
 **Steps**:
+
 1. POS → Add products
-2. Check "Mark as Due (বাকি)"
+2. Check "Mark as Due "
 3. Type name: "Nazrul"
 4. Leave phone blank (or add if known)
 5. Complete sale
@@ -1078,6 +1094,7 @@ Payment 2: ৳600 (bKash) - Dec 20
 **Situation**: Karim owes ৳1000, pays ৳300 today
 
 **Steps**:
+
 1. Dues → Find "Karim - ৳1000"
 2. Click "Collect"
 3. Enter ৳300
@@ -1087,6 +1104,7 @@ Payment 2: ৳600 (bKash) - Dec 20
 7. Remaining → ৳700
 
 **Result**:
+
 - Payment tracked
 - Karim can pay ৳700 later
 - Complete history maintained
@@ -1098,6 +1116,7 @@ Payment 2: ৳600 (bKash) - Dec 20
 **Situation**: Want to see all of Karim's dues
 
 **Steps**:
+
 1. Dues → Search box
 2. Type "Karim" or "01712345678"
 3. See all Karim's dues:
@@ -1111,6 +1130,7 @@ Payment 2: ৳600 (bKash) - Dec 20
 ### Tips for Using Dues System
 
 **Best Practices**:
+
 - Always get phone number (easier to track)
 - Set due dates (helps with collection)
 - Add notes for context ("monthly customer", "will pay Friday")
@@ -1120,19 +1140,22 @@ Payment 2: ৳600 (bKash) - Dec 20
 
 **When to Use Due vs Credit**:
 
-**Use Due (বাকি) when**:
+**Use Due when**:
+
 - Quick one-time due
 - Don't want to create customer account
 - Small amount
 - Irregular customer
 
 **Use Credit when**:
+
 - Regular customer with formal agreement
 - Need credit limit management
 - Want detailed credit history
 - Business customer
 
 **Both track accurately!**
+
 - Complete audit trails
 - Payment history
 - Status tracking
@@ -1142,9 +1165,11 @@ Payment 2: ৳600 (bKash) - Dec 20
 ### Searching Products (Updated)
 
 **Old Way**:
+
 - Search by exact product name only
 
 **New Way (Phase 3A)**:
+
 - Search by ANY of these:
   - Product Name: "Napa 500mg Tablet"
   - Generic Name: "Paracetamol"
@@ -1155,20 +1180,23 @@ Payment 2: ৳600 (bKash) - Dec 20
 **Example Search Results**:
 
 Searching "Paracetamol":
-```
+
+```bash
 ✓ Napa 500mg Tablet (generic: Paracetamol)
 ✓ Ace 500mg Tablet (generic: Paracetamol)
 ✓ Fast 500mg Tablet (generic: Paracetamol)
 ```
 
 Searching "Napa":
-```
+
+```bash
 ✓ Napa 500mg Tablet (brand: Napa)
 ✓ Napa 100mg Syrup (brand: Napa)
 ✓ Napa Extend 665mg (brand: Napa)
 ```
 
 **Works in**:
+
 - POS product search
 - Product management page
 - Reports
@@ -1183,7 +1211,7 @@ Searching "Napa":
 1. Go to POS
 2. Search products (by name, generic, or brand!)
 3. Add to cart
-4. Check "Mark as Due (বাকি)"
+4. Check "Mark as Due "
 5. Enter customer name (phone optional)
 6. Set due date if needed
 7. Complete sale
@@ -1259,26 +1287,4 @@ Searching "Napa":
 
 ---
 
-*For technical issues or system errors, contact your system administrator.*
-
-**BLORIEN Pharma System v2.5 - Phase 3A Complete**
-
-### Version History
-
-**v2.5 (Phase 3A)** - January 2025
-- Quick Phone Lookup
-- Generic/Brand Name Search
-- Simple Due Tracking (বাকি)
-- Partial Payment Support
-- Enhanced Product Search
-
-**v2.0 (Phase 2)** - December 2024
-- Supplier Management
-- Purchase Order System
-- Customer Credit Management
-- Advanced Reporting (6 reports)
-- Analytics Dashboard with Charts
-
-**v1.0 (MVP)** - November 2024
-- Initial Release
-- Basic POS and Inventory
+_For technical issues or system errors, contact your system administrator._

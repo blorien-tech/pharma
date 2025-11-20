@@ -123,7 +123,7 @@
                 </a>
             </li>
 
-            <!-- Dues (বাকি) -->
+            <!-- Dues  -->
             <li>
                 <a
                     href="{{ route('dues.index') }}"

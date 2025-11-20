@@ -6,7 +6,7 @@
 <div class="space-y-6">
     <!-- Page Header -->
     <div class="bg-yellow-600 text-white rounded-lg shadow p-6">
-        <h1 class="text-3xl font-bold">Dues Management (বাকি হিসাব)</h1>
+        <h1 class="text-3xl font-bold">Dues Management</h1>
         <p class="mt-1 opacity-90">Track and collect customer dues - notebook-style</p>
     </div>
 

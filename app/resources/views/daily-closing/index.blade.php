@@ -130,7 +130,7 @@
         <!-- Dues Created -->
         <div class="bg-white rounded-lg shadow overflow-hidden">
             <div class="bg-yellow-50 px-6 py-4 border-b border-yellow-200">
-                <h2 class="text-lg font-semibold text-gray-900">Dues Created (বাকি)</h2>
+                <h2 class="text-lg font-semibold text-gray-900">Dues Created</h2>
             </div>
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">

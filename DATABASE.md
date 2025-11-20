@@ -1,6 +1,6 @@
 # Database Schema Documentation
 
-**BLORIEN Pharma - Complete Database Structure**
+## BLORIEN Pharma - Complete Database Structure
 
 Last Updated: January 2025 (Post Phase 3A)
 
@@ -59,6 +59,7 @@ CREATE TABLE users (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
 - UNIQUE (email)
 - INDEX (role)
@@ -66,6 +67,7 @@ CREATE TABLE users (
 - INDEX (deleted_at)
 
 **Roles**:
+
 - `owner`: Full system access
 - `manager`: Product, inventory, reports, users
 - `cashier`: POS and product viewing only
@@ -100,11 +102,12 @@ CREATE TABLE products (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
 - UNIQUE (sku)
 - UNIQUE (barcode)
-- INDEX (generic_name)   -- Phase 3A: Fast search by generic name
-- INDEX (brand_name)     -- Phase 3A: Fast search by brand name
+- INDEX (generic_name) -- Phase 3A: Fast search by generic name
+- INDEX (brand_name) -- Phase 3A: Fast search by brand name
 - INDEX (supplier_id)
 - INDEX (is_active)
 - INDEX (current_stock)
@@ -136,12 +139,14 @@ CREATE TABLE product_batches (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
 - INDEX (product_id)
 - INDEX (expiry_date)
 - INDEX (is_active)
 
 **Status Logic**:
+
 - Active: quantity_remaining > 0 AND expiry_date > today
 - Expiring Soon: expiry_date <= today + 30 days
 - Expired: expiry_date < today
@@ -180,6 +185,7 @@ CREATE TABLE transactions (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
 - UNIQUE (receipt_number)
 - INDEX (user_id)
@@ -215,6 +221,7 @@ CREATE TABLE transaction_items (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
 - INDEX (transaction_id)
 - INDEX (product_id)
@@ -246,6 +253,7 @@ CREATE TABLE suppliers (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
 - INDEX (is_active)
 - INDEX (deleted_at)
@@ -280,6 +288,7 @@ CREATE TABLE purchase_orders (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
 - UNIQUE (po_number)
 - INDEX (supplier_id)
@@ -315,6 +324,7 @@ CREATE TABLE purchase_order_items (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
 - INDEX (purchase_order_id)
 - INDEX (product_id)
@@ -348,14 +358,16 @@ CREATE TABLE customers (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
-- UNIQUE (phone)          -- Phase 3A: Quick customer lookup
+- UNIQUE (phone) -- Phase 3A: Quick customer lookup
 - INDEX (email)
 - INDEX (credit_enabled)
 - INDEX (is_active)
 - INDEX (deleted_at)
 
 **Credit Logic**:
+
 - Available Credit = credit_limit - current_balance
 - Overdue = current_balance > credit_limit
 
@@ -387,6 +399,7 @@ CREATE TABLE customer_credit_transactions (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
 - INDEX (customer_id)
 - INDEX (transaction_id)
@@ -395,11 +408,11 @@ CREATE TABLE customer_credit_transactions (
 
 ---
 
-## Due Tracking Tables (Phase 3A)
+## Due Tracking Tables
 
 ### 11. dues
 
-**Purpose**: Simple notebook-style due tracking (বাকি হিসাব)
+**Purpose**: Simple notebook-style due tracking
 
 ```sql
 CREATE TABLE dues (
@@ -424,6 +437,7 @@ CREATE TABLE dues (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
 - INDEX (customer_phone)
 - INDEX (status)
@@ -431,13 +445,15 @@ CREATE TABLE dues (
 - INDEX (due_date)
 
 **Key Features**:
+
 - No forced customer account linking
 - Quick entry with just name (phone optional)
 - Tracks partial payments
 - Auto status updates: PENDING → PARTIAL → PAID
 
 **Status Auto-Update Logic**:
-```
+
+```bash
 amount_remaining = 0 → PAID (set paid_at)
 amount_remaining > 0 AND amount_paid > 0 → PARTIAL
 amount_paid = 0 → PENDING
@@ -466,6 +482,7 @@ CREATE TABLE due_payments (
 ```
 
 **Indexes**:
+
 - PRIMARY KEY (id)
 - INDEX (due_id)
 - INDEX (created_at)
@@ -476,7 +493,7 @@ CREATE TABLE due_payments (
 
 ### Entity Relationship Diagram (ERD)
 
-```
+```bash
 users (1) ─────── (*) transactions
 users (1) ─────── (*) purchase_orders
 users (1) ─────── (*) customer_credit_transactions
@@ -508,20 +525,20 @@ dues (1) ────────── (*) due_payments
 
 ### Expected Storage (Small Pharmacy - 1 Year)
 
-| Table | Estimated Rows | Storage |
-|-------|---------------|---------|
-| users | 3-5 | ~1 KB |
-| products | 500-2000 | ~500 KB |
-| product_batches | 2000-5000 | ~2 MB |
-| transactions | 10,000-50,000 | ~10 MB |
-| transaction_items | 30,000-150,000 | ~20 MB |
-| suppliers | 10-50 | ~10 KB |
-| purchase_orders | 500-2000 | ~500 KB |
-| purchase_order_items | 2000-10,000 | ~2 MB |
-| customers | 100-500 | ~100 KB |
-| customer_credit_transactions | 500-5000 | ~1 MB |
-| dues | 1000-5000 | ~1 MB |
-| due_payments | 2000-10,000 | ~1 MB |
+| Table                        | Estimated Rows | Storage |
+| ---------------------------- | -------------- | ------- |
+| users                        | 3-5            | ~1 KB   |
+| products                     | 500-2000       | ~500 KB |
+| product_batches              | 2000-5000      | ~2 MB   |
+| transactions                 | 10,000-50,000  | ~10 MB  |
+| transaction_items            | 30,000-150,000 | ~20 MB  |
+| suppliers                    | 10-50          | ~10 KB  |
+| purchase_orders              | 500-2000       | ~500 KB |
+| purchase_order_items         | 2000-10,000    | ~2 MB   |
+| customers                    | 100-500        | ~100 KB |
+| customer_credit_transactions | 500-5000       | ~1 MB   |
+| dues                         | 1000-5000      | ~1 MB   |
+| due_payments                 | 2000-10,000    | ~1 MB   |
 
 **Total Estimated**: ~40-60 MB per year
 
@@ -555,7 +572,8 @@ mysqldump -u root -p blorien_pharma | gzip > backup_$(date +%Y%m%d).sql.gz
 
 ### Frequently Used Queries
 
-**1. Product Search (with generic/brand)**
+- **Product Search (with generic/brand)**
+
 ```sql
 -- Optimized with indexes on name, generic_name, brand_name, sku, barcode
 SELECT * FROM products
@@ -567,7 +585,8 @@ WHERE (name LIKE '%search%'
 LIMIT 20;
 ```
 
-**2. Customer Lookup by Phone**
+- **Customer Lookup by Phone**
+
 ```sql
 -- UNIQUE index on phone makes this very fast
 SELECT * FROM customers
@@ -576,7 +595,8 @@ WHERE phone = '01712345678'
   AND deleted_at IS NULL;
 ```
 
-**3. Overdue Dues**
+- **Overdue Dues**
+
 ```sql
 -- Compound index on (status, due_date)
 SELECT * FROM dues
@@ -585,7 +605,8 @@ WHERE status != 'PAID'
 ORDER BY due_date ASC;
 ```
 
-**4. Low Stock Alert**
+- **Low Stock Alert**
+
 ```sql
 -- Index on current_stock
 SELECT * FROM products
@@ -594,7 +615,8 @@ WHERE current_stock <= min_stock
   AND deleted_at IS NULL;
 ```
 
-**5. Expiring Batches**
+- **Expiring Batches**
+
 ```sql
 -- Index on expiry_date
 SELECT pb.*, p.name
@@ -610,6 +632,7 @@ WHERE pb.expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)
 ## Data Integrity Rules
 
 ### Cascading Deletes
+
 - Delete Product → Cascade to batches
 - Delete Transaction → Cascade to transaction_items
 - Delete Customer → Cascade to credit_transactions
@@ -617,12 +640,14 @@ WHERE pb.expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)
 - Delete PO → Cascade to PO items
 
 ### Soft Deletes (Paranoid Delete)
+
 - users
 - products
 - suppliers
 - customers
 
 ### Restricted Deletes
+
 - Cannot delete product if in transaction_items
 - Cannot delete product if in purchase_order_items
 
@@ -633,16 +658,19 @@ WHERE pb.expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)
 Located in: `app/database/migrations/`
 
 **Run migrations:**
+
 ```bash
 docker compose exec app php artisan migrate
 ```
 
 **Rollback last migration:**
+
 ```bash
 docker compose exec app php artisan migrate:rollback
 ```
 
 **Fresh migration (DEV ONLY - destroys data):**
+
 ```bash
 docker compose exec app php artisan migrate:fresh
 ```

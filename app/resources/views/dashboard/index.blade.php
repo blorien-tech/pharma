@@ -24,7 +24,7 @@
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 lg:gap-6">
         <!-- Today's Sales -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover">
+        <a href="{{ route('transactions.index') }}" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover transition-all hover:shadow-md hover:border-green-300 cursor-pointer">
             <div class="flex items-center justify-between mb-4">
                 <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-3">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,10 +35,10 @@
             <p class="text-sm font-medium text-gray-600 mb-1">{{ __('dashboard.todays_sales') }}</p>
             <p class="text-2xl font-bold text-gray-900">{{ __('common.currency_symbol') }}{{ number_format($todaySales, 2) }}</p>
             <p class="text-xs text-gray-500 mt-2">{{ __('dashboard.transactions_count', ['count' => $todayTransactions]) }}</p>
-        </div>
+        </a>
 
         <!-- Pending Dues -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover">
+        <a href="{{ route('dues.index') }}" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover transition-all hover:shadow-md hover:border-yellow-300 cursor-pointer">
             <div class="flex items-center justify-between mb-4">
                 <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg p-3">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,10 +54,10 @@
                 <span class="text-red-600 font-medium">{{ __('dashboard.overdue_count', ['count' => $overdueDuesCount]) }}</span>
                 @endif
             </p>
-        </div>
+        </a>
 
         <!-- Total Products -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover">
+        <a href="{{ route('products.index') }}" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover transition-all hover:shadow-md hover:border-blue-300 cursor-pointer">
             <div class="flex items-center justify-between mb-4">
                 <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-3">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,10 +68,10 @@
             <p class="text-sm font-medium text-gray-600 mb-1">{{ __('dashboard.total_products') }}</p>
             <p class="text-2xl font-bold text-gray-900">{{ $totalProducts }}</p>
             <p class="text-xs text-gray-500 mt-2">{{ __('dashboard.active_items') }}</p>
-        </div>
+        </a>
 
         <!-- Low Stock Alert -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover">
+        <a href="{{ route('alerts') }}" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover transition-all hover:shadow-md hover:border-orange-300 cursor-pointer">
             <div class="flex items-center justify-between mb-4">
                 <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-3">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,15 +81,13 @@
             </div>
             <p class="text-sm font-medium text-gray-600 mb-1">{{ __('dashboard.low_stock_alert') }}</p>
             <p class="text-2xl font-bold text-gray-900">{{ $lowStockProducts }}</p>
-            <p class="text-xs text-gray-500 mt-2">
-                <a href="{{ route('alerts') }}" class="text-orange-600 hover:text-orange-700 font-medium">
-                    {{ __('dashboard.products_need_restock') }} →
-                </a>
+            <p class="text-xs text-orange-600 hover:text-orange-700 font-medium mt-2">
+                {{ __('dashboard.products_need_restock') }} →
             </p>
-        </div>
+        </a>
 
         <!-- Expiring Batches -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover">
+        <a href="{{ route('alerts') }}" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover transition-all hover:shadow-md hover:border-red-300 cursor-pointer">
             <div class="flex items-center justify-between mb-4">
                 <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-lg p-3">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,7 +98,7 @@
             <p class="text-sm font-medium text-gray-600 mb-1">{{ __('dashboard.expiring_soon') }}</p>
             <p class="text-2xl font-bold text-gray-900">{{ $expiringSoonBatches }}</p>
             <p class="text-xs text-gray-500 mt-2">{{ __('dashboard.already_expired', ['count' => $expiredBatches]) }}</p>
-        </div>
+        </a>
     </div>
 
     <!-- Recent Activity Section -->

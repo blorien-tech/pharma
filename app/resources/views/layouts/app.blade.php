@@ -66,6 +66,142 @@
 
     <style>
         [x-cloak] { display: none !important; }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Smooth Transitions for Interactive Elements */
+        * {
+            transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+
+        /* Remove transitions from Alpine.js elements to avoid conflicts */
+        [x-cloak], [x-show], [x-transition] {
+            transition: none !important;
+        }
+
+        /* Focus States for Accessibility */
+        button:focus,
+        a:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* Loading Animation */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Pulse Animation for Notifications */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Slide In from Right */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-slide-in-right {
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        /* Smooth Hover Effect for Cards */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Button Ripple Effect */
+        .btn-ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-ripple::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-ripple:active::after {
+            width: 300px;
+            height: 300px;
+        }
     </style>
 </head>
 <body class="h-full bg-gray-100 overflow-hidden" x-data="{ mobileMenuOpen: false, sidebarCollapsed: false }" @toggle-mobile-menu.window="mobileMenuOpen = !mobileMenuOpen" @sidebar-collapse-changed.window="sidebarCollapsed = $event.detail.collapsed">
@@ -85,7 +221,7 @@
             <main class="flex-1 overflow-y-auto bg-gray-50">
                 <!-- Flash Messages -->
                 @if(session('success'))
-                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4">
+                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4 animate-slide-in-right">
                     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative shadow-sm" role="alert">
                         <div class="flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -98,7 +234,7 @@
                 @endif
 
                 @if(session('error'))
-                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4">
+                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4 animate-slide-in-right">
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative shadow-sm" role="alert">
                         <div class="flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -111,7 +247,7 @@
                 @endif
 
                 @if(session('warning'))
-                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4">
+                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4 animate-slide-in-right">
                     <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg relative shadow-sm" role="alert">
                         <div class="flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -124,7 +260,7 @@
                 @endif
 
                 @if(session('info'))
-                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4">
+                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4 animate-slide-in-right">
                     <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg relative shadow-sm" role="alert">
                         <div class="flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -137,7 +273,7 @@
                 @endif
 
                 <!-- Page Content -->
-                <div class="px-4 sm:px-6 lg:px-8 py-6">
+                <div class="px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
                     @yield('content')
                 </div>
 

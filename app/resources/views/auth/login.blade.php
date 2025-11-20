@@ -3,7 +3,7 @@
 @section('title', 'Login - BLORIEN Pharma')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
     <div class="max-w-md w-full">
         <!-- Logo/Brand Section -->
         <div class="text-center mb-8">

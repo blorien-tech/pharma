@@ -26,6 +26,12 @@ return [
     'no' => 'না',
     'ok' => 'ঠিক আছে',
 
+    // System
+    'pharmacy_system' => 'ফার্মাসি সিস্টেম',
+    'settings' => 'সেটিংস',
+    'notifications' => 'বিজ্ঞপ্তি',
+    'no_notifications' => 'কোনো নতুন বিজ্ঞপ্তি নেই',
+
     // Common Labels
     'name' => 'নাম',
     'email' => 'ইমেইল',

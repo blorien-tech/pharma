@@ -23,6 +23,8 @@ return [
     'basic_mode' => 'Basic',
     'toggle_navigation' => 'Toggle navigation mode',
     'toggle_language' => 'Switch language',
+    'expand_sidebar' => 'Expand sidebar',
+    'collapse_sidebar' => 'Collapse sidebar',
 
     // User Info
     'welcome_user' => 'Welcome, :name!',

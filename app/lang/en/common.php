@@ -26,6 +26,12 @@ return [
     'no' => 'No',
     'ok' => 'OK',
 
+    // System
+    'pharmacy_system' => 'Pharmacy System',
+    'settings' => 'Settings',
+    'notifications' => 'Notifications',
+    'no_notifications' => 'No new notifications',
+
     // Common Labels
     'name' => 'Name',
     'email' => 'Email',

@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DueController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\DailyClosingController;
 
 Route::middleware('auth')->group(function () {
 
@@ -15,6 +16,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/products', [ProductController::class, 'apiIndex']);
     Route::post('/products', [ProductController::class, 'apiStore']);
     Route::get('/products/search', [ProductController::class, 'search']);
+    Route::post('/products/quick-stock', [ProductController::class, 'quickAddStock']); // Phase 3B
     Route::post('/products/{product}', [ProductController::class, 'apiUpdate']);
     Route::delete('/products/{product}', [ProductController::class, 'apiDestroy']);
 
@@ -44,5 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/dues', [DueController::class, 'store']);
     Route::get('/dues/lookup/phone', [DueController::class, 'lookupByPhone']);
     Route::get('/dues/statistics', [DueController::class, 'statistics']);
+
+    // Daily Closing API (Phase 3B)
+    Route::get('/daily-closing/data', [DailyClosingController::class, 'getData']);
 
 });

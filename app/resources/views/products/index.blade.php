@@ -3,16 +3,146 @@
 @section('title', 'Products - BLORIEN Pharma')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-6" x-data="productsPage()">
     <!-- Page Header -->
     <div class="flex justify-between items-center">
         <div>
             <h1 class="text-3xl font-bold text-gray-900">Products</h1>
             <p class="mt-1 text-sm text-gray-600">Manage your pharmacy inventory</p>
         </div>
-        <a href="{{ route('products.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
-            + Add Product
-        </a>
+        <div class="flex gap-3">
+            <button @click="showQuickStockModal = true" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium">
+                ⚡ Quick Add Stock
+            </button>
+            <a href="{{ route('products.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+                + Add Product
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Stock Add Modal -->
+    <div x-show="showQuickStockModal"
+         x-cloak
+         class="fixed inset-0 z-50 overflow-y-auto"
+         style="display: none;">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div x-show="showQuickStockModal"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 @click="showQuickStockModal = false"
+                 class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
+
+            <!-- Modal panel -->
+            <div x-show="showQuickStockModal"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+
+                <form @submit.prevent="submitQuickStock()" class="bg-white">
+                    <!-- Modal Header -->
+                    <div class="bg-green-600 px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-medium text-white">⚡ Quick Add Stock</h3>
+                            <button @click="showQuickStockModal = false" type="button" class="text-white hover:text-gray-200">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-sm text-green-100 mt-1">Quickly add stock to existing products</p>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="px-6 py-4 space-y-4">
+                        <!-- Product Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Product *</label>
+                            <select x-model="quickStock.product_id" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <option value="">Select a product...</option>
+                                @foreach(\App\Models\Product::where('is_active', true)->orderBy('name')->get() as $prod)
+                                <option value="{{ $prod->id }}">{{ $prod->name }} (Current: {{ $prod->current_stock }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Quantity to Add *</label>
+                            <input type="number" x-model="quickStock.quantity" required min="1"
+                                   placeholder="Enter quantity"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+
+                        <!-- Batch Number -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Batch Number *</label>
+                            <input type="text" x-model="quickStock.batch_number" required
+                                   placeholder="e.g., BATCH-2024-001"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+
+                        <!-- Expiry Date -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date *</label>
+                            <input type="date" x-model="quickStock.expiry_date" required
+                                   :min="new Date().toISOString().split('T')[0]"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+
+                        <!-- Purchase Price (optional) -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Purchase Price (optional)</label>
+                            <input type="number" x-model="quickStock.purchase_price" step="0.01" min="0"
+                                   placeholder="Cost per unit"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <p class="text-xs text-gray-500 mt-1">Leave blank to use product's default price</p>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="bg-gray-50 px-6 py-4 flex gap-3 justify-end">
+                        <button @click="showQuickStockModal = false" type="button"
+                                class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium">
+                            Cancel
+                        </button>
+                        <button type="submit" :disabled="processing"
+                                :class="processing ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'"
+                                class="px-4 py-2 text-white rounded-lg font-medium">
+                            <span x-show="!processing">Add Stock</span>
+                            <span x-show="processing">Adding...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div x-show="showSuccessToast"
+         x-transition:enter="ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-2"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         style="display: none;"
+         class="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+        <div class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span x-text="successMessage"></span>
+        </div>
     </div>
 
     <!-- Search Bar -->
@@ -116,4 +246,73 @@
     </div>
     @endif
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('productsPage', () => ({
+        showQuickStockModal: false,
+        processing: false,
+        showSuccessToast: false,
+        successMessage: '',
+        quickStock: {
+            product_id: '',
+            quantity: '',
+            batch_number: '',
+            expiry_date: '',
+            purchase_price: ''
+        },
+
+        async submitQuickStock() {
+            if (this.processing) return;
+
+            this.processing = true;
+
+            try {
+                const response = await fetch('/api/products/quick-stock', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify(this.quickStock)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Success - show toast and reload
+                    this.successMessage = data.message || 'Stock added successfully!';
+                    this.showSuccessToast = true;
+                    this.showQuickStockModal = false;
+
+                    // Reset form
+                    this.quickStock = {
+                        product_id: '',
+                        quantity: '',
+                        batch_number: '',
+                        expiry_date: '',
+                        purchase_price: ''
+                    };
+
+                    // Hide toast after 3 seconds and reload
+                    setTimeout(() => {
+                        this.showSuccessToast = false;
+                        window.location.reload();
+                    }, 3000);
+                } else {
+                    alert(data.message || 'Error adding stock. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error adding stock. Please try again.');
+            } finally {
+                this.processing = false;
+            }
+        }
+    }));
+});
+</script>
+@endpush
+
 @endsection

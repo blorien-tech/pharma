@@ -205,4 +205,52 @@ class ProductController extends Controller
             'message' => 'Product deleted successfully'
         ]);
     }
+
+    /**
+     * API: Quick add stock (Phase 3B)
+     * Quickly add stock to existing product with batch creation
+     */
+    public function quickAddStock(Request $request)
+    {
+        $validated = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+            'batch_number' => 'required|string|max:255',
+            'expiry_date' => 'required|date|after:today',
+            'purchase_price' => 'nullable|numeric|min:0',
+        ]);
+
+        try {
+            $product = Product::findOrFail($validated['product_id']);
+
+            // Use product's purchase price if not provided
+            $purchasePrice = $validated['purchase_price'] ?? $product->purchase_price;
+
+            // Create batch
+            $batch = $product->batches()->create([
+                'batch_number' => $validated['batch_number'],
+                'expiry_date' => $validated['expiry_date'],
+                'quantity_received' => $validated['quantity'],
+                'quantity_remaining' => $validated['quantity'],
+                'purchase_price' => $purchasePrice,
+                'is_active' => true,
+            ]);
+
+            // Update product stock
+            $product->increment('current_stock', $validated['quantity']);
+
+            return response()->json([
+                'success' => true,
+                'message' => "Successfully added {$validated['quantity']} units of {$product->name}",
+                'batch' => $batch,
+                'product' => $product->fresh(),
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error adding stock: ' . $e->getMessage()
+            ], 422);
+        }
+    }
 }

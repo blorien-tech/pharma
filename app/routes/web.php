@@ -12,6 +12,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DueController;
+use App\Http\Controllers\DailyClosingController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AnalyticsController;
 
@@ -98,6 +99,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dues/{due}/payment', [DueController::class, 'showPayment'])->name('dues.payment');
     Route::post('/dues/{due}/payment', [DueController::class, 'recordPayment'])->name('dues.payment.store');
     Route::get('/dues/lookup/phone', [DueController::class, 'lookupByPhone'])->name('dues.lookup.phone');
+
+    // Daily Closing (Phase 3B)
+    Route::get('/daily-closing', [DailyClosingController::class, 'index'])->name('daily-closing.index');
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');

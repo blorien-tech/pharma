@@ -8,14 +8,14 @@
     <div class="flex justify-between items-start">
         <div>
             <h1 class="text-3xl font-bold text-gray-900">{{ $supplier->name }}</h1>
-            <p class="mt-1 text-sm text-gray-600">{{ $supplier->company_name ?? 'Supplier Details' }}</p>
+            <p class="mt-1 text-sm text-gray-600">{{ $supplier->company_name ?? __('suppliers.supplier_details') }}</p>
         </div>
         <div class="flex gap-2">
             <a href="{{ route('suppliers.edit', $supplier) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
-                Edit Supplier
+                {{ __('suppliers.edit_supplier') }}
             </a>
             <a href="{{ route('suppliers.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium">
-                Back to List
+                {{ __('common.back_to_list') }}
             </a>
         </div>
     </div>
@@ -23,69 +23,69 @@
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="bg-white rounded-lg shadow p-6">
-            <p class="text-sm font-medium text-gray-600">Total Products</p>
+            <p class="text-sm font-medium text-gray-600">{{ __('common.total_products') }}</p>
             <p class="text-3xl font-bold text-gray-900">{{ $stats['total_products'] }}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
-            <p class="text-sm font-medium text-gray-600">Total Spent</p>
+            <p class="text-sm font-medium text-gray-600">{{ __('suppliers.total_spent') }}</p>
             <p class="text-3xl font-bold text-green-600">৳{{ number_format($stats['total_spent'], 2) }}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
-            <p class="text-sm font-medium text-gray-600">Pending Orders</p>
+            <p class="text-sm font-medium text-gray-600">{{ __('suppliers.pending_orders') }}</p>
             <p class="text-3xl font-bold text-orange-600">{{ $stats['pending_orders'] }}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
-            <p class="text-sm font-medium text-gray-600">Total Orders</p>
+            <p class="text-sm font-medium text-gray-600">{{ __('suppliers.total_orders') }}</p>
             <p class="text-3xl font-bold text-gray-900">{{ $stats['total_orders'] }}</p>
         </div>
     </div>
 
     <!-- Supplier Information -->
     <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Supplier Information</h2>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('suppliers.supplier_information') }}</h2>
         <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
             <div>
-                <dt class="text-sm font-medium text-gray-500">Contact Name</dt>
+                <dt class="text-sm font-medium text-gray-500">{{ __('suppliers.contact_person') }}</dt>
                 <dd class="mt-1 text-sm text-gray-900">{{ $supplier->name }}</dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Company Name</dt>
+                <dt class="text-sm font-medium text-gray-500">{{ __('suppliers.company_name') }}</dt>
                 <dd class="mt-1 text-sm text-gray-900">{{ $supplier->company_name ?? '-' }}</dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Email</dt>
+                <dt class="text-sm font-medium text-gray-500">{{ __('suppliers.email') }}</dt>
                 <dd class="mt-1 text-sm text-gray-900">{{ $supplier->email ?? '-' }}</dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Phone</dt>
+                <dt class="text-sm font-medium text-gray-500">{{ __('suppliers.phone') }}</dt>
                 <dd class="mt-1 text-sm text-gray-900">{{ $supplier->phone }}</dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Address</dt>
+                <dt class="text-sm font-medium text-gray-500">{{ __('suppliers.address') }}</dt>
                 <dd class="mt-1 text-sm text-gray-900">{{ $supplier->address ?? '-' }}</dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">City, Country</dt>
+                <dt class="text-sm font-medium text-gray-500">{{ __('common.city_country') }}</dt>
                 <dd class="mt-1 text-sm text-gray-900">
                     {{ $supplier->city ? $supplier->city . ', ' : '' }}{{ $supplier->country ?? '-' }}
                 </dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Tax ID</dt>
+                <dt class="text-sm font-medium text-gray-500">{{ __('common.tax_id') }}</dt>
                 <dd class="mt-1 text-sm text-gray-900">{{ $supplier->tax_id ?? '-' }}</dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Status</dt>
+                <dt class="text-sm font-medium text-gray-500">{{ __('common.status') }}</dt>
                 <dd class="mt-1">
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                         {{ $supplier->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                        {{ $supplier->is_active ? 'Active' : 'Inactive' }}
+                        {{ $supplier->is_active ? __('suppliers.active') : __('suppliers.inactive') }}
                     </span>
                 </dd>
             </div>
             @if($supplier->notes)
             <div class="md:col-span-2">
-                <dt class="text-sm font-medium text-gray-500">Notes</dt>
+                <dt class="text-sm font-medium text-gray-500">{{ __('common.notes') }}</dt>
                 <dd class="mt-1 text-sm text-gray-900">{{ $supplier->notes }}</dd>
             </div>
             @endif
@@ -96,19 +96,19 @@
     @if($supplier->purchaseOrders->count() > 0)
     <div class="bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 class="text-lg font-semibold text-gray-900">Recent Purchase Orders</h2>
+            <h2 class="text-lg font-semibold text-gray-900">{{ __('suppliers.purchase_orders') }}</h2>
             <a href="{{ route('purchase-orders.index', ['supplier' => $supplier->id]) }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                View All →
+                {{ __('common.view_all') }} →
             </a>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">PO Number</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.po_number') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.date') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.total') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.status') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -143,16 +143,16 @@
     @if($supplier->products->count() > 0)
     <div class="bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Products from this Supplier ({{ $supplier->products->count() }})</h2>
+            <h2 class="text-lg font-semibold text-gray-900">{{ __('suppliers.supplied_products') }} ({{ $supplier->products->count() }})</h2>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">SKU</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.name') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.sku') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.stock') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.price') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

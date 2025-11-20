@@ -1,11 +1,15 @@
 # BLORIEN PHARMA - ARCHITECTURE SUMMARY
 
+**Version**: 2.5 (Phase 3A Complete)
+**Last Updated**: January 2025
+
 ## System Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                         Laravel Application                          │
-│                      BLORIEN Pharma System v1.0                      │
+│                      BLORIEN Pharma System v2.5                      │
+│                    (Phase 3A - Small Pharmacy Ready)                 │
 └─────────────────────────────────────────────────────────────────────┘
 
 ┌────────────────────────────────────────────────────────────────────┐
@@ -27,7 +31,7 @@
 └────────────────────────────────────────────────────────────────────┘
           ↓
 ┌────────────────────────────────────────────────────────────────────┐
-│                   CONTROLLER LAYER (12 Controllers)                │
+│                   CONTROLLER LAYER (13 Controllers)                │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
 │  • AuthController          • BatchController                      │
@@ -36,6 +40,7 @@
 │  • PosController           • AnalyticsController                  │
 │  • TransactionController   • SupplierController                   │
 │  • CustomerController      • PurchaseOrderController              │
+│  • DueController (Phase 3A)                                       │
 │                                                                    │
 │  Role: Request validation, call services, return responses       │
 └────────────────────────────────────────────────────────────────────┘

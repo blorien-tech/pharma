@@ -809,16 +809,476 @@ Products should be organized by:
 
 *For technical issues or system errors, contact your system administrator.*
 
-**BLORIEN Pharma System v2.0 - Phase 2 Complete**
+**BLORIEN Pharma System v2.5 - Phase 3A Complete**
 
-### What's New in Version 2.0
+### What's New in Version 2.5 (Phase 3A)
 
+- **Quick Phone Lookup**: Type phone number for instant customer match
+- **Generic/Brand Search**: Search medicines by both generic and brand names
+- **Simple Due Tracking (বাকি)**: Notebook-style due tracking without forced customer accounts
+- **Partial Payment Support**: Track and collect partial payments over time
+- **Enhanced Product Search**: Search by name, generic, brand, SKU, or barcode
+- **Flexible Workflows**: Optional fields, skip steps as needed
+
+---
+
+## Phase 3A Features Guide
+
+### Quick Customer Phone Lookup
+
+**Purpose**: Find customers instantly by typing their phone number
+
+**How to Use**:
+1. In POS, look for "Quick Phone Lookup" field
+2. Start typing customer's phone number
+3. System automatically finds and fills customer if registered
+4. No need to scroll through dropdown
+
+**Example**:
+```
+Type: 01712... → Auto-fills: "Karim Mia - 01712345678"
+```
+
+**Benefits**:
+- Save time (no scrolling)
+- Reduce errors
+- Quick for regular customers
+
+---
+
+### Generic and Brand Name Search
+
+**Purpose**: Find medicines whether customer says generic or brand name
+
+**How it Works**:
+The system now searches products by:
+- Product Name
+- **Generic Name** (e.g., "Paracetamol")
+- **Brand Name** (e.g., "Napa")
+- SKU
+- Barcode
+
+**Examples**:
+
+Customer says "Napa":
+1. Type "Napa" in product search
+2. Finds "Napa 500mg Tablet" (brand name match)
+
+Customer says "Paracetamol":
+1. Type "Paracetamol" in product search
+2. Finds all products with generic name "Paracetamol"
+   - Napa 500mg
+   - Ace 500mg
+   - etc.
+
+**When Adding Products**:
+- Enter both Generic Name and Brand Name
+- Makes search more flexible
+- Customers can ask either way
+
+**Example Product Entry**:
+```
+Product Name: Napa 500mg Tablet
+Generic Name: Paracetamol
+Brand Name: Napa
+```
+
+---
+
+### Simple Due Tracking (বাকি হিসাব)
+
+**Purpose**: Track customer dues like a digital notebook
+
+**Key Difference from Credit**:
+- **Credit**: Formal customer account required, credit limit
+- **Due (বাকি)**: Simple notebook entry, just name needed
+
+**How to Mark Sale as Due**:
+
+1. **In POS**, add products to cart normally
+2. Check **"Mark as Due (বাকি)"** checkbox
+3. Fill simple due form:
+   - Customer Name * (required)
+   - Phone (optional but recommended)
+   - Due Date (optional)
+   - Notes (optional)
+4. Click **"Complete Sale"**
+5. System creates:
+   - Sale transaction
+   - Due entry linked to sale
+   - Ready for payment collection
+
+**Quick Due Entry Example**:
+```
+✓ Mark as Due (বাকি)
+   Customer Name: Rahman
+   Phone: 01723456789
+   Due Date: [7 days from today]
+   Notes: Regular customer, monthly payment
+
+   → Sale: ৳850
+   → Due created: Rahman owes ৳850
+```
+
+**Auto-Fill from Customer**:
+- If you select a customer from dropdown
+- Due form auto-fills with their name and phone
+- Save even more time
+
+**Cannot Use Both**:
+- Cannot mark as Due AND use Credit
+- Choose one method per sale
+
+---
+
+### Managing Dues
+
+**View All Dues**:
+1. Click **"Dues (বাকি)"** in navigation
+2. See all pending/partial/paid dues
+3. Summary cards show:
+   - Total Pending: ৳
+   - Total Overdue: ৳
+   - Pending Count
+   - Partial Payments Count
+
+**Filter Dues**:
+- Search by customer name or phone
+- Filter by status:
+  - PENDING: No payment made
+  - PARTIAL: Some payment received
+  - PAID: Fully paid
+  - OVERDUE: Past due date, not paid
+
+**Due Status Colors**:
+- 🟡 Yellow: Pending
+- 🔵 Blue: Partial
+- 🟢 Green: Paid
+- 🔴 Red: Overdue
+
+---
+
+### Collecting Due Payments
+
+**Full Process**:
+
+1. **Navigate to Dues**
+   - Click "Dues (বাকি)" in menu
+   - Find customer's due
+   - Click **"Collect"** button
+
+2. **Payment Form Shows**:
+   - Customer name and remaining balance
+   - Payment amount field (pre-filled with full amount)
+   - Quick buttons: "Half" and "Full"
+   - Payment method dropdown
+   - Notes field (optional)
+
+3. **Enter Payment**:
+   - Type amount or click "Half"/"Full"
+   - Select payment method (Cash/Card/Mobile/Other)
+   - Add notes if needed
+   - Click **"Record Payment"**
+
+4. **System Updates**:
+   - Deducts from remaining balance
+   - Updates status automatically:
+     - If paid in full → PAID
+     - If partial → PARTIAL
+   - Records in payment history
+   - Shows who collected and when
+
+**Partial Payment Example**:
+```
+Due: ৳1000
+Customer: Karim
+
+Payment 1: ৳400 (Cash) - Dec 15
+  → Remaining: ৳600
+  → Status: PARTIAL
+
+Payment 2: ৳600 (bKash) - Dec 20
+  → Remaining: ৳0
+  → Status: PAID
+  → Paid at: Dec 20, 2024
+```
+
+**Payment History**:
+- Every payment recorded
+- Shows: amount, method, date, who collected
+- Complete audit trail
+- View in Due details page
+
+---
+
+### Due Details Page
+
+**What You See**:
+- Customer information (name, phone)
+- Amount summary:
+  - Total amount
+  - Amount paid (green)
+  - Amount remaining (yellow/green)
+- Status badge
+- Important dates:
+  - Recorded on
+  - Due date
+  - Paid at (if fully paid)
+  - Recorded by (staff name)
+- Payment history (all payments)
+- Notes
+- Link to original transaction
+
+**Quick Actions**:
+- Collect Payment button (if not fully paid)
+- View Transaction button
+- Print summary (future)
+
+---
+
+### Common Scenarios
+
+#### Scenario 1: Regular Customer Quick Due
+
+**Situation**: Regular customer Rahman wants to buy on due
+
+**Steps**:
+1. POS → Add products (৳500 total)
+2. Type "01712..." in phone lookup
+3. "Rahman" auto-fills
+4. Check "Mark as Due (বাকি)"
+5. Name/phone already filled
+6. Set due date: 7 days
+7. Complete sale
+8. Done! Due recorded.
+
+**Time**: ~20 seconds
+
+---
+
+#### Scenario 2: New Customer Quick Due
+
+**Situation**: New customer, no account, wants due
+
+**Steps**:
+1. POS → Add products
+2. Check "Mark as Due (বাকি)"
+3. Type name: "Nazrul"
+4. Leave phone blank (or add if known)
+5. Complete sale
+6. Due recorded
+
+**Time**: ~15 seconds
+**No customer account needed!**
+
+---
+
+#### Scenario 3: Collecting Partial Payment
+
+**Situation**: Karim owes ৳1000, pays ৳300 today
+
+**Steps**:
+1. Dues → Find "Karim - ৳1000"
+2. Click "Collect"
+3. Enter ৳300
+4. Select "Cash"
+5. Record Payment
+6. Status → PARTIAL
+7. Remaining → ৳700
+
+**Result**:
+- Payment tracked
+- Karim can pay ৳700 later
+- Complete history maintained
+
+---
+
+#### Scenario 4: Finding All Dues for a Customer
+
+**Situation**: Want to see all of Karim's dues
+
+**Steps**:
+1. Dues → Search box
+2. Type "Karim" or "01712345678"
+3. See all Karim's dues:
+   - Current pending
+   - Partial payments
+   - Paid history
+4. Total pending amount shown
+
+---
+
+### Tips for Using Dues System
+
+**Best Practices**:
+- Always get phone number (easier to track)
+- Set due dates (helps with collection)
+- Add notes for context ("monthly customer", "will pay Friday")
+- Collect payments promptly
+- Review pending dues daily
+- Follow up on overdue
+
+**When to Use Due vs Credit**:
+
+**Use Due (বাকি) when**:
+- Quick one-time due
+- Don't want to create customer account
+- Small amount
+- Irregular customer
+
+**Use Credit when**:
+- Regular customer with formal agreement
+- Need credit limit management
+- Want detailed credit history
+- Business customer
+
+**Both track accurately!**
+- Complete audit trails
+- Payment history
+- Status tracking
+
+---
+
+### Searching Products (Updated)
+
+**Old Way**:
+- Search by exact product name only
+
+**New Way (Phase 3A)**:
+- Search by ANY of these:
+  - Product Name: "Napa 500mg Tablet"
+  - Generic Name: "Paracetamol"
+  - Brand Name: "Napa"
+  - SKU: "PARA-500"
+  - Barcode: "8901234567890"
+
+**Example Search Results**:
+
+Searching "Paracetamol":
+```
+✓ Napa 500mg Tablet (generic: Paracetamol)
+✓ Ace 500mg Tablet (generic: Paracetamol)
+✓ Fast 500mg Tablet (generic: Paracetamol)
+```
+
+Searching "Napa":
+```
+✓ Napa 500mg Tablet (brand: Napa)
+✓ Napa 100mg Syrup (brand: Napa)
+✓ Napa Extend 665mg (brand: Napa)
+```
+
+**Works in**:
+- POS product search
+- Product management page
+- Reports
+- Everywhere!
+
+---
+
+## Updated Common Tasks
+
+### Processing a Sale with Due
+
+1. Go to POS
+2. Search products (by name, generic, or brand!)
+3. Add to cart
+4. Check "Mark as Due (বাকি)"
+5. Enter customer name (phone optional)
+6. Set due date if needed
+7. Complete sale
+8. Due recorded automatically
+
+### Collecting a Due Payment
+
+1. Go to Dues page
+2. Find customer (search by name or phone)
+3. Click "Collect Payment"
+4. Enter amount (or click Half/Full)
+5. Select payment method
+6. Record payment
+7. Payment history updated
+
+### Finding a Product by Generic Name
+
+1. Go to POS (or Products page)
+2. Type generic name (e.g., "Paracetamol")
+3. See all matching products
+4. Click to add to cart
+
+### Daily Dues Review
+
+1. Go to Dues page
+2. Check summary cards:
+   - Total pending
+   - Total overdue
+3. Filter by "OVERDUE" status
+4. Follow up with customers
+5. Collect payments
+
+---
+
+## Keyboard Shortcuts (Updated)
+
+- **Search in POS**: Auto-focused on load
+- **Escape**: Clear search results
+- **Enter**: Add selected product to cart
+- **Tab**: Navigate between due form fields
+
+---
+
+## Troubleshooting (Updated)
+
+### Cannot Find Product by Brand Name
+
+- Make sure brand name is filled in product details
+- Check spelling
+- Try generic name instead
+- Contact manager to update product
+
+### Customer Not Found by Phone
+
+- Check phone number is entered in customer record
+- Phone must match exactly
+- Try searching by name instead
+- Or create new due without customer link
+
+### Due Not Showing in List
+
+- Check filter settings (might be filtered out)
+- Check if status is PAID (paid dues hidden by default)
+- Use search box to find specific due
+- Check date range if filtered
+
+### Cannot Record Payment
+
+- Check remaining balance (can't pay more than owed)
+- Check due status (can't pay if already PAID)
+- Try refreshing page
+- Contact support
+
+---
+
+*For technical issues or system errors, contact your system administrator.*
+
+**BLORIEN Pharma System v2.5 - Phase 3A Complete**
+
+### Version History
+
+**v2.5 (Phase 3A)** - January 2025
+- Quick Phone Lookup
+- Generic/Brand Name Search
+- Simple Due Tracking (বাকি)
+- Partial Payment Support
+- Enhanced Product Search
+
+**v2.0 (Phase 2)** - December 2024
 - Supplier Management
 - Purchase Order System
 - Customer Credit Management
 - Advanced Reporting (6 reports)
 - Analytics Dashboard with Charts
-- Credit Sales through POS
-- Payment Recording
-- Balance Adjustments
-- Supplier Performance Tracking
+
+**v1.0 (MVP)** - November 2024
+- Initial Release
+- Basic POS and Inventory

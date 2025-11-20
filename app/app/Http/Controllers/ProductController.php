@@ -86,12 +86,20 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'purchase_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
-            'current_stock' => 'required|integer|min:0',
+            'add_stock' => 'nullable|integer|min:0',
             'min_stock' => 'required|integer|min:0',
             'is_active' => 'boolean',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
+
+        // Handle stock addition - if add_stock is provided and > 0, add it to current stock
+        if (isset($validated['add_stock']) && $validated['add_stock'] > 0) {
+            $validated['current_stock'] = $product->current_stock + $validated['add_stock'];
+        }
+
+        // Remove add_stock from validated data as it's not a database column
+        unset($validated['add_stock']);
 
         $product->update($validated);
 

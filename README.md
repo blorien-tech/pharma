@@ -1,9 +1,10 @@
 # BLORIEN Pharma - Pharmacy Management System
 
-A comprehensive yet simple pharmacy management system built for **Bangladesh small pharmacies**, featuring Point of Sale (POS), inventory management, batch tracking, notebook-style due tracking (বাকি হিসাব), and advanced analytics.
+A comprehensive yet simple pharmacy management system built for **Bangladesh small pharmacies**, featuring Point of Sale (POS), inventory management, batch tracking, notebook-style due tracking (বাকি হিসাব), multi-language support, and advanced analytics.
 
-**Version**: 2.5 (Phase 3A Complete)
+**Version**: 2.6 (Phase 3B Complete)
 **Status**: ✅ Production Ready for Small Pharmacies
+**Languages**: English, Bengali (বাংলা)
 
 ---
 
@@ -30,12 +31,26 @@ A comprehensive yet simple pharmacy management system built for **Bangladesh sma
 - ✅ **Inventory Alerts**: Low stock and expiry warnings
 - ✅ **Dashboard**: Real-time statistics and metrics
 
-### Phase 3A - Small Pharmacy Features 🆕
+### Phase 3A - Small Pharmacy Features
 - ✅ **Quick Phone Lookup**: Type phone → customer auto-fills
 - ✅ **Generic/Brand Search**: Find "Napa" or "Paracetamol" - both work!
 - ✅ **Notebook-Style Dues (বাকি)**: Simple due tracking like digital notebook
 - ✅ **Flexible Workflows**: Optional customer profiles, skip steps as needed
 - ✅ **Partial Payments**: Track and collect payments over time
+
+### Phase 3B - Workflow Enhancements 🆕
+- ✅ **Quick Stock Add**: Add stock in < 20 seconds without full purchase order
+- ✅ **Daily Closing Summary**: One-click end-of-day report with print support
+- ✅ **Dashboard Dues Widgets**: Instant visibility of pending and overdue dues
+- ✅ **Simplified Navigation**: Basic/Advanced mode toggle for cleaner interface
+- ✅ **Performance Optimizations**: Cached queries, indexed tables, debounced search
+
+### Multi-Language Support 🆕
+- ✅ **English & Bengali**: Full system translation in both languages
+- ✅ **Database-Stored Preferences**: Language choice persists across sessions
+- ✅ **Instant Language Switching**: One-click toggle in navigation bar
+- ✅ **Validation Messages**: Form errors in user's preferred language
+- ✅ **JavaScript Translations**: Alerts and dynamic messages localized
 
 ### Supply Chain Management
 - ✅ **Supplier Management**: Track suppliers with contact information
@@ -74,6 +89,7 @@ A comprehensive yet simple pharmacy management system built for **Bangladesh sma
 - **Database**: MySQL 8.0 (12 tables, see [DATABASE.md](DATABASE.md))
 - **Frontend**: TailwindCSS, Alpine.js
 - **Charts**: Chart.js 4.4.0
+- **Localization**: Laravel Translation System (English, Bengali)
 - **Infrastructure**: Docker (Nginx + PHP-FPM + MySQL)
 
 ---
@@ -126,7 +142,7 @@ http://localhost:8000
 ## 📚 Documentation
 
 - **[DATABASE.md](DATABASE.md)** - Complete database schema (12 tables)
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System architecture and design patterns
+- **[ARCHITECTURE_SUMMARY.md](ARCHITECTURE_SUMMARY.md)** - System architecture and design patterns
 - **[USER_GUIDE.md](USER_GUIDE.md)** - How to use the system (for pharmacy staff)
 - **[INSTALLATION.md](INSTALLATION.md)** - Detailed setup instructions
 - **[ROADMAP.md](ROADMAP.md)** - Future development plans
@@ -164,21 +180,22 @@ Shopkeeper: Must create full customer profile first...
 
 ## 🗺️ Implementation Status
 
-### ✅ Completed (Phases 1, 2, 3A)
+### ✅ Completed (Phases 1, 2, 3A, 3B)
 
 | Phase | Features | Status |
 |-------|----------|--------|
 | **Phase 1 (MVP)** | Auth, Products, Batches, POS, Transactions | ✅ Complete |
 | **Phase 2** | Suppliers, POs, Customers, Credit, Reports, Analytics | ✅ Complete |
 | **Phase 3A** | Dues, Phone Lookup, Generic/Brand Search | ✅ Complete |
+| **Phase 3B** | Quick Stock, Daily Closing, Multi-Language, Performance | ✅ Complete |
 
 ### 🔜 Next Priorities
 
 | Phase | Features | Priority |
 |-------|----------|----------|
-| **Phase 3B** | Quick stock add, Daily closing, Simplified UI | High |
-| **Phase 4** | DGDA compliance (Schedule drugs, Prescriptions) | Medium |
-| **Phase 5** | Optional bKash/Nagad integration | Low |
+| **Phase 4** | DGDA compliance (Schedule drugs, Prescriptions) | High |
+| **Phase 5** | Mobile app (React Native) | Medium |
+| **Phase 6** | Optional bKash/Nagad integration | Low |
 
 See [ROADMAP.md](ROADMAP.md) for details.
 
@@ -236,12 +253,15 @@ docker compose exec db mysqldump -u root -p blorien_pharma > backup.sql
 ## 📊 System Statistics
 
 - **Total Tables**: 12
-- **Total Controllers**: 13
+- **Total Controllers**: 14
 - **Total Models**: 12
-- **Web Routes**: 100+
-- **API Routes**: 25+
-- **Views**: 50+
-- **Migrations**: 10
+- **Total Middlewares**: 3
+- **Web Routes**: 105+
+- **API Routes**: 27+
+- **Views**: 52+
+- **Migrations**: 12
+- **Translation Keys**: 200+
+- **Languages**: 2 (English, Bengali)
 
 ---
 
@@ -297,15 +317,16 @@ MIT License
 Developed by **BLORIEN Tech**
 
 Built specifically for Bangladesh small pharmacies with:
+- Full Bengali language support
 - Understanding of local workflows
-- Bengali language support (বাকি)
 - Generic/brand medicine search
-- Simple notebook-style tracking
-- Professional accuracy
+- Simple notebook-style tracking (বাকি হিসাব)
+- Professional accuracy with flexibility
 
 ---
 
-**Current Version**: 2.5 (Phase 3A Complete - January 2025)
+**Current Version**: 2.6 (Phase 3B Complete - January 2025)
 **Status**: ✅ Production Ready
+**Latest**: Multi-language support, workflow enhancements, performance optimizations
 
 *Built for Bangladesh, built for simplicity, built for accuracy.* 🇧🇩

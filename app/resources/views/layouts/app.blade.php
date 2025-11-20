@@ -16,7 +16,13 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100" x-data="{
+    advancedMode: localStorage.getItem('nav_mode') !== 'basic',
+    toggleMode() {
+        this.advancedMode = !this.advancedMode;
+        localStorage.setItem('nav_mode', this.advancedMode ? 'advanced' : 'basic');
+    }
+}">
     @auth
     <!-- Navigation -->
     <nav class="bg-blue-600 text-white shadow-lg">
@@ -25,6 +31,7 @@
                 <div class="flex items-center space-x-4">
                     <h1 class="text-2xl font-bold">BLORIEN Pharma</h1>
                     <div class="hidden md:flex space-x-4">
+                        <!-- Basic Mode Links (Always visible) -->
                         <a href="{{ route('dashboard') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('dashboard') ? 'bg-blue-700' : '' }}">
                             Dashboard
                         </a>
@@ -34,36 +41,60 @@
                         <a href="{{ route('products.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('products.*') ? 'bg-blue-700' : '' }}">
                             Products
                         </a>
-                        <a href="{{ route('transactions.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('transactions.*') ? 'bg-blue-700' : '' }}">
-                            Transactions
+                        <a href="{{ route('dues.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('dues.*') ? 'bg-blue-700' : '' }}">
+                            Dues (বাকি)
                         </a>
                         <a href="{{ route('alerts') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('alerts') ? 'bg-blue-700' : '' }}">
                             Alerts
                         </a>
-                        <a href="{{ route('customers.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('customers.*') ? 'bg-blue-700' : '' }}">
-                            Customers
-                        </a>
-                        <a href="{{ route('dues.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('dues.*') ? 'bg-blue-700' : '' }}">
-                            Dues (বাকি)
-                        </a>
-                        <a href="{{ route('reports.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('reports.*') ? 'bg-blue-700' : '' }}">
-                            Reports
-                        </a>
-                        <a href="{{ route('analytics.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('analytics.*') ? 'bg-blue-700' : '' }}">
-                            Analytics
-                        </a>
+
+                        <!-- Advanced Mode Links (Conditionally visible) -->
+                        <template x-if="advancedMode">
+                            <a href="{{ route('transactions.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('transactions.*') ? 'bg-blue-700' : '' }}">
+                                Transactions
+                            </a>
+                        </template>
+                        <template x-if="advancedMode">
+                            <a href="{{ route('customers.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('customers.*') ? 'bg-blue-700' : '' }}">
+                                Customers
+                            </a>
+                        </template>
+                        <template x-if="advancedMode">
+                            <a href="{{ route('reports.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('reports.*') ? 'bg-blue-700' : '' }}">
+                                Reports
+                            </a>
+                        </template>
+                        <template x-if="advancedMode">
+                            <a href="{{ route('daily-closing.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('daily-closing.*') ? 'bg-blue-700' : '' }}">
+                                Daily Closing
+                            </a>
+                        </template>
+                        <template x-if="advancedMode">
+                            <a href="{{ route('analytics.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('analytics.*') ? 'bg-blue-700' : '' }}">
+                                Analytics
+                            </a>
+                        </template>
                         @if(auth()->user()->hasRole(['owner', 'manager']))
-                        <a href="{{ route('suppliers.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('suppliers.*') ? 'bg-blue-700' : '' }}">
-                            Suppliers
-                        </a>
-                        <a href="{{ route('users.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('users.*') ? 'bg-blue-700' : '' }}">
-                            Users
-                        </a>
+                        <template x-if="advancedMode">
+                            <a href="{{ route('suppliers.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('suppliers.*') ? 'bg-blue-700' : '' }}">
+                                Suppliers
+                            </a>
+                        </template>
+                        <template x-if="advancedMode">
+                            <a href="{{ route('users.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('users.*') ? 'bg-blue-700' : '' }}">
+                                Users
+                            </a>
+                        </template>
                         @endif
                     </div>
                 </div>
 
                 <div class="flex items-center space-x-4">
+                    <!-- Navigation Mode Toggle (Phase 3B) -->
+                    <button @click="toggleMode()" class="bg-blue-500 hover:bg-blue-700 px-3 py-2 rounded text-sm transition" title="Toggle navigation mode">
+                        <span x-show="advancedMode">📋 Advanced</span>
+                        <span x-show="!advancedMode">⚡ Basic</span>
+                    </button>
                     <span class="text-sm">{{ auth()->user()->name }} ({{ ucfirst(auth()->user()->role) }})</span>
                     <form action="{{ route('logout') }}" method="POST" class="inline">
                         @csrf

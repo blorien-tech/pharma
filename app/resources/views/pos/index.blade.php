@@ -270,6 +270,7 @@ function posApp() {
     return {
         searchQuery: '',
         searchResults: [],
+        searchDebounceTimer: null,
         cart: [],
         subtotal: 0,
         discount: 0,
@@ -378,21 +379,29 @@ function posApp() {
         },
 
         async searchProducts() {
+            // Clear existing timer (Phase 3B: Debounce search for performance)
+            if (this.searchDebounceTimer) {
+                clearTimeout(this.searchDebounceTimer);
+            }
+
             if (this.searchQuery.length < 2) {
                 this.searchResults = [];
                 return;
             }
 
-            try {
-                const response = await fetch(`/api/products/search?q=${encodeURIComponent(this.searchQuery)}`, {
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    }
-                });
-                this.searchResults = await response.json();
-            } catch (error) {
-                console.error('Search error:', error);
-            }
+            // Debounce search by 300ms
+            this.searchDebounceTimer = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/api/products/search?q=${encodeURIComponent(this.searchQuery)}`, {
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        }
+                    });
+                    this.searchResults = await response.json();
+                } catch (error) {
+                    console.error('Search error:', error);
+                }
+            }, 300);
         },
 
         addToCart(product) {

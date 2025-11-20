@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Batches - ' . $product->name)
+@section('title', __('products.batches') . ' - ' . $product->name)
 
 @section('content')
 <div class="space-y-6">
     <!-- Page Header -->
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">{{ $product->name }} - Batches</h1>
-            <p class="mt-1 text-sm text-gray-600">Manage product batches and expiry dates</p>
+            <h1 class="text-3xl font-bold text-gray-900">{{ $product->name }} - {{ __('products.batches') }}</h1>
+            <p class="mt-1 text-sm text-gray-600">{{ __('products.batches_subtitle') }}</p>
         </div>
         <a href="{{ route('products.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium">
-            ← Back to Products
+            {{ __('products.back_to_products') }}
         </a>
     </div>
 
@@ -19,19 +19,19 @@
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-                <p class="text-sm text-blue-600 font-medium">SKU</p>
+                <p class="text-sm text-blue-600 font-medium">{{ __('products.sku') }}</p>
                 <p class="text-lg font-semibold text-blue-900">{{ $product->sku }}</p>
             </div>
             <div>
-                <p class="text-sm text-blue-600 font-medium">Current Stock</p>
-                <p class="text-lg font-semibold text-blue-900">{{ $product->current_stock }} units</p>
+                <p class="text-sm text-blue-600 font-medium">{{ __('products.current_stock') }}</p>
+                <p class="text-lg font-semibold text-blue-900">{{ $product->current_stock }} {{ __('products.units') }}</p>
             </div>
             <div>
-                <p class="text-sm text-blue-600 font-medium">Selling Price</p>
-                <p class="text-lg font-semibold text-blue-900">৳{{ number_format($product->selling_price, 2) }}</p>
+                <p class="text-sm text-blue-600 font-medium">{{ __('products.selling_price') }}</p>
+                <p class="text-lg font-semibold text-blue-900">{{ __('common.currency_symbol') }}{{ number_format($product->selling_price, 2) }}</p>
             </div>
             <div>
-                <p class="text-sm text-blue-600 font-medium">Total Batches</p>
+                <p class="text-sm text-blue-600 font-medium">{{ __('products.total_batches') }}</p>
                 <p class="text-lg font-semibold text-blue-900">{{ $batches->total() }}</p>
             </div>
         </div>
@@ -39,7 +39,7 @@
 
     <!-- Add Batch Form -->
     <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Add New Batch</h2>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('products.add_new_batch') }}</h2>
 
         <form action="{{ route('batches.store', $product) }}" method="POST">
             @csrf
@@ -56,14 +56,14 @@
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                    <label for="batch_number" class="block text-sm font-medium text-gray-700">Batch Number *</label>
+                    <label for="batch_number" class="block text-sm font-medium text-gray-700">{{ __('products.batch_number_label') }}</label>
                     <input type="text" name="batch_number" id="batch_number" required
                         value="{{ old('batch_number') }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border">
                 </div>
 
                 <div>
-                    <label for="expiry_date" class="block text-sm font-medium text-gray-700">Expiry Date *</label>
+                    <label for="expiry_date" class="block text-sm font-medium text-gray-700">{{ __('products.expiry_date_label') }}</label>
                     <input type="date" name="expiry_date" id="expiry_date" required
                         value="{{ old('expiry_date') }}"
                         min="{{ date('Y-m-d', strtotime('+1 day')) }}"
@@ -71,14 +71,14 @@
                 </div>
 
                 <div>
-                    <label for="quantity_received" class="block text-sm font-medium text-gray-700">Quantity *</label>
+                    <label for="quantity_received" class="block text-sm font-medium text-gray-700">{{ __('products.quantity') }} *</label>
                     <input type="number" name="quantity_received" id="quantity_received" min="1" required
                         value="{{ old('quantity_received') }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border">
                 </div>
 
                 <div>
-                    <label for="purchase_price" class="block text-sm font-medium text-gray-700">Purchase Price (৳)</label>
+                    <label for="purchase_price" class="block text-sm font-medium text-gray-700">{{ __('products.purchase_price_label') }}</label>
                     <input type="number" name="purchase_price" id="purchase_price" step="0.01" min="0"
                         value="{{ old('purchase_price', $product->purchase_price) }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2 border">
@@ -87,7 +87,7 @@
 
             <div class="mt-4">
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
-                    Add Batch
+                    {{ __('products.add_batch') }}
                 </button>
             </div>
         </form>

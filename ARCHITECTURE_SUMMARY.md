@@ -1,6 +1,6 @@
 # BLORIEN PHARMA - ARCHITECTURE SUMMARY
 
-**Version**: 2.5 (Phase 3A Complete)
+**Version**: 2.6 (Phase 3B Complete)
 **Last Updated**: January 2025
 
 ## System Architecture Overview
@@ -8,8 +8,8 @@
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                         Laravel Application                          │
-│                      BLORIEN Pharma System v2.5                      │
-│                    (Phase 3A - Small Pharmacy Ready)                 │
+│                      BLORIEN Pharma System v2.6                      │
+│              (Phase 3B - Multi-Language & Performance Ready)         │
 └─────────────────────────────────────────────────────────────────────┘
 
 ┌────────────────────────────────────────────────────────────────────┐
@@ -27,11 +27,11 @@
 │  ├─ Reports                                                      │
 │  └─ Analytics                                                    │
 │                                                                  │
-│  Middleware: auth, role:owner,manager                           │
+│  Middleware: auth, role:owner,manager, SetLocale (Phase 3B)     │
 └────────────────────────────────────────────────────────────────────┘
           ↓
 ┌────────────────────────────────────────────────────────────────────┐
-│                   CONTROLLER LAYER (13 Controllers)                │
+│                   CONTROLLER LAYER (15 Controllers)                │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
 │  • AuthController          • BatchController                      │
@@ -41,6 +41,8 @@
 │  • TransactionController   • SupplierController                   │
 │  • CustomerController      • PurchaseOrderController              │
 │  • DueController (Phase 3A)                                       │
+│  • DailyClosingController (Phase 3B)                              │
+│  • LanguageController (Phase 3B)                                  │
 │                                                                    │
 │  Role: Request validation, call services, return responses       │
 └────────────────────────────────────────────────────────────────────┘

@@ -85,6 +85,10 @@
                                 <div class="flex-1">
                                     <h3 class="font-semibold" x-text="item.name"></h3>
                                     <p class="text-sm text-gray-500">৳<span x-text="parseFloat(item.price).toFixed(2)"></span> each</p>
+                                    <p class="text-sm"
+                                       :class="item.max_stock <= 3 ? 'text-red-600 font-medium' : 'text-gray-600'">
+                                        Available: <span x-text="item.max_stock"></span> units
+                                    </p>
                                 </div>
                                 <button @click="removeFromCart(index)" class="text-red-600 hover:text-red-800">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,6 +101,7 @@
                                 <input
                                     type="number"
                                     x-model.number="item.quantity"
+                                    @input="validateQuantity(index)"
                                     @change="updateItemTotal(index)"
                                     min="1"
                                     :max="item.max_stock"
@@ -635,6 +640,23 @@ function posApp() {
                 this.cart[index].quantity--;
                 this.updateItemTotal(index);
             }
+        },
+
+        validateQuantity(index) {
+            const item = this.cart[index];
+
+            // Ensure quantity is a valid number
+            if (isNaN(item.quantity) || item.quantity < 1) {
+                item.quantity = 1;
+            }
+
+            // Enforce max stock limit
+            if (item.quantity > item.max_stock) {
+                item.quantity = item.max_stock;
+                showWarning(`Cannot exceed available stock. Maximum ${item.max_stock} ${item.max_stock === 1 ? 'unit is' : 'units are'} available for ${item.name}.`, 'Stock Limit Reached');
+            }
+
+            this.updateItemTotal(index);
         },
 
         updateItemTotal(index) {

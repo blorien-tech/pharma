@@ -19,14 +19,15 @@
 >
     <!-- Logo & Branding -->
     <div class="p-4 border-b border-blue-700">
-        <div class="flex items-center justify-between">
+        <!-- Expanded State -->
+        <div x-show="!collapsed" class="flex items-center justify-between" x-transition>
             <div class="flex items-center space-x-3">
                 <!-- Logo/Icon -->
                 <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
                     <span class="text-blue-900 font-bold text-xl">৳</span>
                 </div>
                 <!-- Brand Name -->
-                <div x-show="!collapsed" class="overflow-hidden" x-transition>
+                <div class="overflow-hidden">
                     <h1 class="text-lg font-bold leading-tight">{{ __('navigation.app_name') }}</h1>
                     <p class="text-xs text-blue-300">{{ __('common.pharmacy_system') }}</p>
                 </div>
@@ -44,20 +45,36 @@
                     </svg>
                 </button>
 
-                <!-- Desktop Collapse Toggle -->
+                <!-- Desktop Collapse Toggle (Collapse) -->
                 <button
                     @click="toggleCollapse()"
                     class="p-2 hover:bg-blue-700 rounded-lg transition hidden lg:block"
-                    :title="collapsed ? '{{ __('navigation.expand_sidebar') }}' : '{{ __('navigation.collapse_sidebar') }}'"
+                    :title="'{{ __('navigation.collapse_sidebar') }}'"
                 >
-                    <svg x-show="!collapsed" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
-                    </svg>
-                    <svg x-show="collapsed" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
                     </svg>
                 </button>
             </div>
+        </div>
+
+        <!-- Collapsed State -->
+        <div x-show="collapsed" class="flex flex-col items-center space-y-3" x-transition>
+            <!-- Logo/Icon -->
+            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                <span class="text-blue-900 font-bold text-xl">৳</span>
+            </div>
+
+            <!-- Desktop Expand Toggle -->
+            <button
+                @click="toggleCollapse()"
+                class="p-2 hover:bg-blue-700 rounded-lg transition hidden lg:block w-full"
+                :title="'{{ __('navigation.expand_sidebar') }}'"
+            >
+                <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+                </svg>
+            </button>
         </div>
     </div>
 

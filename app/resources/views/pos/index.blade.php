@@ -30,9 +30,28 @@
                 </div>
 
                 <!-- Search Results -->
-                <div x-show="searchResults.length > 0" class="mt-4 max-h-96 overflow-y-auto">
+                <div x-show="searchQuery.length >= 2" class="mt-4 max-h-96 overflow-y-auto border border-gray-200 rounded-lg bg-white">
+                    <!-- Loading State -->
+                    <div x-show="isSearching" class="p-4 text-center text-gray-500">
+                        <svg class="animate-spin h-6 w-6 mx-auto mb-2 text-blue-600" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <p class="text-sm">Searching products...</p>
+                    </div>
+
+                    <!-- No Results State -->
+                    <div x-show="!isSearching && searchResults.length === 0" class="p-4 text-center text-gray-500">
+                        <svg class="h-12 w-12 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-sm">No products found for "<span x-text="searchQuery"></span>"</p>
+                        <p class="text-xs text-gray-400 mt-1">Try searching by product name, SKU, or barcode</p>
+                    </div>
+
+                    <!-- Results List -->
                     <template x-for="product in searchResults" :key="product.id">
-                        <div @click="addToCart(product)" class="p-3 border-b hover:bg-blue-50 cursor-pointer transition">
+                        <div @click="addToCart(product)" class="p-3 border-b last:border-b-0 hover:bg-blue-50 cursor-pointer transition">
                             <div class="flex justify-between items-start">
                                 <div class="flex-1">
                                     <h3 class="font-semibold text-gray-900" x-text="product.name"></h3>
@@ -271,6 +290,7 @@ function posApp() {
         searchQuery: '',
         searchResults: [],
         searchDebounceTimer: null,
+        isSearching: false,
         cart: [],
         subtotal: 0,
         discount: 0,
@@ -386,20 +406,39 @@ function posApp() {
 
             if (this.searchQuery.length < 2) {
                 this.searchResults = [];
+                this.isSearching = false;
                 return;
             }
+
+            this.isSearching = true;
 
             // Debounce search by 300ms
             this.searchDebounceTimer = setTimeout(async () => {
                 try {
                     const response = await fetch(`/api/products/search?q=${encodeURIComponent(this.searchQuery)}`, {
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
                         }
                     });
-                    this.searchResults = await response.json();
+
+                    if (!response.ok) {
+                        console.error('Search failed:', response.status, response.statusText);
+                        const errorText = await response.text();
+                        console.error('Error response:', errorText);
+                        this.searchResults = [];
+                        this.isSearching = false;
+                        return;
+                    }
+
+                    const data = await response.json();
+                    this.searchResults = Array.isArray(data) ? data : [];
+                    this.isSearching = false;
+                    console.log('Search results:', this.searchResults);
                 } catch (error) {
                     console.error('Search error:', error);
+                    this.searchResults = [];
+                    this.isSearching = false;
                 }
             }, 300);
         },

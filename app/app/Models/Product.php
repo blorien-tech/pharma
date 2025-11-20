@@ -81,16 +81,19 @@ class Product extends Model
     /**
      * Scope for searching products
      * Searches by name, generic name, brand name, SKU, barcode, and description
+     * Case-insensitive search
      */
     public function scopeSearch($query, $search)
     {
-        return $query->where(function($q) use ($search) {
-            $q->where('name', 'like', "%{$search}%")
-              ->orWhere('generic_name', 'like', "%{$search}%")
-              ->orWhere('brand_name', 'like', "%{$search}%")
-              ->orWhere('sku', 'like', "%{$search}%")
-              ->orWhere('barcode', 'like', "%{$search}%")
-              ->orWhere('description', 'like', "%{$search}%");
+        $searchTerm = strtolower($search);
+
+        return $query->where(function($q) use ($searchTerm, $search) {
+            $q->whereRaw('LOWER(name) LIKE ?', ["%{$searchTerm}%"])
+              ->orWhereRaw('LOWER(generic_name) LIKE ?', ["%{$searchTerm}%"])
+              ->orWhereRaw('LOWER(brand_name) LIKE ?', ["%{$searchTerm}%"])
+              ->orWhereRaw('LOWER(sku) LIKE ?', ["%{$searchTerm}%"])
+              ->orWhereRaw('LOWER(barcode) LIKE ?', ["%{$searchTerm}%"])
+              ->orWhereRaw('LOWER(description) LIKE ?', ["%{$searchTerm}%"]);
         });
     }
 }

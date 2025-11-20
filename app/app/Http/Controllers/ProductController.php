@@ -133,11 +133,38 @@ class ProductController extends Controller
     {
         $search = $request->input('q', '');
 
-        $products = Product::where('is_active', true)
-            ->search($search)
-            ->with('activeBatches')
+        \Log::info('Product search query', [
+            'search_term' => $search,
+            'user_id' => auth()->id()
+        ]);
+
+        // Check total active products first
+        $totalActive = Product::where('is_active', true)->count();
+        $totalActiveInt = Product::where('is_active', 1)->count();
+
+        \Log::info('Active products count', [
+            'is_active_true' => $totalActive,
+            'is_active_1' => $totalActiveInt
+        ]);
+
+        $query = Product::where(function($q) {
+            $q->where('is_active', true)
+              ->orWhere('is_active', 1);
+        });
+
+        if (!empty($search)) {
+            $query->search($search);
+        }
+
+        $products = $query->with('activeBatches')
             ->limit(20)
             ->get();
+
+        \Log::info('Product search results', [
+            'search_term' => $search,
+            'results_count' => $products->count(),
+            'products' => $products->pluck('name', 'id')->toArray()
+        ]);
 
         return response()->json($products);
     }

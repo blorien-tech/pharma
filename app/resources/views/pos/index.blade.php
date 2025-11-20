@@ -2,6 +2,12 @@
 
 @section('title', __('pos.title') . ' - ' . __('navigation.app_name'))
 
+@push('styles')
+<style>
+    [x-cloak] { display: none !important; }
+</style>
+@endpush
+
 @section('content')
 <div x-data="posApp()" x-init="init()" class="space-y-4">
     <!-- Page Header -->
@@ -281,6 +287,113 @@
             </div>
         </div>
     </div>
+
+    <!-- Sale Confirmation Modal -->
+    <div x-show="showConfirmModal"
+         x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+         @click.self="showConfirmModal = false">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+                <h3 class="text-xl font-bold text-white">Confirm Sale</h3>
+                <p class="text-blue-100 text-sm mt-1">Review transaction details before completing</p>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6">
+                <!-- Transaction Summary -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                        Transaction Summary
+                    </h4>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Items:</span>
+                            <span class="font-medium text-gray-900" x-text="cart.length"></span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Gross Amount:</span>
+                            <span class="font-semibold text-gray-900">৳<span x-text="subtotal.toFixed(2)"></span></span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Discount:</span>
+                            <span class="font-semibold text-red-600">- ৳<span x-text="discount.toFixed(2)"></span></span>
+                        </div>
+                        <div class="border-t border-gray-300 pt-2 mt-2"></div>
+                        <div class="flex justify-between">
+                            <span class="font-semibold text-gray-900">Net Amount:</span>
+                            <span class="font-bold text-lg text-green-600">৳<span x-text="total.toFixed(2)"></span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Details -->
+                <div class="bg-blue-50 rounded-lg p-4 mb-4">
+                    <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Payment Details
+                    </h4>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Method:</span>
+                            <span class="font-semibold text-gray-900">
+                                <span x-show="markAsDue" class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium">DUE</span>
+                                <span x-show="!markAsDue && isCredit" class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-medium">CREDIT</span>
+                                <span x-show="!markAsDue && !isCredit" class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium" x-text="paymentMethod"></span>
+                            </span>
+                        </div>
+                        <div x-show="!markAsDue && paymentMethod === 'CASH'" class="flex justify-between text-sm">
+                            <span class="text-gray-600">Amount Paid:</span>
+                            <span class="font-semibold text-gray-900">৳<span x-text="amountPaid.toFixed(2)"></span></span>
+                        </div>
+                        <div x-show="!markAsDue && paymentMethod === 'CASH' && change > 0" class="flex justify-between text-sm bg-green-100 -mx-2 px-2 py-1 rounded">
+                            <span class="text-green-700 font-medium">Change to Return:</span>
+                            <span class="font-bold text-green-700">৳<span x-text="change.toFixed(2)"></span></span>
+                        </div>
+                        <div x-show="markAsDue" class="flex justify-between text-sm">
+                            <span class="text-gray-600">Customer:</span>
+                            <span class="font-semibold text-gray-900" x-text="dueName"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Validation Warning -->
+                <div x-show="validationError" class="bg-red-50 border-l-4 border-red-500 p-3 mb-4">
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                        </svg>
+                        <p class="text-sm text-red-700 font-medium" x-text="validationError"></p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3">
+                    <button
+                        @click="showConfirmModal = false; validationError = ''"
+                        class="flex-1 px-4 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition">
+                        Cancel
+                    </button>
+                    <button
+                        @click="confirmAndCompleteSale()"
+                        :disabled="processing || validationError"
+                        class="flex-1 px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span x-show="!processing">Confirm Sale</span>
+                        <span x-show="processing">Processing...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @push('scripts')
@@ -310,6 +423,8 @@ function posApp() {
         duePhone: '',
         dueDate: '',
         dueNotes: '',
+        showConfirmModal: false,
+        validationError: '',
 
         init() {
             // Initialize
@@ -537,13 +652,17 @@ function posApp() {
             }
         },
 
-        async completeSale() {
+        completeSale() {
+            // Initial validation before showing modal
             if (this.cart.length === 0) return;
+
+            this.validationError = '';
 
             // Validate due entry
             if (this.markAsDue) {
                 if (!this.dueName || this.dueName.trim() === '') {
-                    alert('Please enter customer name for due entry');
+                    this.validationError = 'Please enter customer name for due entry';
+                    this.showConfirmModal = true;
                     return;
                 }
             }
@@ -551,14 +670,21 @@ function posApp() {
             // Validate credit sale
             if (this.isCredit) {
                 if (this.total > this.availableCredit) {
-                    alert(`Insufficient credit. Available: ৳${this.availableCredit.toFixed(2)}, Required: ৳${this.total.toFixed(2)}`);
+                    this.validationError = `Insufficient credit. Available: ৳${this.availableCredit.toFixed(2)}, Required: ৳${this.total.toFixed(2)}`;
+                    this.showConfirmModal = true;
                     return;
                 }
             } else if (!this.markAsDue && this.paymentMethod === 'CASH' && this.amountPaid < this.total) {
-                alert('Amount paid is less than total');
+                this.validationError = 'Amount paid is less than total';
+                this.showConfirmModal = true;
                 return;
             }
 
+            // All validations passed, show confirmation modal
+            this.showConfirmModal = true;
+        },
+
+        async confirmAndCompleteSale() {
             this.processing = true;
 
             try {
@@ -614,13 +740,17 @@ function posApp() {
                         });
 
                         if (dueResponse.ok) {
-                            alert('Sale completed and marked as due successfully!');
+                            this.showSuccessNotification('Sale completed and marked as due successfully!');
                         } else {
-                            alert('Sale completed but error creating due entry');
+                            this.showSuccessNotification('Sale completed but error creating due entry');
                         }
                     } else {
-                        alert('Sale completed successfully!');
+                        this.showSuccessNotification('Sale completed successfully!');
                     }
+
+                    // Close modal
+                    this.showConfirmModal = false;
+                    this.validationError = '';
 
                     // Open receipt in new tab
                     if (data.transaction && data.transaction.id) {
@@ -628,14 +758,32 @@ function posApp() {
                     }
                     this.clearCart();
                 } else {
-                    alert(data.message || 'Error completing sale');
+                    this.validationError = data.message || 'Error completing sale';
                 }
             } catch (error) {
                 console.error('Sale error:', error);
-                alert('Error completing sale');
+                this.validationError = 'Error completing sale. Please try again.';
             } finally {
                 this.processing = false;
             }
+        },
+
+        showSuccessNotification(message) {
+            // Create a temporary success notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center';
+            notification.innerHTML = `
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="font-medium">${message}</span>
+            `;
+            document.body.appendChild(notification);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
         }
     }
 }

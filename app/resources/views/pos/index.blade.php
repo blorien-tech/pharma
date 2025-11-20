@@ -416,10 +416,13 @@ function posApp() {
             this.searchDebounceTimer = setTimeout(async () => {
                 try {
                     const response = await fetch(`/api/products/search?q=${encodeURIComponent(this.searchQuery)}`, {
+                        method: 'GET',
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json'
-                        }
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        credentials: 'same-origin'
                     });
 
                     if (!response.ok) {

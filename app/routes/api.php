@@ -6,6 +6,7 @@ use App\Http\Controllers\BatchController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DueController;
 use App\Http\Controllers\AnalyticsController;
 
 Route::middleware('auth')->group(function () {
@@ -38,5 +39,10 @@ Route::middleware('auth')->group(function () {
 
     // Analytics API
     Route::get('/analytics/sales', [AnalyticsController::class, 'salesData']);
+
+    // Dues API
+    Route::post('/dues', [DueController::class, 'store']);
+    Route::get('/dues/lookup/phone', [DueController::class, 'lookupByPhone']);
+    Route::get('/dues/statistics', [DueController::class, 'statistics']);
 
 });

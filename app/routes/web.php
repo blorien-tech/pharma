@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DueController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AnalyticsController;
 
@@ -85,6 +86,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/customers/{customer}/payment', [CustomerController::class, 'recordPayment'])->name('customers.payment.store');
     Route::get('/customers/{customer}/adjustment', [CustomerController::class, 'showAdjustment'])->name('customers.adjustment');
     Route::post('/customers/{customer}/adjustment', [CustomerController::class, 'recordAdjustment'])->name('customers.adjustment.store');
+
+    // Dues (Notebook-style due tracking)
+    Route::get('/dues', [DueController::class, 'index'])->name('dues.index');
+    Route::get('/dues/create', [DueController::class, 'create'])->name('dues.create');
+    Route::post('/dues', [DueController::class, 'store'])->name('dues.store');
+    Route::get('/dues/{due}', [DueController::class, 'show'])->name('dues.show');
+    Route::get('/dues/{due}/edit', [DueController::class, 'edit'])->name('dues.edit');
+    Route::put('/dues/{due}', [DueController::class, 'update'])->name('dues.update');
+    Route::delete('/dues/{due}', [DueController::class, 'destroy'])->name('dues.destroy');
+    Route::get('/dues/{due}/payment', [DueController::class, 'showPayment'])->name('dues.payment');
+    Route::post('/dues/{due}/payment', [DueController::class, 'recordPayment'])->name('dues.payment.store');
+    Route::get('/dues/lookup/phone', [DueController::class, 'lookupByPhone'])->name('dues.lookup.phone');
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');

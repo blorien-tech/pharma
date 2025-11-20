@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('phone');
+            $table->string('phone')->unique(); // Phone is unique identifier
             $table->string('email')->nullable();
             $table->string('address')->nullable();
             $table->string('city')->nullable();
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index('phone');
+            // phone is unique, so no separate index needed
             $table->index('email');
             $table->index('is_active');
             $table->index('credit_enabled');

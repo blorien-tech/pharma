@@ -39,7 +39,10 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'generic_name' => 'nullable|string|max:255',
+            'brand_name' => 'nullable|string|max:255',
             'sku' => 'required|string|max:255|unique:products',
+            'barcode' => 'nullable|string|max:255|unique:products',
             'description' => 'nullable|string',
             'purchase_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
@@ -76,7 +79,10 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'generic_name' => 'nullable|string|max:255',
+            'brand_name' => 'nullable|string|max:255',
             'sku' => 'required|string|max:255|unique:products,sku,' . $product->id,
+            'barcode' => 'nullable|string|max:255|unique:products,barcode,' . $product->id,
             'description' => 'nullable|string',
             'purchase_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
@@ -143,7 +149,10 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'generic_name' => 'nullable|string|max:255',
+            'brand_name' => 'nullable|string|max:255',
             'sku' => 'required|string|max:255|unique:products',
+            'barcode' => 'nullable|string|max:255|unique:products',
             'description' => 'nullable|string',
             'purchase_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
@@ -166,7 +175,10 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
+            'generic_name' => 'nullable|string|max:255',
+            'brand_name' => 'nullable|string|max:255',
             'sku' => 'sometimes|string|max:255|unique:products,sku,' . $product->id,
+            'barcode' => 'nullable|string|max:255|unique:products,barcode,' . $product->id,
             'description' => 'nullable|string',
             'purchase_price' => 'sometimes|numeric|min:0',
             'selling_price' => 'sometimes|numeric|min:0',

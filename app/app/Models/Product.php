@@ -12,7 +12,10 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'generic_name',
+        'brand_name',
         'sku',
+        'barcode',
         'supplier_id',
         'description',
         'purchase_price',
@@ -77,12 +80,16 @@ class Product extends Model
 
     /**
      * Scope for searching products
+     * Searches by name, generic name, brand name, SKU, barcode, and description
      */
     public function scopeSearch($query, $search)
     {
         return $query->where(function($q) use ($search) {
             $q->where('name', 'like', "%{$search}%")
+              ->orWhere('generic_name', 'like', "%{$search}%")
+              ->orWhere('brand_name', 'like', "%{$search}%")
               ->orWhere('sku', 'like', "%{$search}%")
+              ->orWhere('barcode', 'like', "%{$search}%")
               ->orWhere('description', 'like', "%{$search}%");
         });
     }

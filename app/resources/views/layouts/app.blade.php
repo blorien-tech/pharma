@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,8 @@
     <!-- TailwindCSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Alpine.js -->
+    <!-- Alpine.js with Persist Plugin -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <!-- Translation Support for JavaScript -->
@@ -67,135 +68,114 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-gray-100" x-data="{
-    advancedMode: localStorage.getItem('nav_mode') !== 'basic',
-    toggleMode() {
-        this.advancedMode = !this.advancedMode;
-        localStorage.setItem('nav_mode', this.advancedMode ? 'advanced' : 'basic');
-    }
-}">
+<body class="h-full bg-gray-100 overflow-hidden" x-data="{ mobileMenuOpen: false }" @toggle-mobile-menu.window="mobileMenuOpen = !mobileMenuOpen">
     @auth
-    <!-- Navigation -->
-    <nav class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-4">
-                    <h1 class="text-2xl font-bold">{{ __('navigation.app_name') }}</h1>
-                    <div class="hidden md:flex space-x-4">
-                        <!-- Basic Mode Links (Always visible) -->
-                        <a href="{{ route('dashboard') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('dashboard') ? 'bg-blue-700' : '' }}">
-                            {{ __('navigation.dashboard') }}
-                        </a>
-                        <a href="{{ route('pos.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('pos.*') ? 'bg-blue-700' : '' }}">
-                            {{ __('navigation.pos') }}
-                        </a>
-                        <a href="{{ route('products.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('products.*') ? 'bg-blue-700' : '' }}">
-                            {{ __('navigation.products') }}
-                        </a>
-                        <a href="{{ route('dues.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('dues.*') ? 'bg-blue-700' : '' }}">
-                            {{ __('navigation.dues_bangla') }}
-                        </a>
-                        <a href="{{ route('alerts') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('alerts') ? 'bg-blue-700' : '' }}">
-                            {{ __('navigation.alerts') }}
-                        </a>
+    <!-- Main Container: Flex layout for sidebar + content -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar Component -->
+        @include('layouts.sidebar')
 
-                        <!-- Advanced Mode Links (Conditionally visible) -->
-                        <template x-if="advancedMode">
-                            <a href="{{ route('transactions.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('transactions.*') ? 'bg-blue-700' : '' }}">
-                                {{ __('navigation.transactions') }}
-                            </a>
-                        </template>
-                        <template x-if="advancedMode">
-                            <a href="{{ route('customers.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('customers.*') ? 'bg-blue-700' : '' }}">
-                                {{ __('navigation.customers') }}
-                            </a>
-                        </template>
-                        <template x-if="advancedMode">
-                            <a href="{{ route('reports.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('reports.*') ? 'bg-blue-700' : '' }}">
-                                {{ __('navigation.reports') }}
-                            </a>
-                        </template>
-                        <template x-if="advancedMode">
-                            <a href="{{ route('daily-closing.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('daily-closing.*') ? 'bg-blue-700' : '' }}">
-                                {{ __('navigation.daily_closing') }}
-                            </a>
-                        </template>
-                        <template x-if="advancedMode">
-                            <a href="{{ route('analytics.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('analytics.*') ? 'bg-blue-700' : '' }}">
-                                {{ __('navigation.analytics') }}
-                            </a>
-                        </template>
-                        @if(auth()->user()->hasRole(['owner', 'manager']))
-                        <template x-if="advancedMode">
-                            <a href="{{ route('suppliers.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('suppliers.*') ? 'bg-blue-700' : '' }}">
-                                {{ __('navigation.suppliers') }}
-                            </a>
-                        </template>
-                        <template x-if="advancedMode">
-                            <a href="{{ route('users.index') }}" class="hover:bg-blue-700 px-3 py-2 rounded {{ request()->routeIs('users.*') ? 'bg-blue-700' : '' }}">
-                                {{ __('navigation.users') }}
-                            </a>
-                        </template>
-                        @endif
+        <!-- Main Content Area: Topbar + Content + Footer -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navbar Component -->
+            @include('layouts.topbar')
+
+            <!-- Main Content with Scroll -->
+            <main class="flex-1 overflow-y-auto bg-gray-50">
+                <!-- Flash Messages -->
+                @if(session('success'))
+                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4">
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative shadow-sm" role="alert">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="block sm:inline">{{ session('success') }}</span>
+                        </div>
                     </div>
                 </div>
+                @endif
 
-                <div class="flex items-center space-x-4">
-                    <!-- Language Toggle -->
-                    <form action="{{ route('language.switch') }}" method="POST" class="inline">
-                        @csrf
-                        <input type="hidden" name="locale" value="{{ app()->getLocale() === 'en' ? 'bn' : 'en' }}">
-                        <button type="submit" class="bg-green-500 hover:bg-green-700 px-3 py-2 rounded text-sm transition font-semibold" title="{{ __('navigation.toggle_language', [], app()->getLocale() === 'en' ? 'bn' : 'en') }}">
-                            {{ app()->getLocale() === 'en' ? '🇧🇩 বাংলা' : '🇬🇧 English' }}
-                        </button>
-                    </form>
-
-                    <!-- Navigation Mode Toggle (Phase 3B) -->
-                    <button @click="toggleMode()" class="bg-blue-500 hover:bg-blue-700 px-3 py-2 rounded text-sm transition" title="{{ __('navigation.toggle_navigation') }}">
-                        <span x-show="advancedMode">📋 {{ __('navigation.advanced_mode') }}</span>
-                        <span x-show="!advancedMode">⚡ {{ __('navigation.basic_mode') }}</span>
-                    </button>
-                    <span class="text-sm">{{ auth()->user()->name }} ({{ ucfirst(auth()->user()->role) }})</span>
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
-                        @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded">
-                            {{ __('navigation.logout') }}
-                        </button>
-                    </form>
+                @if(session('error'))
+                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4">
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative shadow-sm" role="alert">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="block sm:inline">{{ session('error') }}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </nav>
-    @endauth
+                @endif
 
-    <!-- Flash Messages -->
-    @if(session('success'))
-    <div class="container mx-auto px-4 mt-4">
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-            <span class="block sm:inline">{{ session('success') }}</span>
+                @if(session('warning'))
+                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4">
+                    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg relative shadow-sm" role="alert">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="block sm:inline">{{ session('warning') }}</span>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                @if(session('info'))
+                <div class="mx-4 sm:mx-6 lg:mx-8 mt-4">
+                    <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg relative shadow-sm" role="alert">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="block sm:inline">{{ session('info') }}</span>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                <!-- Page Content -->
+                <div class="px-4 sm:px-6 lg:px-8 py-6">
+                    @yield('content')
+                </div>
+
+                <!-- Footer -->
+                <footer class="bg-white border-t mt-8 py-6">
+                    <div class="px-4 sm:px-6 lg:px-8">
+                        <div class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+                            <div class="text-gray-600 text-sm">
+                                <p>&copy; {{ date('Y') }} {{ __('navigation.app_name') }}. All rights reserved.</p>
+                            </div>
+                            <div class="text-gray-500 text-xs">
+                                <p>Version 2.6 | Powered by BLORIEN Tech</p>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </main>
         </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div
+            x-show="mobileMenuOpen"
+            x-transition:enter="transition-opacity ease-linear duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-linear duration-300"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            @click="mobileMenuOpen = false"
+            class="fixed inset-0 bg-gray-600 bg-opacity-75 z-20 lg:hidden"
+            style="display: none;"
+        ></div>
     </div>
-    @endif
-
-    @if(session('error'))
-    <div class="container mx-auto px-4 mt-4">
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <span class="block sm:inline">{{ session('error') }}</span>
-        </div>
-    </div>
-    @endif
-
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-6">
+    @else
+    <!-- Guest Layout (Login/Register pages) -->
+    <main class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 to-blue-700">
         @yield('content')
     </main>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t mt-8 py-4">
-        <div class="container mx-auto px-4 text-center text-gray-600 text-sm">
-            <p>&copy; {{ date('Y') }} BLORIEN Pharma. All rights reserved.</p>
-        </div>
-    </footer>
+    @endauth
 
     @stack('scripts')
 </body>

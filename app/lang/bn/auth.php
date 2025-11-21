@@ -9,5 +9,5 @@ return [
     'forgot_password' => 'পাসওয়ার্ড ভুলে গেছেন?',
     'login_to_account' => 'আপনার অ্যাকাউন্টে লগইন করুন',
     'welcome_back' => 'আবার স্বাগতম!',
-    'sign_in_to_continue' => 'ব্লোরিয়েন ফার্মায় চালিয়ে যেতে সাইন ইন করুন',
+    'sign_in_to_continue' => 'BLORIEN ফার্মায় সাইন ইন করুন',
 ];

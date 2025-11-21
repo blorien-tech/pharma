@@ -5,17 +5,17 @@
 @section('content')
 <div class="space-y-6">
     <div>
-        <h1 class="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
-        <p class="mt-1 text-sm text-gray-600">Access comprehensive business reports and insights</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ __('reports.title') }}</h1>
+        <p class="mt-1 text-sm text-gray-600">{{ __('reports.subtitle') }}</p>
     </div>
 
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between">
         <div>
-            <h3 class="font-semibold text-blue-900">Looking for visual insights?</h3>
-            <p class="text-sm text-blue-700">Check out our interactive Analytics Dashboard with charts and graphs</p>
+            <h3 class="font-semibold text-blue-900">{{ __('analytics.title') }}</h3>
+            <p class="text-sm text-blue-700">{{ __('analytics.subtitle') }}</p>
         </div>
         <a href="{{ route('analytics.index') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
-            View Analytics →
+            {{ __('analytics.view_details') }} →
         </a>
     </div>
 
@@ -29,8 +29,8 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <h3 class="text-lg font-semibold text-gray-900">Sales Report</h3>
-                    <p class="mt-1 text-sm text-gray-600">View sales by date, payment method, and transaction details</p>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ __('reports.sales_report') }}</h3>
+                    <p class="mt-1 text-sm text-gray-600">{{ __('reports.sales_desc') }}</p>
                 </div>
             </div>
         </a>
@@ -44,8 +44,8 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <h3 class="text-lg font-semibold text-gray-900">Profit Analysis</h3>
-                    <p class="mt-1 text-sm text-gray-600">Analyze profit margins and revenue vs. cost breakdown</p>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ __('reports.profit_report') }}</h3>
+                    <p class="mt-1 text-sm text-gray-600">{{ __('reports.profit_desc') }}</p>
                 </div>
             </div>
         </a>
@@ -59,8 +59,8 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <h3 class="text-lg font-semibold text-gray-900">Inventory Report</h3>
-                    <p class="mt-1 text-sm text-gray-600">View inventory valuation and stock levels</p>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ __('reports.inventory_report') }}</h3>
+                    <p class="mt-1 text-sm text-gray-600">{{ __('reports.inventory_desc') }}</p>
                 </div>
             </div>
         </a>
@@ -74,8 +74,8 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <h3 class="text-lg font-semibold text-gray-900">Top Products</h3>
-                    <p class="mt-1 text-sm text-gray-600">Best selling products by quantity and revenue</p>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ __('reports.top_products_report') }}</h3>
+                    <p class="mt-1 text-sm text-gray-600">{{ __('reports.top_products_desc') }}</p>
                 </div>
             </div>
         </a>
@@ -89,8 +89,8 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <h3 class="text-lg font-semibold text-gray-900">Supplier Performance</h3>
-                    <p class="mt-1 text-sm text-gray-600">Analyze spending and order history by supplier</p>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ __('reports.suppliers_report') }}</h3>
+                    <p class="mt-1 text-sm text-gray-600">{{ __('reports.suppliers_desc') }}</p>
                 </div>
             </div>
         </a>
@@ -104,8 +104,8 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <h3 class="text-lg font-semibold text-gray-900">Customer Credit</h3>
-                    <p class="mt-1 text-sm text-gray-600">Monitor customer credit balances and utilization</p>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ __('reports.customers_report') }}</h3>
+                    <p class="mt-1 text-sm text-gray-600">{{ __('reports.customers_desc') }}</p>
                 </div>
             </div>
         </a>
@@ -114,22 +114,22 @@
     <!-- Quick Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
         <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md p-6 text-white">
-            <div class="text-sm font-medium opacity-90">Today's Sales</div>
+            <div class="text-sm font-medium opacity-90">{{ __('common.today') }} {{ __('reports.total_sales') }}</div>
             <div class="text-3xl font-bold mt-2">৳{{ number_format(\App\Models\Transaction::where('type', 'SALE')->whereDate('created_at', today())->sum('total'), 2) }}</div>
         </div>
 
         <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-6 text-white">
-            <div class="text-sm font-medium opacity-90">This Month</div>
+            <div class="text-sm font-medium opacity-90">{{ __('reports.this_month') }}</div>
             <div class="text-3xl font-bold mt-2">৳{{ number_format(\App\Models\Transaction::where('type', 'SALE')->whereMonth('created_at', now()->month)->sum('total'), 2) }}</div>
         </div>
 
         <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md p-6 text-white">
-            <div class="text-sm font-medium opacity-90">Inventory Value</div>
+            <div class="text-sm font-medium opacity-90">{{ __('analytics.inventory_value') }}</div>
             <div class="text-3xl font-bold mt-2">৳{{ number_format(\App\Models\Product::where('is_active', true)->get()->sum(fn($p) => $p->current_stock * $p->purchase_price), 2) }}</div>
         </div>
 
         <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-lg shadow-md p-6 text-white">
-            <div class="text-sm font-medium opacity-90">Credit Outstanding</div>
+            <div class="text-sm font-medium opacity-90">{{ __('reports.outstanding_dues') }}</div>
             <div class="text-3xl font-bold mt-2">৳{{ number_format(\App\Models\Customer::sum('current_balance'), 2) }}</div>
         </div>
     </div>

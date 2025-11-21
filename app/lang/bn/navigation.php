@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'app_name' => 'ব্লোরিয়েন ফার্মা',
+    'app_name' => 'BLORIEN ফার্মা',
     'dashboard' => 'ড্যাশবোর্ড',
-    'pos' => 'পিওএস',
+    'pos' => 'POS',
     'products' => 'পণ্য',
     'transactions' => 'লেনদেন',
     'alerts' => 'সতর্কতা',
@@ -11,15 +11,15 @@ return [
     'dues' => 'বাকি',
     'dues_bangla' => 'বাকি',
     'reports' => 'রিপোর্ট',
-    'daily_closing' => 'দৈনিক সমাপনী',
-    'analytics' => 'বিশ্লেষণ',
+    'daily_closing' => 'দৈনিক ক্রয়-বিক্রয়',
+    'analytics' => 'অ্যানালিটিক্স',
     'suppliers' => 'সরবরাহকারী',
     'users' => 'ব্যবহারকারী',
     'purchase_orders' => 'ক্রয় আদেশ',
     'logout' => 'লগ আউট',
 
     // Navigation Modes
-    'advanced_mode' => 'উন্নত',
+    'advanced_mode' => 'প্রগতি',
     'basic_mode' => 'সহজ',
     'toggle_navigation' => 'নেভিগেশন মোড পরিবর্তন করুন',
     'toggle_language' => 'ভাষা পরিবর্তন করুন',

@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Alerts - BLORIEN Pharma')
+@section('title', __('alerts.title') . ' - ' . __('navigation.app_name'))
 
 @section('content')
 <div x-data="alertsApp()" x-init="loadAlerts()" class="space-y-6">
     <!-- Page Header -->
     <div>
-        <h1 class="text-3xl font-bold text-gray-900">System Alerts</h1>
-        <p class="mt-1 text-sm text-gray-600">Monitor low stock and expiring products</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ __('alerts.title') }}</h1>
+        <p class="mt-1 text-sm text-gray-600">{{ __('alerts.subtitle') }}</p>
     </div>
 
     <!-- Alert Summary Cards -->
@@ -15,7 +15,7 @@
         <div class="bg-orange-50 border border-orange-200 rounded-lg p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-orange-600">Low Stock</p>
+                    <p class="text-sm font-medium text-orange-600">{{ __('alerts.low_stock') }}</p>
                     <p class="text-3xl font-bold text-orange-900" x-text="alerts.low_stock?.count || 0"></p>
                 </div>
                 <svg class="w-12 h-12 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -27,7 +27,7 @@
         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-yellow-600">Expiring Soon</p>
+                    <p class="text-sm font-medium text-yellow-600">{{ __('alerts.expiring_soon') }}</p>
                     <p class="text-3xl font-bold text-yellow-900" x-text="alerts.expiring_soon?.count || 0"></p>
                 </div>
                 <svg class="w-12 h-12 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@
         <div class="bg-red-50 border border-red-200 rounded-lg p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-red-600">Expired</p>
+                    <p class="text-sm font-medium text-red-600">{{ __('alerts.expired') }}</p>
                     <p class="text-3xl font-bold text-red-900" x-text="alerts.expired?.count || 0"></p>
                 </div>
                 <svg class="w-12 h-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,17 +52,17 @@
     <!-- Low Stock Products -->
     <div x-show="alerts.low_stock?.items?.length > 0" class="bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Low Stock Products</h2>
+            <h2 class="text-lg font-semibold text-gray-900">{{ __('alerts.low_stock_title') }}</h2>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">SKU</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Stock</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Min Stock</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.product_name') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.product_sku') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.current_stock') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.reorder_level') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('common.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -73,7 +73,7 @@
                             <td class="px-6 py-4 text-sm font-semibold text-orange-600" x-text="item.current_stock"></td>
                             <td class="px-6 py-4 text-sm text-gray-500" x-text="item.min_stock"></td>
                             <td class="px-6 py-4 text-sm">
-                                <a :href="`/products/${item.id}/edit`" class="text-blue-600 hover:text-blue-900">Restock</a>
+                                <a :href="`/products/${item.id}/edit`" class="text-blue-600 hover:text-blue-900">{{ __('alerts.restock') }}</a>
                             </td>
                         </tr>
                     </template>
@@ -85,17 +85,17 @@
     <!-- Expiring Soon Batches -->
     <div x-show="alerts.expiring_soon?.items?.length > 0" class="bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Batches Expiring Soon (30 days)</h2>
+            <h2 class="text-lg font-semibold text-gray-900">{{ __('alerts.expiring_soon_desc') }}</h2>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Batch Number</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Expiry Date</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Remaining</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Days Left</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.product_name') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.batch_number') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.expiry_date') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.batch_qty') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.expires_in') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -116,16 +116,16 @@
     <!-- Expired Batches -->
     <div x-show="alerts.expired?.items?.length > 0" class="bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Expired Batches</h2>
+            <h2 class="text-lg font-semibold text-gray-900">{{ __('alerts.expired_title') }}</h2>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Batch Number</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Expiry Date</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Remaining</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.product_name') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.batch_number') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.expiry_date') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('alerts.batch_qty') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -147,8 +147,8 @@
         <svg class="w-16 h-16 mx-auto mb-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <h3 class="text-lg font-semibold text-green-900">All Clear!</h3>
-        <p class="text-green-700 mt-2">No alerts at this time. Everything is in good condition.</p>
+        <h3 class="text-lg font-semibold text-green-900">{{ __('alerts.no_low_stock') }}</h3>
+        <p class="text-green-700 mt-2">{{ __('alerts.no_low_stock_desc') }}</p>
     </div>
 </div>
 

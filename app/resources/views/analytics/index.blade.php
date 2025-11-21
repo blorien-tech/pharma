@@ -5,39 +5,39 @@
 @section('content')
 <div class="space-y-6">
     <div>
-        <h1 class="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
-        <p class="mt-1 text-sm text-gray-600">Visual insights and business intelligence</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ __('analytics.title') }}</h1>
+        <p class="mt-1 text-sm text-gray-600">{{ __('analytics.subtitle') }}</p>
     </div>
 
     <!-- Monthly Comparison Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-6 text-white">
-            <div class="text-sm font-medium opacity-90">This Month</div>
+            <div class="text-sm font-medium opacity-90">{{ __('reports.this_month') }}</div>
             <div class="text-3xl font-bold mt-2">৳{{ number_format($monthlyComparison['current'], 2) }}</div>
-            <div class="text-xs opacity-75 mt-1">Total Sales</div>
+            <div class="text-xs opacity-75 mt-1">{{ __('reports.total_sales') }}</div>
         </div>
 
         <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md p-6 text-white">
-            <div class="text-sm font-medium opacity-90">Last Month</div>
+            <div class="text-sm font-medium opacity-90">{{ __('reports.last_month') }}</div>
             <div class="text-3xl font-bold mt-2">৳{{ number_format($monthlyComparison['last'], 2) }}</div>
-            <div class="text-xs opacity-75 mt-1">Total Sales</div>
+            <div class="text-xs opacity-75 mt-1">{{ __('reports.total_sales') }}</div>
         </div>
 
         <div class="bg-gradient-to-br from-{{ $monthlyComparison['growth'] >= 0 ? 'green' : 'red' }}-500 to-{{ $monthlyComparison['growth'] >= 0 ? 'green' : 'red' }}-600 rounded-lg shadow-md p-6 text-white">
-            <div class="text-sm font-medium opacity-90">Growth</div>
+            <div class="text-sm font-medium opacity-90">{{ __('analytics.revenue_growth') }}</div>
             <div class="text-3xl font-bold mt-2">{{ $monthlyComparison['growth'] >= 0 ? '+' : '' }}{{ number_format($monthlyComparison['growth'], 1) }}%</div>
-            <div class="text-xs opacity-75 mt-1">Month over Month</div>
+            <div class="text-xs opacity-75 mt-1">{{ __('analytics.period_over_period') }}</div>
         </div>
     </div>
 
     <!-- Sales Trend Chart -->
     <div class="bg-white rounded-lg shadow-md p-6">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold text-gray-900">Sales Trend (Last 30 Days)</h2>
+            <h2 class="text-lg font-semibold text-gray-900">{{ __('analytics.sales_trend') }} ({{ __('analytics.last_30_days') }})</h2>
             <div class="flex gap-2">
-                <button onclick="updatePeriod('7days')" class="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded">7 Days</button>
-                <button onclick="updatePeriod('30days')" class="px-3 py-1 text-sm bg-blue-600 text-white rounded">30 Days</button>
-                <button onclick="updatePeriod('90days')" class="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded">90 Days</button>
+                <button onclick="updatePeriod('7days')" class="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded">{{ __('analytics.last_7_days') }}</button>
+                <button onclick="updatePeriod('30days')" class="px-3 py-1 text-sm bg-blue-600 text-white rounded">{{ __('analytics.last_30_days') }}</button>
+                <button onclick="updatePeriod('90days')" class="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded">{{ __('analytics.last_90_days') }}</button>
             </div>
         </div>
         <canvas id="salesTrendChart" height="80"></canvas>
@@ -46,35 +46,35 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Payment Methods Chart -->
         <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Revenue by Payment Method</h2>
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('analytics.revenue') }} - {{ __('reports.payment_methods') }}</h2>
             <canvas id="paymentMethodChart"></canvas>
         </div>
 
         <!-- Inventory Status Chart -->
         <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Inventory Status</h2>
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('analytics.inventory_health') }}</h2>
             <canvas id="inventoryChart"></canvas>
         </div>
     </div>
 
     <!-- Top Products Chart -->
     <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Top 10 Products by Revenue (This Month)</h2>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('analytics.top_products') }} ({{ __('reports.this_month') }})</h2>
         <canvas id="topProductsChart" height="80"></canvas>
     </div>
 
     <!-- Customer Credit Chart -->
     <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Customer Credit Utilization</h2>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('analytics.customer_insights') }}</h2>
         <canvas id="creditChart"></canvas>
         <div class="mt-4 grid grid-cols-2 gap-4 text-center">
             <div>
                 <div class="text-2xl font-bold text-red-600">৳{{ number_format(array_sum($creditData['values']) > 0 ? $creditData['values'][0] : 0, 2) }}</div>
-                <div class="text-sm text-gray-600">Used Credit</div>
+                <div class="text-sm text-gray-600">{{ __('common.status') }}</div>
             </div>
             <div>
                 <div class="text-2xl font-bold text-green-600">৳{{ number_format(array_sum($creditData['values']) > 1 ? $creditData['values'][1] : 0, 2) }}</div>
-                <div class="text-sm text-gray-600">Available Credit</div>
+                <div class="text-sm text-gray-600">{{ __('common.status') }}</div>
             </div>
         </div>
     </div>

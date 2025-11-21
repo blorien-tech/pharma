@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Receipt #' . $transaction->id)
+@section('title', __('transactions.transaction_details') . ' #' . $transaction->id)
 
 @section('content')
 <div class="max-w-3xl mx-auto space-y-6">
@@ -9,7 +9,7 @@
         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
-        Back to Transactions
+        {{ __('common.back') }}
     </a>
 
     <!-- Receipt -->
@@ -26,24 +26,24 @@
         <div class="mb-6">
             <div class="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                    <p class="text-gray-600">Receipt No:</p>
+                    <p class="text-gray-600">{{ __('transactions.transaction_id') }}:</p>
                     <p class="font-semibold">#{{ $transaction->id }}</p>
                 </div>
                 <div>
-                    <p class="text-gray-600">Date:</p>
+                    <p class="text-gray-600">{{ __('common.date') }}:</p>
                     <p class="font-semibold">{{ $transaction->created_at->format('M d, Y H:i') }}</p>
                 </div>
                 <div>
-                    <p class="text-gray-600">Type:</p>
+                    <p class="text-gray-600">{{ __('common.type') }}:</p>
                     <p class="font-semibold">
                         <span class="px-2 py-1 text-xs rounded-full
                             {{ $transaction->type === 'SALE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                            {{ $transaction->type }}
+                            {{ $transaction->type === 'SALE' ? __('transactions.sale') : __('transactions.return') }}
                         </span>
                     </p>
                 </div>
                 <div>
-                    <p class="text-gray-600">Cashier:</p>
+                    <p class="text-gray-600">{{ __('transactions.cashier') }}:</p>
                     <p class="font-semibold">{{ $transaction->user->name }}</p>
                 </div>
             </div>
@@ -54,10 +54,10 @@
             <table class="w-full text-sm">
                 <thead class="border-b-2 border-gray-300">
                     <tr class="text-left">
-                        <th class="pb-2">Item</th>
-                        <th class="pb-2 text-center">Qty</th>
-                        <th class="pb-2 text-right">Price</th>
-                        <th class="pb-2 text-right">Total</th>
+                        <th class="pb-2">{{ __('transactions.product_name') }}</th>
+                        <th class="pb-2 text-center">{{ __('transactions.quantity') }}</th>
+                        <th class="pb-2 text-right">{{ __('common.price') }}</th>
+                        <th class="pb-2 text-right">{{ __('common.total') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -66,7 +66,7 @@
                         <td class="py-2">
                             <div>
                                 <p class="font-medium">{{ $item->product->name }}</p>
-                                <p class="text-xs text-gray-500">SKU: {{ $item->product->sku }}</p>
+                                <p class="text-xs text-gray-500">{{ __('transactions.sku') }}: {{ $item->product->sku }}</p>
                                 @if($item->batch)
                                 <p class="text-xs text-gray-500">Batch: {{ $item->batch->batch_number }}</p>
                                 @endif
@@ -85,23 +85,23 @@
         <div class="border-t-2 border-gray-300 pt-4 mb-6">
             <div class="space-y-2">
                 <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">Subtotal:</span>
+                    <span class="text-gray-600">{{ __('transactions.subtotal') }}:</span>
                     <span class="font-medium">৳{{ number_format(abs($transaction->subtotal), 2) }}</span>
                 </div>
                 @if($transaction->discount > 0)
                 <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">Discount:</span>
+                    <span class="text-gray-600">{{ __('transactions.discount') }}:</span>
                     <span class="font-medium text-red-600">-৳{{ number_format($transaction->discount, 2) }}</span>
                 </div>
                 @endif
                 @if($transaction->tax > 0)
                 <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">Tax:</span>
+                    <span class="text-gray-600">{{ __('common.tax') }}:</span>
                     <span class="font-medium">৳{{ number_format($transaction->tax, 2) }}</span>
                 </div>
                 @endif
                 <div class="flex justify-between text-xl font-bold border-t pt-2">
-                    <span>Total:</span>
+                    <span>{{ __('transactions.total') }}:</span>
                     <span class="{{ $transaction->type === 'SALE' ? 'text-green-600' : 'text-red-600' }}">
                         ৳{{ number_format(abs($transaction->total), 2) }}
                     </span>
@@ -114,17 +114,17 @@
         <div class="border-t border-gray-300 pt-4 mb-6">
             <div class="space-y-2 text-sm">
                 <div class="flex justify-between">
-                    <span class="text-gray-600">Payment Method:</span>
+                    <span class="text-gray-600">{{ __('transactions.payment_method') }}:</span>
                     <span class="font-medium">{{ $transaction->payment_method }}</span>
                 </div>
                 @if($transaction->payment_method === 'CASH')
                 <div class="flex justify-between">
-                    <span class="text-gray-600">Amount Paid:</span>
+                    <span class="text-gray-600">{{ __('transactions.amount_paid') }}:</span>
                     <span class="font-medium">৳{{ number_format($transaction->amount_paid, 2) }}</span>
                 </div>
                 @if($transaction->change_given > 0)
                 <div class="flex justify-between">
-                    <span class="text-gray-600">Change Given:</span>
+                    <span class="text-gray-600">{{ __('transactions.change_given') }}:</span>
                     <span class="font-medium">৳{{ number_format($transaction->change_given, 2) }}</span>
                 </div>
                 @endif
@@ -136,7 +136,7 @@
         @if($transaction->type === 'RETURN' && $transaction->relatedTransaction)
         <div class="bg-yellow-50 border border-yellow-200 rounded p-3 mb-6">
             <p class="text-sm text-yellow-800">
-                <strong>Return for Transaction:</strong> #{{ $transaction->related_transaction_id }}
+                <strong>{{ __('transactions.return_title') }}:</strong> #{{ $transaction->related_transaction_id }}
             </p>
         </div>
         @endif
@@ -144,18 +144,18 @@
         <!-- Footer -->
         <div class="border-t-2 border-gray-300 pt-4 text-center text-sm text-gray-600">
             <p class="font-medium">{{ env('RECEIPT_FOOTER', 'Thank you for your business!') }}</p>
-            <p class="mt-2 text-xs">This is a computer-generated receipt</p>
+            <p class="mt-2 text-xs">{{ __('transactions.print_receipt') }}</p>
         </div>
     </div>
 
     <!-- Action Buttons -->
     <div class="flex gap-3 justify-center no-print">
         <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
-            Print Receipt
+            {{ __('transactions.print_receipt') }}
         </button>
         @if($transaction->type === 'SALE')
         <button onclick="processReturn({{ $transaction->id }})" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium">
-            Process Return
+            {{ __('transactions.process_return') }}
         </button>
         @endif
     </div>
@@ -164,7 +164,7 @@
 @push('scripts')
 <script>
 async function processReturn(transactionId) {
-    if (!confirm('Are you sure you want to process a return for this transaction? This will refund the full amount and restore inventory.')) {
+    if (!confirm('{{ __('transactions.return_warning') }}')) {
         return;
     }
 
@@ -180,14 +180,14 @@ async function processReturn(transactionId) {
         const data = await response.json();
 
         if (response.ok) {
-            alert('Return processed successfully!');
+            alert('{{ __('transactions.return_processed') }}');
             window.location.href = `/transactions/${data.transaction.id}`;
         } else {
-            alert(data.message || 'Error processing return');
+            alert(data.message || '{{ __('transactions.return_error') }}');
         }
     } catch (error) {
         console.error('Return error:', error);
-        alert('Error processing return');
+        alert('{{ __('transactions.return_error') }}');
     }
 }
 

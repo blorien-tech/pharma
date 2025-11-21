@@ -51,6 +51,14 @@ class Customer extends Model
     }
 
     /**
+     * Get dues for this customer
+     */
+    public function dues()
+    {
+        return $this->hasMany(Due::class);
+    }
+
+    /**
      * Get available credit
      */
     public function availableCredit()

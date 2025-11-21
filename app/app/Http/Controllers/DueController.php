@@ -73,6 +73,33 @@ class DueController extends Controller
         $validated['amount_remaining'] = $validated['amount'];
         $validated['status'] = 'PENDING';
 
+        // Auto-create or link customer if phone is provided
+        $customerId = null;
+        if (!empty($validated['customer_phone'])) {
+            $customer = \App\Models\Customer::where('phone', $validated['customer_phone'])->first();
+
+            if ($customer) {
+                // Customer exists - link to it and update name if different
+                $customerId = $customer->id;
+                if ($customer->name !== $validated['customer_name']) {
+                    $customer->update(['name' => $validated['customer_name']]);
+                }
+            } else {
+                // Customer doesn't exist - create new customer
+                $customer = \App\Models\Customer::create([
+                    'name' => $validated['customer_name'],
+                    'phone' => $validated['customer_phone'],
+                    'credit_limit' => 0,
+                    'current_balance' => 0,
+                    'credit_enabled' => false,
+                    'is_active' => true,
+                    'notes' => 'Auto-created from due entry',
+                ]);
+                $customerId = $customer->id;
+            }
+        }
+
+        $validated['customer_id'] = $customerId;
         $due = Due::create($validated);
 
         if ($request->expectsJson()) {

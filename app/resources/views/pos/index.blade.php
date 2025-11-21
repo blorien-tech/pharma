@@ -157,34 +157,29 @@
                     </div>
                 </div>
 
-                <!-- Customer Selection -->
+                <!-- Customer Phone Lookup -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer (Optional)</label>
-
-                    <!-- Quick Phone Lookup -->
-                    <div class="mb-2">
-                        <input
-                            type="tel"
-                            x-model="customerPhone"
-                            @input="lookupCustomerByPhone()"
-                            placeholder="Type phone number for quick lookup..."
-                            class="w-full px-3 py-2 border rounded-lg text-sm">
-                        <p x-show="customerLookupResult" class="text-xs text-green-600 mt-1" x-text="customerLookupResult"></p>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer Phone (Optional)</label>
+                    <input
+                        type="tel"
+                        x-model="customerPhone"
+                        @input="lookupCustomerByPhone()"
+                        placeholder="Type phone number..."
+                        class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <!-- Lookup Status Messages -->
+                    <div x-show="customerLookupStatus" class="mt-2 p-2 rounded-lg text-xs" :class="customerFound ? 'bg-green-50 text-green-700' : 'bg-blue-50 text-blue-700'">
+                        <span x-text="customerLookupStatus"></span>
                     </div>
+                </div>
 
-                    <!-- Or Select from List -->
-                    <select x-model="customerId" @change="onCustomerChange()" class="w-full px-3 py-2 border rounded-lg">
-                        <option value="">Walk-in Customer</option>
-                        @foreach(\App\Models\Customer::active()->orderBy('name')->get() as $customer)
-                        <option value="{{ $customer->id }}"
-                            data-phone="{{ $customer->phone }}"
-                            data-name="{{ $customer->name }}"
-                            data-credit-enabled="{{ $customer->credit_enabled ? '1' : '0' }}"
-                            data-available-credit="{{ $customer->availableCredit() }}">
-                            {{ $customer->name }} - {{ $customer->phone }} @if($customer->credit_enabled)(Credit: ৳{{ number_format($customer->availableCredit(), 2) }})@endif
-                        </option>
-                        @endforeach
-                    </select>
+                <!-- Customer Name (Auto-filled or Manual) -->
+                <div x-show="customerPhone.length > 0 || customerId" class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer Name</label>
+                    <input
+                        type="text"
+                        x-model="customerName"
+                        placeholder="Customer name"
+                        class="w-full px-3 py-2 border rounded-lg text-sm">
                 </div>
 
                 <!-- Credit Sale Option -->
@@ -202,8 +197,8 @@
                         <input type="checkbox" x-model="markAsDue" @change="onDueChange()"
                             class="rounded border-gray-300 text-yellow-600 shadow-sm focus:border-yellow-500 focus:ring-yellow-500">
                         <div class="ml-2">
-                            <span class="text-sm font-medium text-yellow-900">Mark as Due </span>
-                            <p class="text-xs text-yellow-700">Quick notebook-style due tracking</p>
+                            <span class="text-sm font-medium text-yellow-900">Mark as Due</span>
+                            <p class="text-xs text-yellow-700">Customer will pay later</p>
                         </div>
                     </label>
                 </div>
@@ -212,22 +207,6 @@
                 <div x-show="markAsDue" class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                     <div class="space-y-2">
                         <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Customer Name *</label>
-                            <input
-                                type="text"
-                                x-model="dueName"
-                                placeholder="Enter customer name"
-                                class="w-full px-2 py-1 border rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Phone (Optional)</label>
-                            <input
-                                type="tel"
-                                x-model="duePhone"
-                                placeholder="Customer phone"
-                                class="w-full px-2 py-1 border rounded text-sm">
-                        </div>
-                        <div>
                             <label class="block text-xs font-medium text-gray-700 mb-1">Due Date (Optional)</label>
                             <input
                                 type="date"
@@ -235,10 +214,10 @@
                                 class="w-full px-2 py-1 border rounded text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Notes</label>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Notes (Optional)</label>
                             <textarea
                                 x-model="dueNotes"
-                                placeholder="Any notes..."
+                                placeholder="Any additional notes..."
                                 rows="2"
                                 class="w-full px-2 py-1 border rounded text-sm"></textarea>
                         </div>
@@ -361,9 +340,12 @@
                             <span class="text-green-700 font-medium">Change to Return:</span>
                             <span class="font-bold text-green-700">৳<span x-text="change.toFixed(2)"></span></span>
                         </div>
-                        <div x-show="markAsDue" class="flex justify-between text-sm">
+                        <div x-show="markAsDue && (customerName || customerPhone)" class="flex justify-between text-sm">
                             <span class="text-gray-600">Customer:</span>
-                            <span class="font-semibold text-gray-900" x-text="dueName"></span>
+                            <span class="font-semibold text-gray-900">
+                                <span x-text="customerName || 'Unknown'"></span>
+                                <span x-show="customerPhone" class="text-xs text-gray-600 block" x-text="'(' + customerPhone + ')'"></span>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -418,14 +400,15 @@ function posApp() {
         change: 0,
         processing: false,
         customerId: '',
+        customerName: '',
+        customerPhone: '',
+        customerFound: false,
+        customerLookupStatus: '',
+        customerLookupTimer: null,
         isCredit: false,
         canUseCredit: false,
         availableCredit: 0,
-        customerPhone: '',
-        customerLookupResult: '',
         markAsDue: false,
-        dueName: '',
-        duePhone: '',
         dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         dueNotes: '',
         showConfirmModal: false,
@@ -435,55 +418,68 @@ function posApp() {
             // Initialize
         },
 
-        onCustomerChange() {
-            const select = document.querySelector('select[x-model="customerId"]');
-            const selectedOption = select.options[select.selectedIndex];
+        async lookupCustomerByPhone() {
+            // Clear existing timer
+            if (this.customerLookupTimer) {
+                clearTimeout(this.customerLookupTimer);
+            }
 
-            if (this.customerId) {
-                const creditEnabled = selectedOption.getAttribute('data-credit-enabled') === '1';
-                const availableCredit = parseFloat(selectedOption.getAttribute('data-available-credit'));
-                const phone = selectedOption.getAttribute('data-phone');
-                const name = selectedOption.getAttribute('data-name');
-
-                this.canUseCredit = creditEnabled;
-                this.availableCredit = availableCredit;
-                this.customerPhone = phone || '';
-
-                // Auto-fill due details if marking as due
-                if (this.markAsDue) {
-                    this.dueName = name;
-                    this.duePhone = phone;
-                }
-            } else {
+            // Reset status if phone is too short
+            if (this.customerPhone.length < 3) {
+                this.customerLookupStatus = '';
+                this.customerFound = false;
+                this.customerId = '';
+                this.customerName = '';
                 this.canUseCredit = false;
                 this.availableCredit = 0;
-                this.isCredit = false;
-            }
-        },
-
-        lookupCustomerByPhone() {
-            if (this.customerPhone.length < 3) {
-                this.customerLookupResult = '';
                 return;
             }
 
-            // Find matching customer in dropdown
-            const select = document.querySelector('select[x-model="customerId"]');
-            const options = Array.from(select.options);
+            // Debounce the API call
+            this.customerLookupTimer = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/api/customers/search-by-phone?phone=${encodeURIComponent(this.customerPhone)}`, {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        credentials: 'same-origin'
+                    });
 
-            for (let option of options) {
-                const phone = option.getAttribute('data-phone');
-                if (phone && phone.includes(this.customerPhone)) {
-                    const name = option.getAttribute('data-name');
-                    this.customerId = option.value;
-                    this.customerLookupResult = `Found: ${name}`;
-                    this.onCustomerChange();
-                    return;
+                    if (!response.ok) {
+                        console.error('Customer lookup failed:', response.status);
+                        this.customerLookupStatus = 'Error looking up customer';
+                        this.customerFound = false;
+                        return;
+                    }
+
+                    const data = await response.json();
+
+                    if (data.found) {
+                        // Customer exists
+                        this.customerFound = true;
+                        this.customerId = data.customer.id;
+                        this.customerName = data.customer.name;
+                        this.customerLookupStatus = `✓ Customer found: ${data.customer.name}`;
+                        this.canUseCredit = data.customer.credit_enabled;
+                        this.availableCredit = data.customer.available_credit;
+                    } else {
+                        // Customer doesn't exist - will be created
+                        this.customerFound = false;
+                        this.customerId = '';
+                        this.customerName = '';
+                        this.customerLookupStatus = '→ New customer - will be created automatically';
+                        this.canUseCredit = false;
+                        this.availableCredit = 0;
+                    }
+                } catch (error) {
+                    console.error('Customer lookup error:', error);
+                    this.customerLookupStatus = 'Error looking up customer';
+                    this.customerFound = false;
                 }
-            }
-
-            this.customerLookupResult = '';
-            this.customerId = '';
+            }, 500);
         },
 
         onCreditChange() {
@@ -498,21 +494,8 @@ function posApp() {
         onDueChange() {
             if (this.markAsDue) {
                 this.isCredit = false; // Cannot use both due and credit
-                // Auto-fill from customer if selected
-                if (this.customerId) {
-                    const select = document.querySelector('select[x-model="customerId"]');
-                    const selectedOption = select.options[select.selectedIndex];
-                    const name = selectedOption.getAttribute('data-name');
-                    const phone = selectedOption.getAttribute('data-phone');
-                    this.dueName = name || '';
-                    this.duePhone = phone || '';
-                } else if (this.customerPhone) {
-                    this.duePhone = this.customerPhone;
-                }
             } else {
-                // Clear due fields
-                this.dueName = '';
-                this.duePhone = '';
+                // Reset due date and notes when unchecked
                 this.dueDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
                 this.dueNotes = '';
             }
@@ -695,14 +678,14 @@ function posApp() {
             this.discount = 0;
             this.amountPaid = 0;
             this.customerId = '';
+            this.customerName = '';
             this.customerPhone = '';
-            this.customerLookupResult = '';
+            this.customerFound = false;
+            this.customerLookupStatus = '';
             this.isCredit = false;
             this.canUseCredit = false;
             this.availableCredit = 0;
             this.markAsDue = false;
-            this.dueName = '';
-            this.duePhone = '';
             this.dueDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
             this.dueNotes = '';
             this.paymentMethod = 'CASH';
@@ -715,9 +698,9 @@ function posApp() {
 
             this.validationError = '';
 
-            // Validate due entry
+            // Validate due entry - require customer name when marking as due
             if (this.markAsDue) {
-                if (!this.dueName || this.dueName.trim() === '') {
+                if (!this.customerName || this.customerName.trim() === '') {
                     this.validationError = 'Please enter customer name for due entry';
                     this.showConfirmModal = true;
                     return;
@@ -780,8 +763,8 @@ function posApp() {
                     // If marked as due, create due entry
                     if (this.markAsDue && data.transaction && data.transaction.id) {
                         const duePayload = {
-                            customer_name: this.dueName,
-                            customer_phone: this.duePhone || null,
+                            customer_name: this.customerName,
+                            customer_phone: this.customerPhone || null,
                             transaction_id: data.transaction.id,
                             amount: this.total,
                             due_date: this.dueDate || null,
@@ -798,7 +781,14 @@ function posApp() {
                         });
 
                         if (dueResponse.ok) {
-                            this.showSuccessNotification('Sale completed and marked as due successfully!');
+                            const dueData = await dueResponse.json();
+                            if (this.customerFound) {
+                                this.showSuccessNotification('Sale completed and due recorded for existing customer!');
+                            } else if (this.customerPhone) {
+                                this.showSuccessNotification('Sale completed, new customer created, and due recorded!');
+                            } else {
+                                this.showSuccessNotification('Sale completed and marked as due successfully!');
+                            }
                         } else {
                             this.showSuccessNotification('Sale completed but error creating due entry');
                         }

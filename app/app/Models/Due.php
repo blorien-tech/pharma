@@ -11,6 +11,7 @@ class Due extends Model
     use HasFactory;
 
     protected $fillable = [
+        'customer_id',
         'customer_name',
         'customer_phone',
         'transaction_id',
@@ -33,6 +34,14 @@ class Due extends Model
             'due_date' => 'datetime',
             'paid_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Get the customer associated with this due
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     /**

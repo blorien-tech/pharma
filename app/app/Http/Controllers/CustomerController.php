@@ -233,4 +233,34 @@ class CustomerController extends Controller
         return redirect()->route('customers.show', $customer)
             ->with('success', 'Balance adjustment recorded successfully.');
     }
+
+    /**
+     * API: Search customer by phone
+     */
+    public function searchByPhone(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|string|min:3',
+        ]);
+
+        $customer = Customer::where('phone', $request->phone)->first();
+
+        if ($customer) {
+            return response()->json([
+                'found' => true,
+                'customer' => [
+                    'id' => $customer->id,
+                    'name' => $customer->name,
+                    'phone' => $customer->phone,
+                    'credit_enabled' => $customer->credit_enabled,
+                    'available_credit' => $customer->availableCredit(),
+                ],
+            ]);
+        } else {
+            return response()->json([
+                'found' => false,
+                'message' => 'No customer found. A new customer will be created when you complete the sale.',
+            ]);
+        }
+    }
 }

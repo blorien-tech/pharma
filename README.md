@@ -1,11 +1,13 @@
 # BLORIEN Pharma - Pharmacy Management System
 
-A comprehensive yet simple pharmacy management system built for **Bangladesh small pharmacies**, featuring Point of Sale (POS), inventory management, batch tracking, notebook-style due tracking, multi-language support, and advanced analytics.
+> Modern, comprehensive pharmacy management system built for Bangladesh pharmacies
 
-**Version**: 2.6.0
-**Status**: Production Ready for Small Pharmacies
-**Languages**: English, Bengali (বাংলা)
-A comprehensive yet simple pharmacy management system built for **Bangladesh small pharmacies**, featuring Point of Sale (POS), inventory management, batch tracking, notebook-style due tracking, and advanced analytics.
+![Version](https://img.shields.io/badge/version-2.6.0-blue.svg)
+![Laravel](https://img.shields.io/badge/Laravel-12.0-red.svg)
+![PHP](https://img.shields.io/badge/PHP-8.4-purple.svg)
+![Status](https://img.shields.io/badge/status-production-green.svg)
+
+A comprehensive yet simple pharmacy management system featuring Point of Sale (POS), FIFO inventory management, batch tracking, credit system, multi-language support (English & Bengali), and advanced analytics.
 
 ---
 
@@ -148,11 +150,20 @@ http://localhost:8000
 
 ## 📚 Documentation
 
-- **[DATABASE.md](DATABASE.md)** - Complete database schema (12 tables)
-- **[ARCHITECTURE_SUMMARY.md](ARCHITECTURE_SUMMARY.md)** - System architecture and design patterns
-- **[USER_GUIDE.md](USER_GUIDE.md)** - How to use the system (for pharmacy staff)
-- **[INSTALLATION.md](INSTALLATION.md)** - Detailed setup instructions
-- **[ROADMAP.md](ROADMAP.md)** - Future development plans
+### 👤 For Users
+- **[User Manual](docs/USER_MANUAL.md)** - Complete guide for pharmacy staff
+- **[Quick Start Guide](docs/QUICK_START.md)** - Get started in 5 minutes
+
+### 💻 For Developers
+- **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Technical documentation
+- **[API Reference](docs/API_REFERENCE.md)** - API endpoints & usage
+- **[Database Schema](docs/DATABASE_SCHEMA.md)** - Complete database documentation
+- **[Installation Guide](docs/INSTALLATION.md)** - Setup & deployment
+
+### 📊 For Management
+- **[Product Overview](docs/PRODUCT_OVERVIEW.md)** - High-level system overview
+- **[Features Documentation](docs/FEATURES.md)** - Detailed feature guide
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment
 
 ---
 

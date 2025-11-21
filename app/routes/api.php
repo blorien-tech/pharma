@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DueController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\DailyClosingController;
+use App\Http\Controllers\CustomerController;
 
 Route::middleware('auth')->group(function () {
 
@@ -46,6 +47,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/dues', [DueController::class, 'store']);
     Route::get('/dues/lookup/phone', [DueController::class, 'lookupByPhone']);
     Route::get('/dues/statistics', [DueController::class, 'statistics']);
+
+    // Customers API
+    Route::get('/customers/search-by-phone', [CustomerController::class, 'searchByPhone']);
 
     // Daily Closing API (Phase 3B)
     Route::get('/daily-closing/data', [DailyClosingController::class, 'getData']);

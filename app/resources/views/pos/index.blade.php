@@ -236,7 +236,7 @@
                 </div>
 
                 <!-- Amount Paid (for cash) -->
-                <div x-show="paymentMethod === 'CASH' && !isCredit" class="mb-4">
+                <div x-show="paymentMethod === 'CASH' && !isCredit && !markAsDue" class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Amount Paid</label>
                     <input
                         type="number"
@@ -748,6 +748,8 @@ function posApp() {
                     payload.is_credit = true;
                 }
 
+                console.log('Transaction payload:', payload);
+
                 const response = await fetch('/api/transactions', {
                     method: 'POST',
                     headers: {
@@ -757,7 +759,16 @@ function posApp() {
                     body: JSON.stringify(payload)
                 });
 
-                const data = await response.json();
+                let data;
+                try {
+                    data = await response.json();
+                    console.log('Transaction response:', response.status, data);
+                } catch (e) {
+                    console.error('Failed to parse transaction response:', e);
+                    this.validationError = 'Server error - please check the logs and try again';
+                    this.processing = false;
+                    return;
+                }
 
                 if (response.ok) {
                     // If marked as due, create due entry
@@ -771,6 +782,8 @@ function posApp() {
                             notes: this.dueNotes || null
                         };
 
+                        console.log('Due payload:', duePayload);
+
                         const dueResponse = await fetch('/api/dues', {
                             method: 'POST',
                             headers: {
@@ -780,8 +793,24 @@ function posApp() {
                             body: JSON.stringify(duePayload)
                         });
 
+                        let dueData;
+                        try {
+                            dueData = await dueResponse.json();
+                            console.log('Due response:', dueResponse.status, dueData);
+                        } catch (e) {
+                            console.error('Failed to parse due response:', e);
+                            this.showSuccessNotification('Sale completed but error recording due entry');
+                            this.showConfirmModal = false;
+                            this.validationError = '';
+                            if (data.transaction && data.transaction.id) {
+                                window.open(`/transactions/${data.transaction.id}`, '_blank');
+                            }
+                            this.clearCart(true);
+                            this.processing = false;
+                            return;
+                        }
+
                         if (dueResponse.ok) {
-                            const dueData = await dueResponse.json();
                             if (this.customerFound) {
                                 this.showSuccessNotification('Sale completed and due recorded for existing customer!');
                             } else if (this.customerPhone) {
@@ -790,7 +819,9 @@ function posApp() {
                                 this.showSuccessNotification('Sale completed and marked as due successfully!');
                             }
                         } else {
-                            this.showSuccessNotification('Sale completed but error creating due entry');
+                            const dueError = dueData.message || 'Unknown error creating due entry';
+                            console.error('Due creation failed:', dueError);
+                            this.showSuccessNotification('Sale completed but error recording due: ' + dueError);
                         }
                     } else {
                         this.showSuccessNotification('Sale completed successfully!');
@@ -806,11 +837,14 @@ function posApp() {
                     }
                     this.clearCart(true); // Skip confirmation after successful sale
                 } else {
-                    this.validationError = data.message || 'Error completing sale';
+                    // Transaction failed - show detailed error
+                    const errorMessage = data.message || data.error || 'Error completing sale';
+                    console.error('Transaction failed:', errorMessage, data);
+                    this.validationError = errorMessage;
                 }
             } catch (error) {
-                console.error('Sale error:', error);
-                this.validationError = 'Error completing sale. Please try again.';
+                console.error('Sale error (caught exception):', error);
+                this.validationError = 'Network error - please check your connection and try again: ' + error.message;
             } finally {
                 this.processing = false;
             }

@@ -6,8 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'BLORIEN Pharma')</title>
 
-    <!-- TailwindCSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vite Assets (Tailwind CSS + JS) -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Alpine.js with Persist Plugin -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>

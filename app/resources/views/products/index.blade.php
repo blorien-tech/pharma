@@ -275,7 +275,7 @@ document.addEventListener('alpine:init', () => {
             product_id: '',
             quantity: '',
             batch_number: '',
-            expiry_date: '',
+            expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
             purchase_price: ''
         },
 
@@ -307,7 +307,7 @@ document.addEventListener('alpine:init', () => {
                         product_id: '',
                         quantity: '',
                         batch_number: '',
-                        expiry_date: '',
+                        expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                         purchase_price: ''
                     };
 

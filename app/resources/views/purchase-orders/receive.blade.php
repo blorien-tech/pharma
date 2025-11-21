@@ -65,6 +65,7 @@
                         <div>
                             <label for="expiry_{{ $index }}" class="block text-sm font-medium text-gray-700">Expiry Date *</label>
                             <input type="date" name="items[{{ $index }}][expiry_date]" id="expiry_{{ $index }}" required
+                                value="{{ date('Y-m-d', strtotime('+1 year')) }}"
                                 min="{{ date('Y-m-d', strtotime('+1 day')) }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border text-sm">
                         </div>

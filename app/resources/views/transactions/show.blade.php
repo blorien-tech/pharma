@@ -122,10 +122,12 @@
                     <span class="text-gray-600">{{ __('transactions.amount_paid') }}:</span>
                     <span class="font-medium">৳{{ number_format($transaction->amount_paid, 2) }}</span>
                 </div>
+                @if($transaction->change_given > 0)
                 <div class="flex justify-between">
                     <span class="text-gray-600">{{ __('transactions.change_given') }}:</span>
                     <span class="font-medium">৳{{ number_format($transaction->change_given, 2) }}</span>
                 </div>
+                @endif
                 @endif
             </div>
         </div>

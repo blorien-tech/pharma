@@ -73,6 +73,16 @@ class PosService
                 }
             }
 
+            // Calculate change properly
+            $amountPaid = $isCredit ? 0 : ($data['amount_paid'] ?? $total);
+            $changeGiven = 0;
+
+            if (!$isCredit && $amountPaid > $total) {
+                // Only give change if amount paid exceeds total
+                $changeGiven = $amountPaid - $total;
+            }
+            // If amount paid < total, it's a partial payment (due), so change = 0
+
             // Create transaction
             $transaction = Transaction::create([
                 'type' => 'SALE',
@@ -84,8 +94,8 @@ class PosService
                 'tax' => 0,
                 'total' => $total,
                 'payment_method' => $data['payment_method'],
-                'amount_paid' => $isCredit ? 0 : ($data['amount_paid'] ?? $total),
-                'change_given' => $isCredit ? 0 : (($data['amount_paid'] ?? $total) - $total),
+                'amount_paid' => $amountPaid,
+                'change_given' => $changeGiven,
             ]);
 
             // Record credit transaction

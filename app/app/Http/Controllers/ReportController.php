@@ -220,7 +220,7 @@ class ReportController extends Controller
      */
     public function suppliers(Request $request)
     {
-        $startDate = $request->input('start_date', Carbon::now()->startOfYear()->format('Y-m-d'));
+        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->input('end_date', Carbon::now()->format('Y-m-d'));
 
         // Get suppliers with purchase order statistics

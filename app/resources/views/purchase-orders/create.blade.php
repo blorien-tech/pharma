@@ -46,7 +46,7 @@
 
                 <div>
                     <label for="expected_delivery_date" class="block text-sm font-medium text-gray-700">Expected Delivery</label>
-                    <input type="date" name="expected_delivery_date" id="expected_delivery_date" value="{{ old('expected_delivery_date') }}"
+                    <input type="date" name="expected_delivery_date" id="expected_delivery_date" value="{{ old('expected_delivery_date', date('Y-m-d', strtotime('+7 days'))) }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border">
                 </div>
             </div>

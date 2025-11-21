@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Users - BLORIEN Pharma')
+@section('title', __('users.title') . ' - BLORIEN Pharma')
 
 @section('content')
 <div class="space-y-6">
     <!-- Page Header -->
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Users</h1>
-            <p class="mt-1 text-sm text-gray-600">Manage staff accounts and permissions</p>
+            <h1 class="text-3xl font-bold text-gray-900">{{ __('users.title') }}</h1>
+            <p class="mt-1 text-sm text-gray-600">{{ __('users.subtitle') }}</p>
         </div>
         <a href="{{ route('users.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
-            + Add User
+            + {{ __('users.add_user') }}
         </a>
     </div>
 
@@ -20,11 +20,11 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('common.name') }}</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('common.email') }}</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('users.role') }}</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('common.status') }}</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('users.joined_date') }}</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -48,13 +48,13 @@
                             {{ $user->role === 'owner' ? 'bg-purple-100 text-purple-800' : '' }}
                             {{ $user->role === 'manager' ? 'bg-blue-100 text-blue-800' : '' }}
                             {{ $user->role === 'cashier' ? 'bg-gray-100 text-gray-800' : '' }}">
-                            {{ ucfirst($user->role) }}
+                            {{ __('users.' . $user->role) }}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                             {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                            {{ $user->is_active ? 'Active' : 'Inactive' }}
+                            {{ $user->is_active ? __('users.active') : __('users.inactive') }}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -63,7 +63,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No users found</td>
+                    <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">{{ __('users.no_users') }}</td>
                 </tr>
                 @endforelse
             </tbody>

@@ -5,8 +5,8 @@
 @section('content')
 <div class="space-y-6">
     <div>
-        <h1 class="text-3xl font-bold text-gray-900">Add Customer</h1>
-        <p class="mt-1 text-sm text-gray-600">Create a new customer account</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ __('customers.add_customer') }}</h1>
+        <p class="mt-1 text-sm text-gray-600">{{ __('customers.create_customer') }}</p>
     </div>
 
     <form action="{{ route('customers.store') }}" method="POST" class="space-y-6">
@@ -24,42 +24,42 @@
 
         <!-- Basic Information -->
         <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
-            <h2 class="text-lg font-semibold text-gray-900">Basic Information</h2>
+            <h2 class="text-lg font-semibold text-gray-900">{{ __('common.basic_information') }}</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
-                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name *</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700">{{ __('common.full_name') }} *</label>
                     <input type="text" name="name" id="name" required value="{{ old('name') }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border">
                 </div>
 
                 <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number *</label>
+                    <label for="phone" class="block text-sm font-medium text-gray-700">{{ __('common.phone_number') }} *</label>
                     <input type="text" name="phone" id="phone" required value="{{ old('phone') }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border">
                 </div>
 
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700">{{ __('customers.email') }}</label>
                     <input type="email" name="email" id="email" value="{{ old('email') }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border">
                 </div>
 
                 <div>
-                    <label for="id_number" class="block text-sm font-medium text-gray-700">ID Number</label>
+                    <label for="id_number" class="block text-sm font-medium text-gray-700">{{ __('common.id_number') }}</label>
                     <input type="text" name="id_number" id="id_number" value="{{ old('id_number') }}"
-                        placeholder="National ID or other identification"
+                        placeholder="{{ __('common.id_number_placeholder') }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border">
                 </div>
 
                 <div>
-                    <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                    <label for="city" class="block text-sm font-medium text-gray-700">{{ __('customers.city') }}</label>
                     <input type="text" name="city" id="city" value="{{ old('city') }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border">
                 </div>
 
                 <div class="md:col-span-2">
-                    <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                    <label for="address" class="block text-sm font-medium text-gray-700">{{ __('customers.address') }}</label>
                     <textarea name="address" id="address" rows="2"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border">{{ old('address') }}</textarea>
                 </div>
@@ -68,7 +68,7 @@
 
         <!-- Credit Settings -->
         <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
-            <h2 class="text-lg font-semibold text-gray-900">Credit Settings</h2>
+            <h2 class="text-lg font-semibold text-gray-900">{{ __('common.credit_settings') }}</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
@@ -76,25 +76,25 @@
                         <input type="hidden" name="credit_enabled" value="0">
                         <input type="checkbox" name="credit_enabled" id="credit_enabled" value="1" {{ old('credit_enabled') ? 'checked' : '' }}
                             class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <span class="ml-2 text-sm text-gray-700">Enable Credit for this Customer</span>
+                        <span class="ml-2 text-sm text-gray-700">{{ __('common.enable_credit_customer') }}</span>
                     </label>
                 </div>
 
                 <div>
-                    <label for="credit_limit" class="block text-sm font-medium text-gray-700">Credit Limit (৳)</label>
+                    <label for="credit_limit" class="block text-sm font-medium text-gray-700">{{ __('customers.credit_limit') }} (৳)</label>
                     <input type="number" name="credit_limit" id="credit_limit" step="0.01" min="0" value="{{ old('credit_limit', 0) }}"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border">
-                    <p class="mt-1 text-xs text-gray-500">Maximum credit amount allowed</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('common.maximum_credit_allowed') }}</p>
                 </div>
             </div>
         </div>
 
         <!-- Additional Information -->
         <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
-            <h2 class="text-lg font-semibold text-gray-900">Additional Information</h2>
+            <h2 class="text-lg font-semibold text-gray-900">{{ __('common.additional_information') }}</h2>
 
             <div>
-                <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
+                <label for="notes" class="block text-sm font-medium text-gray-700">{{ __('common.notes') }}</label>
                 <textarea name="notes" id="notes" rows="3"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border">{{ old('notes') }}</textarea>
             </div>
@@ -103,17 +103,17 @@
                 <label class="flex items-center">
                     <input type="checkbox" name="is_active" value="1" checked
                         class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <span class="ml-2 text-sm text-gray-700">Active Customer</span>
+                    <span class="ml-2 text-sm text-gray-700">{{ __('common.active_customer') }}</span>
                 </label>
             </div>
         </div>
 
         <div class="flex justify-end space-x-3">
             <a href="{{ route('customers.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-medium">
-                Cancel
+                {{ __('common.cancel') }}
             </a>
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
-                Create Customer
+                {{ __('customers.create_customer') }}
             </button>
         </div>
     </form>

@@ -312,7 +312,7 @@
     </div>
     @else
     <!-- Guest Layout (Login/Register pages) -->
-    <main class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 to-blue-700">
+    <main class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         @yield('content')
     </main>
     @endauth

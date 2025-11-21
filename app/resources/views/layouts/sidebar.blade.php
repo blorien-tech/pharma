@@ -1,7 +1,7 @@
 <!-- Sidebar Navigation Component -->
 <div
     x-data="{
-        collapsed: $persist(false).as('sidebar_collapsed'),
+        collapsed: $persist(window.__sidebarCollapsed || false).as('sidebar_collapsed'),
         mobileMenuOpen: false,
         init() {
             // Dispatch initial state to parent

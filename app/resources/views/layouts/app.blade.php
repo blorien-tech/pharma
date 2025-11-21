@@ -13,6 +13,23 @@
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <!-- Initialize sidebar state from localStorage before Alpine loads to prevent flash -->
+    <script>
+        // Read sidebar state from localStorage synchronously before page renders
+        (function() {
+            try {
+                const sidebarState = localStorage.getItem('_x_sidebar_collapsed');
+                if (sidebarState !== null) {
+                    window.__sidebarCollapsed = JSON.parse(sidebarState);
+                } else {
+                    window.__sidebarCollapsed = false;
+                }
+            } catch (e) {
+                window.__sidebarCollapsed = false;
+            }
+        })();
+    </script>
+
     <!-- Translation Support for JavaScript -->
     <script>
         window.translations = {
@@ -204,7 +221,7 @@
         }
     </style>
 </head>
-<body class="h-full bg-gray-100 overflow-hidden" x-data="{ mobileMenuOpen: false, sidebarCollapsed: $persist(false).as('sidebar_collapsed') }" @toggle-mobile-menu.window="mobileMenuOpen = !mobileMenuOpen" @sidebar-collapse-changed.window="sidebarCollapsed = $event.detail.collapsed">
+<body class="h-full bg-gray-100 overflow-hidden" x-data="{ mobileMenuOpen: false, sidebarCollapsed: $persist(window.__sidebarCollapsed || false).as('sidebar_collapsed') }" @toggle-mobile-menu.window="mobileMenuOpen = !mobileMenuOpen" @sidebar-collapse-changed.window="sidebarCollapsed = $event.detail.collapsed">
     @auth
     <!-- Main Container: Flex layout for sidebar + content -->
     <div class="flex h-screen overflow-hidden">

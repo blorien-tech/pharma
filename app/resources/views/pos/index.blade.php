@@ -198,14 +198,88 @@
                             class="rounded border-gray-300 text-yellow-600 shadow-sm focus:border-yellow-500 focus:ring-yellow-500">
                         <div class="ml-2">
                             <span class="text-sm font-medium text-yellow-900">Mark as Due</span>
-                            <p class="text-xs text-yellow-700">Customer will pay later</p>
+                            <p class="text-xs text-yellow-700">Full or partial payment with due</p>
                         </div>
                     </label>
                 </div>
 
                 <!-- Due Details -->
                 <div x-show="markAsDue" class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <div class="space-y-2">
+                    <div class="space-y-3">
+                        <!-- Partial Payment Option -->
+                        <div class="bg-white p-3 rounded border border-yellow-300">
+                            <label class="flex items-center mb-2">
+                                <input type="checkbox" x-model="hasPartialPayment" @change="onPartialPaymentChange()"
+                                    class="rounded border-gray-300 text-blue-600 shadow-sm">
+                                <span class="ml-2 text-xs font-medium text-gray-700">Customer paying partial amount now</span>
+                            </label>
+
+                            <div x-show="hasPartialPayment" class="space-y-2">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Payment Method</label>
+                                    <select x-model="paymentMethod" class="w-full px-2 py-1 border rounded text-sm">
+                                        <option value="CASH">Cash</option>
+                                        <option value="CARD">Card</option>
+                                        <option value="MOBILE">Mobile Money (bKash/Nagad)</option>
+                                        <option value="OTHER">Other</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Amount Paying Now</label>
+                                    <input
+                                        type="number"
+                                        x-model.number="partialPaymentAmount"
+                                        @input="calculateDueAmount()"
+                                        step="0.01"
+                                        min="0"
+                                        :max="total"
+                                        placeholder="0.00"
+                                        class="w-full px-2 py-1 border rounded text-sm">
+                                </div>
+
+                                <div x-show="paymentMethod === 'CASH' && partialPaymentAmount > 0" class="bg-blue-50 p-2 rounded">
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <span>Amount Received:</span>
+                                        <input
+                                            type="number"
+                                            x-model.number="amountPaid"
+                                            @input="calculateChange()"
+                                            step="0.01"
+                                            min="0"
+                                            class="w-24 px-1 py-0.5 border rounded text-right text-xs">
+                                    </div>
+                                    <div x-show="change >= 0" class="flex justify-between text-xs font-medium text-blue-800">
+                                        <span>Change:</span>
+                                        <span>৳<span x-text="change.toFixed(2)"></span></span>
+                                    </div>
+                                </div>
+
+                                <!-- Remaining Due Amount -->
+                                <div class="bg-yellow-100 p-2 rounded border border-yellow-400">
+                                    <div class="flex justify-between text-xs">
+                                        <span class="font-medium text-yellow-900">Total Bill:</span>
+                                        <span class="font-semibold text-yellow-900">৳<span x-text="total.toFixed(2)"></span></span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-yellow-800">Paying Now:</span>
+                                        <span class="text-yellow-800">- ৳<span x-text="(partialPaymentAmount || 0).toFixed(2)"></span></span>
+                                    </div>
+                                    <div class="flex justify-between text-xs font-bold text-red-700 mt-1 pt-1 border-t border-yellow-400">
+                                        <span>Due Amount:</span>
+                                        <span>৳<span x-text="dueAmount.toFixed(2)"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div x-show="!hasPartialPayment" class="text-xs text-gray-600 bg-yellow-50 p-2 rounded">
+                                <div class="flex justify-between font-semibold">
+                                    <span>Full amount will be marked as due:</span>
+                                    <span class="text-red-700">৳<span x-text="total.toFixed(2)"></span></span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div>
                             <label class="block text-xs font-medium text-gray-700 mb-1">Due Date (Optional)</label>
                             <input
@@ -224,7 +298,7 @@
                     </div>
                 </div>
 
-                <!-- Payment Method -->
+                <!-- Payment Method (for non-due sales) -->
                 <div x-show="!isCredit && !markAsDue" class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
                     <select x-model="paymentMethod" class="w-full px-3 py-2 border rounded-lg">
@@ -235,7 +309,7 @@
                     </select>
                 </div>
 
-                <!-- Amount Paid (for cash) -->
+                <!-- Amount Paid (for cash non-due sales) -->
                 <div x-show="paymentMethod === 'CASH' && !isCredit && !markAsDue" class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Amount Paid</label>
                     <input
@@ -327,11 +401,39 @@
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Method:</span>
                             <span class="font-semibold text-gray-900">
-                                <span x-show="markAsDue" class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium">DUE</span>
+                                <span x-show="markAsDue && hasPartialPayment" class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">PARTIAL + DUE</span>
+                                <span x-show="markAsDue && !hasPartialPayment" class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium">FULL DUE</span>
                                 <span x-show="!markAsDue && isCredit" class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-medium">CREDIT</span>
                                 <span x-show="!markAsDue && !isCredit" class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium" x-text="paymentMethod"></span>
                             </span>
                         </div>
+
+                        <!-- Partial Payment Details -->
+                        <div x-show="markAsDue && hasPartialPayment" class="bg-blue-50 -mx-2 px-2 py-2 rounded space-y-1">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-700">Payment Method:</span>
+                                <span class="font-medium text-gray-900" x-text="paymentMethod"></span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-700">Paying Now:</span>
+                                <span class="font-semibold text-green-700">৳<span x-text="partialPaymentAmount.toFixed(2)"></span></span>
+                            </div>
+                            <div x-show="paymentMethod === 'CASH'" class="flex justify-between text-xs">
+                                <span class="text-gray-700">Amount Received:</span>
+                                <span class="font-medium text-gray-900">৳<span x-text="amountPaid.toFixed(2)"></span></span>
+                            </div>
+                            <div x-show="paymentMethod === 'CASH' && change > 0" class="flex justify-between text-xs bg-green-100 -mx-2 px-2 py-0.5 rounded">
+                                <span class="text-green-700 font-medium">Change:</span>
+                                <span class="font-semibold text-green-700">৳<span x-text="change.toFixed(2)"></span></span>
+                            </div>
+                            <div class="border-t border-blue-200 pt-1 mt-1"></div>
+                            <div class="flex justify-between text-sm font-bold">
+                                <span class="text-red-700">Remaining Due:</span>
+                                <span class="text-red-700">৳<span x-text="dueAmount.toFixed(2)"></span></span>
+                            </div>
+                        </div>
+
+                        <!-- Non-partial Due or Full Payment -->
                         <div x-show="!markAsDue && paymentMethod === 'CASH'" class="flex justify-between text-sm">
                             <span class="text-gray-600">Amount Paid:</span>
                             <span class="font-semibold text-gray-900">৳<span x-text="amountPaid.toFixed(2)"></span></span>
@@ -340,6 +442,16 @@
                             <span class="text-green-700 font-medium">Change to Return:</span>
                             <span class="font-bold text-green-700">৳<span x-text="change.toFixed(2)"></span></span>
                         </div>
+
+                        <!-- Full Due Customer Info -->
+                        <div x-show="markAsDue && !hasPartialPayment" class="bg-yellow-50 -mx-2 px-2 py-2 rounded">
+                            <div class="flex justify-between text-sm font-bold text-red-700">
+                                <span>Full Amount Due:</span>
+                                <span>৳<span x-text="total.toFixed(2)"></span></span>
+                            </div>
+                        </div>
+
+                        <!-- Customer Info -->
                         <div x-show="markAsDue && (customerName || customerPhone)" class="flex justify-between text-sm">
                             <span class="text-gray-600">Customer:</span>
                             <span class="font-semibold text-gray-900">
@@ -409,6 +521,9 @@ function posApp() {
         canUseCredit: false,
         availableCredit: 0,
         markAsDue: false,
+        hasPartialPayment: false,
+        partialPaymentAmount: 0,
+        dueAmount: 0,
         dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         dueNotes: '',
         showConfirmModal: false,
@@ -494,10 +609,44 @@ function posApp() {
         onDueChange() {
             if (this.markAsDue) {
                 this.isCredit = false; // Cannot use both due and credit
+                this.calculateDueAmount();
             } else {
-                // Reset due date and notes when unchecked
+                // Reset due fields when unchecked
+                this.hasPartialPayment = false;
+                this.partialPaymentAmount = 0;
+                this.dueAmount = 0;
                 this.dueDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
                 this.dueNotes = '';
+            }
+        },
+
+        onPartialPaymentChange() {
+            if (this.hasPartialPayment) {
+                // Initialize partial payment amount to 0
+                this.partialPaymentAmount = 0;
+                this.amountPaid = 0;
+                this.calculateDueAmount();
+            } else {
+                // Reset to full due
+                this.partialPaymentAmount = 0;
+                this.amountPaid = 0;
+                this.dueAmount = this.total;
+                this.change = 0;
+            }
+        },
+
+        calculateDueAmount() {
+            if (this.markAsDue) {
+                if (this.hasPartialPayment) {
+                    const paymentAmount = parseFloat(this.partialPaymentAmount) || 0;
+                    this.dueAmount = this.total - paymentAmount;
+                    if (this.dueAmount < 0) this.dueAmount = 0;
+                } else {
+                    // Full amount as due
+                    this.dueAmount = this.total;
+                }
+            } else {
+                this.dueAmount = 0;
             }
         },
 
@@ -656,7 +805,13 @@ function posApp() {
 
         calculateChange() {
             if (this.paymentMethod === 'CASH') {
-                this.change = this.amountPaid - this.total;
+                if (this.markAsDue && this.hasPartialPayment) {
+                    // For partial payment, calculate change based on partial amount
+                    this.change = this.amountPaid - this.partialPaymentAmount;
+                } else {
+                    // For full payment, calculate change based on total
+                    this.change = this.amountPaid - this.total;
+                }
             } else {
                 this.change = 0;
             }
@@ -686,6 +841,9 @@ function posApp() {
             this.canUseCredit = false;
             this.availableCredit = 0;
             this.markAsDue = false;
+            this.hasPartialPayment = false;
+            this.partialPaymentAmount = 0;
+            this.dueAmount = 0;
             this.dueDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
             this.dueNotes = '';
             this.paymentMethod = 'CASH';
@@ -704,6 +862,28 @@ function posApp() {
                     this.validationError = 'Please enter customer name for due entry';
                     this.showConfirmModal = true;
                     return;
+                }
+
+                // Validate partial payment if checked
+                if (this.hasPartialPayment) {
+                    if (!this.partialPaymentAmount || this.partialPaymentAmount <= 0) {
+                        this.validationError = 'Please enter partial payment amount';
+                        this.showConfirmModal = true;
+                        return;
+                    }
+
+                    if (this.partialPaymentAmount > this.total) {
+                        this.validationError = 'Partial payment cannot exceed total amount';
+                        this.showConfirmModal = true;
+                        return;
+                    }
+
+                    // For cash partial payment, validate amount received
+                    if (this.paymentMethod === 'CASH' && this.amountPaid < this.partialPaymentAmount) {
+                        this.validationError = 'Amount received is less than partial payment amount';
+                        this.showConfirmModal = true;
+                        return;
+                    }
                 }
             }
 
@@ -729,15 +909,28 @@ function posApp() {
             this.processing = true;
 
             try {
+                // Calculate amount paid based on payment type
+                let amountPaid = 0;
+                if (this.markAsDue && this.hasPartialPayment) {
+                    // Partial payment with due
+                    amountPaid = this.paymentMethod === 'CASH' ? this.amountPaid : this.partialPaymentAmount;
+                } else if (this.markAsDue && !this.hasPartialPayment) {
+                    // Full due - no payment
+                    amountPaid = 0;
+                } else if (!this.markAsDue) {
+                    // Full payment - no due
+                    amountPaid = this.paymentMethod === 'CASH' ? this.amountPaid : this.total;
+                }
+
                 const payload = {
                     items: this.cart.map(item => ({
                         product_id: item.id,
                         quantity: item.quantity,
                         unit_price: item.price
                     })),
-                    payment_method: this.markAsDue ? 'OTHER' : this.paymentMethod,
+                    payment_method: this.markAsDue && !this.hasPartialPayment ? 'OTHER' : this.paymentMethod,
                     discount: this.discount,
-                    amount_paid: this.markAsDue ? 0 : (this.paymentMethod === 'CASH' ? this.amountPaid : this.total)
+                    amount_paid: amountPaid
                 };
 
                 // Add customer and credit info if applicable
@@ -771,13 +964,13 @@ function posApp() {
                 }
 
                 if (response.ok) {
-                    // If marked as due, create due entry
-                    if (this.markAsDue && data.transaction && data.transaction.id) {
+                    // If marked as due, create due entry (only if there's a due amount)
+                    if (this.markAsDue && this.dueAmount > 0 && data.transaction && data.transaction.id) {
                         const duePayload = {
                             customer_name: this.customerName,
                             customer_phone: this.customerPhone || null,
                             transaction_id: data.transaction.id,
-                            amount: this.total,
+                            amount: this.dueAmount,  // Use calculated due amount (not total)
                             due_date: this.dueDate || null,
                             notes: this.dueNotes || null
                         };
@@ -811,13 +1004,22 @@ function posApp() {
                         }
 
                         if (dueResponse.ok) {
-                            if (this.customerFound) {
-                                this.showSuccessNotification('Sale completed and due recorded for existing customer!');
-                            } else if (this.customerPhone) {
-                                this.showSuccessNotification('Sale completed, new customer created, and due recorded!');
+                            let message = '';
+                            if (this.hasPartialPayment) {
+                                message = `Sale completed! Received ৳${this.partialPaymentAmount.toFixed(2)}, Due ৳${this.dueAmount.toFixed(2)}`;
+                                if (!this.customerFound && this.customerPhone) {
+                                    message += ' (New customer created)';
+                                }
                             } else {
-                                this.showSuccessNotification('Sale completed and marked as due successfully!');
+                                if (this.customerFound) {
+                                    message = 'Sale completed and full amount marked as due for existing customer!';
+                                } else if (this.customerPhone) {
+                                    message = 'Sale completed, new customer created, and full amount marked as due!';
+                                } else {
+                                    message = 'Sale completed and full amount marked as due!';
+                                }
                             }
+                            this.showSuccessNotification(message);
                         } else {
                             const dueError = dueData.message || 'Unknown error creating due entry';
                             console.error('Due creation failed:', dueError);

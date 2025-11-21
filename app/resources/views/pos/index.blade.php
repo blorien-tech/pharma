@@ -426,7 +426,7 @@ function posApp() {
         markAsDue: false,
         dueName: '',
         duePhone: '',
-        dueDate: '',
+        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         dueNotes: '',
         showConfirmModal: false,
         validationError: '',
@@ -513,7 +513,7 @@ function posApp() {
                 // Clear due fields
                 this.dueName = '';
                 this.duePhone = '';
-                this.dueDate = '';
+                this.dueDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
                 this.dueNotes = '';
             }
         },
@@ -703,7 +703,7 @@ function posApp() {
             this.markAsDue = false;
             this.dueName = '';
             this.duePhone = '';
-            this.dueDate = '';
+            this.dueDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
             this.dueNotes = '';
             this.paymentMethod = 'CASH';
             this.calculateTotals();

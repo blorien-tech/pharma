@@ -334,6 +334,228 @@
     </main>
     @endauth
 
+    <!-- Global Quick Stock Modal -->
+    @auth
+    <div x-data="quickStockModal()" x-cloak>
+        <div x-show="show"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4"
+             @open-quick-stock.window="openModal()"
+             @click.self="closeModal()">
+            <div x-show="show"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform scale-90"
+                 x-transition:enter-end="opacity-100 transform scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 transform scale-100"
+                 x-transition:leave-end="opacity-0 transform scale-90"
+                 class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden"
+                 @click.stop>
+
+                <form @submit.prevent="submitStock()">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                                <div>
+                                    <h3 class="text-xl font-bold text-white">{{ __('products.quick_stock_add') }}</h3>
+                                    <p class="text-sm text-green-100">{{ __('products.quick_stock_desc') }}</p>
+                                </div>
+                            </div>
+                            <button @click="closeModal()" type="button" class="text-white hover:text-gray-200 transition">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="px-6 py-4 max-h-[70vh] overflow-y-auto space-y-4">
+                        <!-- Product Search (with barcode support) -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('products.search_product') }}
+                                <span class="text-xs text-gray-500">({{ __('products.type_or_scan_barcode') }})</span>
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="text"
+                                    x-model="searchQuery"
+                                    @input.debounce.300ms="searchProducts()"
+                                    @focus="showSearchResults = true"
+                                    :placeholder="__('products.search_by_name_or_barcode')"
+                                    :disabled="processing"
+                                    class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                    autocomplete="off"
+                                >
+                                <div class="absolute right-3 top-3">
+                                    <svg x-show="searching" class="w-5 h-5 text-gray-400 animate-spin" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <svg x-show="!searching" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                    </svg>
+                                </div>
+
+                                <!-- Search Results Dropdown -->
+                                <div x-show="showSearchResults && searchResults.length > 0"
+                                     @click.away="showSearchResults = false"
+                                     class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+                                    <template x-for="product in searchResults" :key="product.id">
+                                        <button
+                                            type="button"
+                                            @click="selectProduct(product)"
+                                            class="w-full text-left px-4 py-3 hover:bg-green-50 border-b border-gray-100 last:border-0 transition">
+                                            <div class="flex justify-between items-start">
+                                                <div class="flex-1">
+                                                    <p class="font-medium text-gray-900" x-text="product.name"></p>
+                                                    <p class="text-xs text-gray-500">
+                                                        <span>SKU: </span><span x-text="product.sku"></span>
+                                                        <span x-show="product.barcode"> | Barcode: <span x-text="product.barcode"></span></span>
+                                                    </p>
+                                                </div>
+                                                <div class="text-right ml-3">
+                                                    <p class="text-sm font-semibold" :class="product.current_stock < product.min_stock ? 'text-red-600' : 'text-gray-700'">
+                                                        <span x-text="product.current_stock"></span> {{ __('products.units') }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500">{{ __('products.in_stock') }}</p>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </template>
+                                </div>
+
+                                <!-- No Results Message -->
+                                <div x-show="showSearchResults && searchResults.length === 0 && searchQuery.length >= 2 && !searching"
+                                     class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg p-4 text-center text-gray-500 text-sm">
+                                    {{ __('products.no_products_found') }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Selected Product Display -->
+                        <div x-show="selectedProduct" class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-600">{{ __('products.selected_product') }}</p>
+                                    <p class="text-lg font-bold text-gray-900" x-text="selectedProduct?.name"></p>
+                                    <p class="text-sm text-gray-600 mt-1">
+                                        {{ __('products.current_stock') }}:
+                                        <span class="font-semibold" x-text="selectedProduct?.current_stock"></span> {{ __('products.units') }}
+                                        <span x-show="selectedProduct && selectedProduct.current_stock < selectedProduct.min_stock" class="text-red-600 font-medium ml-2">
+                                            ({{ __('products.low') }})
+                                        </span>
+                                    </p>
+                                </div>
+                                <button @click="clearSelection()" type="button" class="text-gray-500 hover:text-red-600 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Stock Details Form (only show when product selected) -->
+                        <div x-show="selectedProduct" class="space-y-4">
+                            <!-- Quantity -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.quantity_to_add') }} *</label>
+                                <input
+                                    type="number"
+                                    x-model.number="form.quantity"
+                                    required
+                                    min="1"
+                                    step="1"
+                                    :placeholder="__('products.enter_quantity')"
+                                    :disabled="processing"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            </div>
+
+                            <!-- Batch Number -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.batch_number_label') }} *</label>
+                                <input
+                                    type="text"
+                                    x-model="form.batch_number"
+                                    required
+                                    :placeholder="__('products.batch_example')"
+                                    :disabled="processing"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            </div>
+
+                            <!-- Expiry Date -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.expiry_date_label') }} *</label>
+                                <input
+                                    type="date"
+                                    x-model="form.expiry_date"
+                                    required
+                                    :min="new Date().toISOString().split('T')[0]"
+                                    :disabled="processing"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            </div>
+
+                            <!-- Purchase Price (Optional) -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    {{ __('products.purchase_price_optional') }}
+                                    <span class="text-xs text-gray-500">
+                                        ({{ __('products.default') }}: ৳<span x-text="selectedProduct?.purchase_price?.toFixed(2) || '0.00'"></span>)
+                                    </span>
+                                </label>
+                                <input
+                                    type="number"
+                                    x-model.number="form.purchase_price"
+                                    step="0.01"
+                                    min="0"
+                                    :placeholder="__('products.cost_per_unit')"
+                                    :disabled="processing"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <p class="text-xs text-gray-500 mt-1">{{ __('products.default_price_note') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="px-6 py-4 bg-gray-50 border-t flex gap-3 justify-end">
+                        <button
+                            @click="closeModal()"
+                            type="button"
+                            :disabled="processing"
+                            class="px-6 py-2.5 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            {{ __('common.cancel') }}
+                        </button>
+                        <button
+                            type="submit"
+                            :disabled="!selectedProduct || processing"
+                            :class="processing ? 'bg-gray-400' : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'"
+                            class="px-6 py-2.5 text-white rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span x-show="!processing">{{ __('products.add_stock') }}</span>
+                            <span x-show="processing" class="flex items-center">
+                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                {{ __('products.adding') }}
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endauth
+
     <!-- Global Modal System -->
     <div x-data="modalSystem()" x-cloak>
         <!-- Alert Modal -->
@@ -439,6 +661,160 @@
             </div>
         </div>
     </div>
+
+    <!-- Global Quick Stock Modal Script -->
+    <script>
+        function quickStockModal() {
+            return {
+                show: false,
+                processing: false,
+                searching: false,
+                searchQuery: '',
+                searchResults: [],
+                showSearchResults: false,
+                selectedProduct: null,
+                form: {
+                    quantity: '',
+                    batch_number: '',
+                    expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    purchase_price: ''
+                },
+
+                openModal() {
+                    this.show = true;
+                    this.resetForm();
+                    // Focus search input after modal opens
+                    setTimeout(() => {
+                        const input = document.querySelector('[x-model="searchQuery"]');
+                        if (input) input.focus();
+                    }, 100);
+                },
+
+                closeModal() {
+                    this.show = false;
+                    this.resetForm();
+                },
+
+                resetForm() {
+                    this.searchQuery = '';
+                    this.searchResults = [];
+                    this.showSearchResults = false;
+                    this.selectedProduct = null;
+                    this.form = {
+                        quantity: '',
+                        batch_number: '',
+                        expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        purchase_price: ''
+                    };
+                },
+
+                async searchProducts() {
+                    if (this.searchQuery.length < 2) {
+                        this.searchResults = [];
+                        return;
+                    }
+
+                    this.searching = true;
+
+                    try {
+                        const response = await fetch(`/api/products/search?q=${encodeURIComponent(this.searchQuery)}`, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            }
+                        });
+
+                        if (response.ok) {
+                            this.searchResults = await response.json();
+                            this.showSearchResults = true;
+                        } else {
+                            console.error('Search failed:', response.statusText);
+                            this.searchResults = [];
+                        }
+                    } catch (error) {
+                        console.error('Search error:', error);
+                        this.searchResults = [];
+                    } finally {
+                        this.searching = false;
+                    }
+                },
+
+                selectProduct(product) {
+                    this.selectedProduct = product;
+                    this.searchQuery = product.name;
+                    this.showSearchResults = false;
+                    this.form.purchase_price = ''; // Reset to use default
+                },
+
+                clearSelection() {
+                    this.selectedProduct = null;
+                    this.searchQuery = '';
+                    this.showSearchResults = false;
+                },
+
+                async submitStock() {
+                    if (!this.selectedProduct || this.processing) {
+                        return;
+                    }
+
+                    this.processing = true;
+
+                    try {
+                        const response = await fetch('/api/products/quick-stock', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            },
+                            body: JSON.stringify({
+                                product_id: this.selectedProduct.id,
+                                quantity: this.form.quantity,
+                                batch_number: this.form.batch_number,
+                                expiry_date: this.form.expiry_date,
+                                purchase_price: this.form.purchase_price || null
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            // Success
+                            window.showSuccess(
+                                data.message || __('stock_added_success'),
+                                __('success')
+                            );
+                            this.closeModal();
+
+                            // Reload page after a short delay to show updated stock
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            // Error
+                            window.showError(
+                                data.message || __('operation_failed'),
+                                __('error')
+                            );
+                        }
+                    } catch (error) {
+                        console.error('Stock addition error:', error);
+                        window.showError(
+                            __('operation_failed'),
+                            __('error')
+                        );
+                    } finally {
+                        this.processing = false;
+                    }
+                }
+            };
+        }
+
+        // Global helper to open quick stock modal
+        window.openQuickStockModal = function() {
+            window.dispatchEvent(new CustomEvent('open-quick-stock'));
+        };
+    </script>
 
     <!-- Global Modal System Script -->
     <script>

@@ -52,7 +52,7 @@
                     type="button"
                     class="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-sm"
                     title="{{ __('products.quick_stock_add') }}"
-                    @click="window.location.href='{{ route('products.index') }}#quick-stock'"
+                    @click="window.openQuickStockModal()"
                 >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>

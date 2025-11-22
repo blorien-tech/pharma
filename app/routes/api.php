@@ -10,6 +10,7 @@ use App\Http\Controllers\DueController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\DailyClosingController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\StorageLocationController;
 
 Route::middleware('auth')->group(function () {
 
@@ -53,5 +54,11 @@ Route::middleware('auth')->group(function () {
 
     // Daily Closing API (Phase 3B)
     Route::get('/daily-closing/data', [DailyClosingController::class, 'getData']);
+
+    // Storage Locations API (Phase 4A)
+    Route::get('/locations/search', [StorageLocationController::class, 'search']);
+    Route::get('/locations/suggest', [StorageLocationController::class, 'suggestForProduct']);
+    Route::post('/locations/assign-batch', [StorageLocationController::class, 'assignBatch']);
+    Route::post('/locations/move-batch', [StorageLocationController::class, 'moveBatch']);
 
 });

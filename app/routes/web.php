@@ -16,6 +16,7 @@ use App\Http\Controllers\DailyClosingController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\StorageLocationController;
 
 // Language switching (accessible to all)
 Route::post('/language/switch', [LanguageController::class, 'switch'])->name('language.switch');
@@ -49,6 +50,21 @@ Route::middleware('auth')->group(function () {
     // Batches
     Route::get('/products/{product}/batches', [BatchController::class, 'index'])->name('batches.index');
     Route::post('/products/{product}/batches', [BatchController::class, 'store'])->name('batches.store');
+
+    // Storage Locations (viewing for all, management for owner/manager)
+    Route::get('/locations', [StorageLocationController::class, 'index'])->name('locations.index');
+    Route::get('/locations/{location}', [StorageLocationController::class, 'show'])->name('locations.show');
+
+    // Storage Location Management (Owner/Manager only)
+    Route::middleware('role:owner,manager')->group(function () {
+        Route::get('/locations/create/single', [StorageLocationController::class, 'create'])->name('locations.create');
+        Route::post('/locations', [StorageLocationController::class, 'store'])->name('locations.store');
+        Route::post('/locations/quick-hierarchy', [StorageLocationController::class, 'quickCreateHierarchy'])->name('locations.quick-hierarchy');
+        Route::get('/locations/{location}/edit', [StorageLocationController::class, 'edit'])->name('locations.edit');
+        Route::put('/locations/{location}', [StorageLocationController::class, 'update'])->name('locations.update');
+        Route::delete('/locations/{location}', [StorageLocationController::class, 'destroy'])->name('locations.destroy');
+        Route::post('/locations/bulk-auto-assign', [StorageLocationController::class, 'bulkAutoAssign'])->name('locations.bulk-auto-assign');
+    });
 
     // POS
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');

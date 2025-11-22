@@ -16,6 +16,7 @@ return [
     'suppliers' => 'Suppliers',
     'users' => 'Users',
     'purchase_orders' => 'Purchase Orders',
+    'locations' => 'Locations',
     'logout' => 'Logout',
 
     // Navigation Modes

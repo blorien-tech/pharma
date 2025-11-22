@@ -8,7 +8,7 @@ return [
     'edit_product' => 'পণ্য সম্পাদনা',
     'delete_product' => 'পণ্য মুছুন',
     'create_new_product' => 'নতুন পণ্য তৈরি করুন',
-    'quick_stock_add' => '⚡ দ্রুত স্টক যোগ',
+    'quick_stock_add' => '⚡ কুইক স্টক আপডেট',
 
     // Page Descriptions
     'add_product_desc' => 'আপনার ইনভেন্টরিতে একটি নতুন পণ্য যোগ করুন',
@@ -74,7 +74,7 @@ return [
     'units' => 'ইউনিট',
 
     // Quick Stock Add Modal
-    'quick_stock_title' => '⚡ দ্রুত স্টক যোগ করুন',
+    'quick_stock_add' => '⚡ কুইক স্টক আপডেট',
     'quick_stock_desc' => 'বিদ্যমান পণ্যে দ্রুত স্টক যোগ করুন',
     'select_product' => 'পণ্য *',
     'select_product_placeholder' => 'একটি পণ্য নির্বাচন করুন...',

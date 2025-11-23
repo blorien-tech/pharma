@@ -63,6 +63,16 @@
                                     <h3 class="font-semibold text-gray-900" x-text="product.name"></h3>
                                     <p class="text-sm text-gray-500">SKU: <span x-text="product.sku"></span></p>
                                     <p class="text-sm text-gray-600">Stock: <span x-text="product.current_stock"></span> units</p>
+                                    <!-- Storage Location -->
+                                    <template x-if="getProductLocations(product).length > 0">
+                                        <div class="flex items-center gap-1 mt-1 text-xs text-blue-600">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                            <span x-text="getProductLocations(product).join(', ')"></span>
+                                        </div>
+                                    </template>
                                 </div>
                                 <div class="text-right">
                                     <p class="text-lg font-bold text-green-600">৳<span x-text="parseFloat(product.selling_price).toFixed(2)"></span></p>
@@ -490,6 +500,28 @@ function posApp() {
 
         init() {
             // Initialize
+        },
+
+        getProductLocations(product) {
+            if (!product.active_batches || product.active_batches.length === 0) {
+                return [];
+            }
+
+            // Get unique locations from all active batches
+            const locations = new Set();
+            product.active_batches.forEach(batch => {
+                if (batch.storage_location) {
+                    // Build full path manually if needed
+                    let path = batch.storage_location.name;
+                    if (batch.storage_location.parent) {
+                        path = batch.storage_location.parent.name + ' / ' + path;
+                        // Could continue up the chain if needed
+                    }
+                    locations.add(path);
+                }
+            });
+
+            return Array.from(locations);
         },
 
         async lookupCustomerByPhone() {

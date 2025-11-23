@@ -172,7 +172,7 @@ class ProductController extends Controller
             $query->search($search);
         }
 
-        $products = $query->with('activeBatches')
+        $products = $query->with(['activeBatches.storageLocation.parent'])
             ->limit(20)
             ->get();
 

@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\StockMovement;
+use App\Services\LocationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+    protected $locationService;
+
+    public function __construct(LocationService $locationService = null)
+    {
+        $this->locationService = $locationService;
+    }
     /**
      * Display a listing of products
      */
@@ -253,6 +261,7 @@ class ProductController extends Controller
             'batch_number' => 'required|string|max:255',
             'expiry_date' => 'required|date|after:today',
             'purchase_price' => 'nullable|numeric|min:0',
+            'storage_location_id' => 'nullable|exists:storage_locations,id',
         ]);
 
         try {
@@ -261,23 +270,50 @@ class ProductController extends Controller
             // Use product's purchase price if not provided
             $purchasePrice = $validated['purchase_price'] ?? $product->purchase_price;
 
-            // Create batch
+            // Determine storage location (use provided or auto-suggest)
+            $locationId = null;
+            if (isset($validated['storage_location_id']) && $validated['storage_location_id']) {
+                $locationId = $validated['storage_location_id'];
+            } elseif ($this->locationService) {
+                // Auto-suggest location based on product and expiry date
+                $suggestedLocation = $this->locationService->suggestLocationForProduct(
+                    $product,
+                    $validated['expiry_date']
+                );
+                $locationId = $suggestedLocation?->id;
+            }
+
+            // Create batch with location
             $batch = $product->batches()->create([
                 'batch_number' => $validated['batch_number'],
                 'expiry_date' => $validated['expiry_date'],
                 'quantity_received' => $validated['quantity'],
                 'quantity_remaining' => $validated['quantity'],
                 'purchase_price' => $purchasePrice,
+                'storage_location_id' => $locationId,
                 'is_active' => true,
             ]);
+
+            // Record stock movement if location assigned
+            if ($locationId && $this->locationService) {
+                StockMovement::recordMovement(
+                    $batch->id,
+                    null, // from external
+                    $locationId,
+                    $validated['quantity'],
+                    'RECEIPT',
+                    'Quick stock add'
+                );
+            }
 
             // Update product stock
             $product->increment('current_stock', $validated['quantity']);
 
             return response()->json([
                 'success' => true,
-                'message' => "Successfully added {$validated['quantity']} units of {$product->name}",
-                'batch' => $batch,
+                'message' => "Successfully added {$validated['quantity']} units of {$product->name}" .
+                            ($locationId ? " to " . ($batch->storageLocation?->getFullPath() ?? 'storage') : ''),
+                'batch' => $batch->load('storageLocation'),
                 'product' => $product->fresh(),
             ]);
 

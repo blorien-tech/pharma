@@ -144,4 +144,7 @@ return [
     'suggestion_same_product' => 'Groups with existing batches of this product',
     'suggestion_available_space' => 'Has available space',
     'suggestion_temperature' => 'Meets temperature requirements',
+
+    // Auto assignment
+    'auto_assign' => 'Auto-assign (Recommended)',
 ];

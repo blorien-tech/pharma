@@ -6,10 +6,17 @@ use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
 use App\Models\Product;
 use App\Models\ProductBatch;
+use App\Models\StockMovement;
 use Illuminate\Support\Facades\DB;
 
 class PurchaseOrderService
 {
+    protected $locationService;
+
+    public function __construct(LocationService $locationService = null)
+    {
+        $this->locationService = $locationService;
+    }
     /**
      * Create a new purchase order
      */
@@ -80,7 +87,23 @@ class PurchaseOrderService
                     'expiry_date' => $itemData['expiry_date'],
                 ]);
 
-                // Create product batch
+                // Get product for location assignment
+                $product = Product::findOrFail($item->product_id);
+
+                // Determine storage location (use provided or auto-suggest)
+                $locationId = null;
+                if (isset($itemData['storage_location_id']) && $itemData['storage_location_id']) {
+                    $locationId = $itemData['storage_location_id'];
+                } elseif ($this->locationService) {
+                    // Auto-suggest location based on product and expiry date
+                    $suggestedLocation = $this->locationService->suggestLocationForProduct(
+                        $product,
+                        $itemData['expiry_date']
+                    );
+                    $locationId = $suggestedLocation?->id;
+                }
+
+                // Create product batch with location
                 $batch = ProductBatch::create([
                     'product_id' => $item->product_id,
                     'batch_number' => $itemData['batch_number'],
@@ -88,11 +111,23 @@ class PurchaseOrderService
                     'quantity_received' => $itemData['quantity_received'],
                     'quantity_remaining' => $itemData['quantity_received'],
                     'purchase_price' => $item->unit_price,
+                    'storage_location_id' => $locationId,
                     'is_active' => true,
                 ]);
 
+                // Record stock movement if location assigned
+                if ($locationId && $this->locationService) {
+                    StockMovement::recordMovement(
+                        $batch->id,
+                        null, // from external
+                        $locationId,
+                        $itemData['quantity_received'],
+                        'RECEIPT',
+                        'Received from PO: ' . $purchaseOrder->po_number
+                    );
+                }
+
                 // Update product stock
-                $product = Product::findOrFail($item->product_id);
                 $product->increment('current_stock', $itemData['quantity_received']);
 
                 // Update product purchase price if different

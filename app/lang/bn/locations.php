@@ -144,4 +144,7 @@ return [
     'suggestion_same_product' => 'এই প্রোডাক্টের বিদ্যমান ব্যাচের সাথে গ্রুপ করা হয়েছে',
     'suggestion_available_space' => 'উপলব্ধ স্থান আছে',
     'suggestion_temperature' => 'তাপমাত্রা প্রয়োজনীয়তা পূরণ করে',
+
+    // Auto assignment
+    'auto_assign' => 'স্বয়ংক্রিয়-নির্ধারণ (প্রস্তাবিত)',
 ];

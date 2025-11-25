@@ -5,16 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\PurchaseOrder;
 use App\Models\Supplier;
 use App\Models\Product;
+use App\Models\StorageLocation;
 use App\Services\PurchaseOrderService;
+use App\Services\LocationService;
 use Illuminate\Http\Request;
 
 class PurchaseOrderController extends Controller
 {
     protected $purchaseOrderService;
+    protected $locationService;
 
-    public function __construct(PurchaseOrderService $purchaseOrderService)
+    public function __construct(PurchaseOrderService $purchaseOrderService, LocationService $locationService = null)
     {
         $this->purchaseOrderService = $purchaseOrderService;
+        $this->locationService = $locationService;
     }
 
     /**
@@ -106,7 +110,51 @@ class PurchaseOrderController extends Controller
 
         $purchaseOrder->load(['supplier', 'items.product']);
 
-        return view('purchase-orders.receive', compact('purchaseOrder'));
+        // Get available storage locations
+        $availableLocations = StorageLocation::active()
+            ->whereNotNull('capacity') // Only show locations with capacity
+            ->with('parent')
+            ->get()
+            ->filter(function ($location) {
+                return !$location->isFull();
+            });
+
+        // Get location suggestions for each product
+        $suggestions = [];
+        if ($this->locationService) {
+            foreach ($purchaseOrder->items as $item) {
+                $suggested = $this->locationService->suggestLocationForProduct($item->product);
+                if ($suggested) {
+                    $suggestions[$item->id] = [
+                        'location' => $suggested,
+                        'reason' => $this->getSuggestionReason($item->product, $suggested)
+                    ];
+                }
+            }
+        }
+
+        return view('purchase-orders.receive', compact('purchaseOrder', 'availableLocations', 'suggestions'));
+    }
+
+    /**
+     * Get the reason for location suggestion
+     */
+    protected function getSuggestionReason($product, $location): string
+    {
+        // Check if product already has batches in this location
+        $existingBatches = $product->batches()
+            ->where('storage_location_id', $location->id)
+            ->count();
+
+        if ($existingBatches > 0) {
+            return __('locations.suggestion_same_product');
+        }
+
+        if ($location->getRemainingCapacity() !== null) {
+            return __('locations.suggestion_available_space');
+        }
+
+        return __('locations.suggested_location');
     }
 
     /**
@@ -121,6 +169,7 @@ class PurchaseOrderController extends Controller
             'items.*.quantity_received' => 'required|integer|min:0',
             'items.*.batch_number' => 'required|string',
             'items.*.expiry_date' => 'required|date|after:today',
+            'items.*.storage_location_id' => 'nullable|exists:storage_locations,id',
         ]);
 
         try {

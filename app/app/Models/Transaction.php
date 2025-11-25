@@ -10,8 +10,11 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
+        'invoice_number',
         'type',
         'user_id',
+        'customer_id',
+        'is_credit',
         'related_transaction_id',
         'subtotal',
         'tax',
@@ -32,7 +35,50 @@ class Transaction extends Model
             'total' => 'decimal:2',
             'amount_paid' => 'decimal:2',
             'change_given' => 'decimal:2',
+            'is_credit' => 'boolean',
         ];
+    }
+
+    /**
+     * Boot method to auto-generate invoice numbers
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($transaction) {
+            if (empty($transaction->invoice_number)) {
+                $transaction->invoice_number = static::generateInvoiceNumber();
+            }
+        });
+    }
+
+    /**
+     * Generate unique invoice number in format: YYYYMMDDnnnnnn
+     * Example: 20251121000001
+     */
+    public static function generateInvoiceNumber(): string
+    {
+        $datePrefix = now()->format('Ymd'); // 20251121
+
+        // Get the last invoice number with today's date prefix
+        $lastInvoice = static::where('invoice_number', 'like', $datePrefix . '%')
+            ->orderBy('invoice_number', 'desc')
+            ->first();
+
+        if ($lastInvoice) {
+            // Extract the sequential number and increment it
+            $lastSequence = (int) substr($lastInvoice->invoice_number, 8); // Get last 6 digits
+            $newSequence = $lastSequence + 1;
+        } else {
+            // First transaction of the day
+            $newSequence = 1;
+        }
+
+        // Pad with zeros to make it 6 digits
+        $sequenceNumber = str_pad($newSequence, 6, '0', STR_PAD_LEFT);
+
+        return $datePrefix . $sequenceNumber;
     }
 
     /**
@@ -41,6 +87,14 @@ class Transaction extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the customer for this transaction
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     /**

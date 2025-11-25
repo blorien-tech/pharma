@@ -16,6 +16,7 @@ return [
     'suppliers' => 'সরবরাহকারী',
     'users' => 'ব্যবহারকারী',
     'purchase_orders' => 'ক্রয় আদেশ',
+    'locations' => 'স্টোরেজ লোকেশন',
     'logout' => 'লগ আউট',
 
     // Navigation Modes

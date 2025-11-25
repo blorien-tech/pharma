@@ -3,7 +3,7 @@
 @section('title', __('products.title') . ' - ' . __('navigation.app_name'))
 
 @section('content')
-<div class="space-y-6" x-data="productsPage()">
+<div class="space-y-6">
     <!-- Page Header -->
     <div class="flex justify-between items-center">
         <div>
@@ -11,7 +11,7 @@
             <p class="mt-1 text-sm text-gray-600">{{ __('products.subtitle') }}</p>
         </div>
         <div class="flex gap-3">
-            <button @click="showQuickStockModal = true" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium">
+            <button @click="window.openQuickStockModal()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium">
                 {{ __('products.quick_stock_add') }}
             </button>
             <a href="{{ route('products.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
@@ -264,70 +264,6 @@ async function handleDeleteProduct(event, productName) {
 
     return false;
 }
-
-document.addEventListener('alpine:init', () => {
-    Alpine.data('productsPage', () => ({
-        showQuickStockModal: false,
-        processing: false,
-        showSuccessToast: false,
-        successMessage: '',
-        quickStock: {
-            product_id: '',
-            quantity: '',
-            batch_number: '',
-            expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            purchase_price: ''
-        },
-
-        async submitQuickStock() {
-            if (this.processing) return;
-
-            this.processing = true;
-
-            try {
-                const response = await fetch('/api/products/quick-stock', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify(this.quickStock)
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    // Success - show toast and reload
-                    this.successMessage = data.message || '{{ __('products.stock_added_success') }}';
-                    this.showSuccessToast = true;
-                    this.showQuickStockModal = false;
-
-                    // Reset form
-                    this.quickStock = {
-                        product_id: '',
-                        quantity: '',
-                        batch_number: '',
-                        expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                        purchase_price: ''
-                    };
-
-                    // Hide toast after 3 seconds and reload
-                    setTimeout(() => {
-                        this.showSuccessToast = false;
-                        window.location.reload();
-                    }, 3000);
-                } else {
-                    showError(data.message || 'Failed to add stock. Please try again.', 'Error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showError('An error occurred while adding stock. Please try again.', 'Error');
-            } finally {
-                this.processing = false;
-            }
-        }
-    }));
-});
 </script>
 @endpush
 

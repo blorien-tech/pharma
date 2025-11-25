@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('transactions.transaction_details') . ' #' . $transaction->id)
+@section('title', __('transactions.transaction_details') . ' #' . $transaction->invoice_number)
 
 @section('content')
 <div class="max-w-3xl mx-auto space-y-6">
@@ -27,7 +27,7 @@
             <div class="grid grid-cols-2 gap-4 text-sm">
                 <div>
                     <p class="text-gray-600">{{ __('transactions.transaction_id') }}:</p>
-                    <p class="font-semibold">#{{ $transaction->id }}</p>
+                    <p class="font-semibold">#{{ $transaction->invoice_number }}</p>
                 </div>
                 <div>
                     <p class="text-gray-600">{{ __('common.date') }}:</p>

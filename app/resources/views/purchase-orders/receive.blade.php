@@ -70,6 +70,42 @@
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border text-sm">
                         </div>
                     </div>
+
+                    <!-- Storage Location Selection -->
+                    @if($availableLocations->isNotEmpty())
+                    <div class="mt-4">
+                        <label for="location_{{ $index }}" class="block text-sm font-medium text-gray-700">
+                            Storage Location
+                            <span class="text-xs text-gray-500">(Optional - auto-assigned if left empty)</span>
+                        </label>
+
+                        @if(isset($suggestions[$item->id]))
+                        <div class="mt-1 mb-2 flex items-start p-2 bg-green-50 border border-green-200 rounded-md">
+                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <div class="flex-1 text-sm">
+                                <p class="font-medium text-green-800">{{ __('locations.suggested_location') }}: {{ $suggestions[$item->id]['location']->getFullPath() }}</p>
+                                <p class="text-xs text-green-600 mt-0.5">{{ $suggestions[$item->id]['reason'] }}</p>
+                            </div>
+                        </div>
+                        @endif
+
+                        <select name="items[{{ $index }}][storage_location_id]" id="location_{{ $index }}"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border text-sm">
+                            <option value="">{{ __('locations.auto_assign') }}</option>
+                            @foreach($availableLocations as $location)
+                                <option value="{{ $location->id }}"
+                                    {{ isset($suggestions[$item->id]) && $suggestions[$item->id]['location']->id === $location->id ? 'selected' : '' }}>
+                                    {{ $location->getFullPath() }}
+                                    @if($location->capacity)
+                                        ({{ $location->getCurrentOccupancy() }}/{{ $location->capacity }})
+                                    @endif
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
                 </div>
                 @endforeach
             </div>

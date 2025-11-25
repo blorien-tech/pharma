@@ -18,6 +18,7 @@ class ProductBatch extends Model
         'quantity_remaining',
         'purchase_price',
         'is_active',
+        'storage_location_id',
     ];
 
     protected function casts(): array
@@ -45,6 +46,38 @@ class ProductBatch extends Model
     public function transactionItems()
     {
         return $this->hasMany(TransactionItem::class, 'batch_id');
+    }
+
+    /**
+     * Get the storage location where this batch is stored
+     */
+    public function storageLocation()
+    {
+        return $this->belongsTo(StorageLocation::class);
+    }
+
+    /**
+     * Get all stock movements for this batch
+     */
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class, 'batch_id')->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Get the location path (e.g., "Rack 1 / Shelf 2 / Bin A")
+     */
+    public function getLocationPath(): ?string
+    {
+        return $this->storageLocation?->getFullPath();
+    }
+
+    /**
+     * Check if batch has a location assigned
+     */
+    public function hasLocation(): bool
+    {
+        return $this->storage_location_id !== null;
     }
 
     /**

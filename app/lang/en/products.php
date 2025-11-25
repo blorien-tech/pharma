@@ -74,7 +74,7 @@ return [
     'units' => 'units',
 
     // Quick Stock Add Modal
-    'quick_stock_title' => '⚡ Quick Add Stock',
+    'quick_stock_add' => '⚡ Quick Add Stock',
     'quick_stock_desc' => 'Quickly add stock to existing products',
     'select_product' => 'Product *',
     'select_product_placeholder' => 'Select a product...',
